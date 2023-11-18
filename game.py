@@ -1,9 +1,8 @@
-from typing import Any
 import pygame
 from pygame.locals import *
 from sys import exit
 import os
-from random import randrange
+from random import randrange, choice
 
 pygame.init()
 pygame.mixer.init()
@@ -27,6 +26,8 @@ sprite_sheet = pygame.image.load(os.path.join(diretorio_imagens,"dinoSpritesheet
 som_colisao = pygame.mixer.Sound(os.path.join(diretorio_sons, "death_sound.wav"))
 som_colisao.set_volume(1)
 colidiu = False
+
+escolha_obstaculo = choice([0,1])
 
 class Dino(pygame.sprite.Sprite):
     def __init__(self):
@@ -117,15 +118,45 @@ class Cacto(pygame.sprite.Sprite):
         self.image = pygame.transform.scale(self.image, (32*2, 32*2))
         self.rect = self.image.get_rect()
         self.mask = pygame.mask.from_surface(self.image)
+        self.escolha = escolha_obstaculo
         # Posição do cacto logo acima do chão
         self.rect.center = (LARGURA, ALTURA - 64)
+        self.rect.x = LARGURA
 
     def update(self):
-        if self.rect.topright[0] < 0:
-            self.rect.x = LARGURA
-        self.rect.x -= 10
+        if self.escolha == 0:
+            if self.rect.topright[0] < 0:
+                self.rect.x = LARGURA
+            self.rect.x -= 10
 
-            
+class DinoVoador(pygame.sprite.Sprite):
+    def __init__(self):
+        pygame.sprite.Sprite.__init__(self)
+        self.imagens_dinossauro_voador = []
+        for i in range(3,5):
+            img = sprite_sheet.subsurface((i*32,0), (32,32))
+            img = pygame.transform.scale(img, (32*3, 32*3))
+            self.imagens_dinossauro_voador.append(img)
+        
+        self.index_lista = 0
+        self.image = self.imagens_dinossauro_voador[self.index_lista]
+        self.mask = pygame.mask.from_surface(self.image)
+        self.escolha = escolha_obstaculo
+        self.rect = self.image.get_rect()
+        self.rect.center = (LARGURA, 300)
+        self.rect.x = LARGURA
+
+    def update(self):
+        # Se a escolha aleatória for igual a 0, o cacto aparece na tela
+        if self.escolha == 1:
+            if self.rect.topright[0] < 0:
+                self.rect.x = LARGURA
+            self.rect.x -= 10
+
+            if self.index_lista > 1:
+                self.index_lista = 0
+            self.index_lista += 0.25
+            self.image = self.imagens_dinossauro_voador[int(self.index_lista)]
 
 todas_sprites = pygame.sprite.Group()
 dino = Dino()
@@ -144,8 +175,12 @@ for i in range(0,LARGURA*2//64):
 cacto = Cacto()
 todas_sprites.add(cacto)
 
+dino_voador = DinoVoador()
+todas_sprites.add(dino_voador)
+
 grupo_obstaculos = pygame.sprite.Group()
 grupo_obstaculos.add(cacto)
+grupo_obstaculos.add(dino_voador)
 
 # Relógio controlando a taxa de frames do jogo
 relogio = pygame.time.Clock()
@@ -168,7 +203,15 @@ while True:
 
     todas_sprites.draw(tela)
 
-    if colisoes and colidiu == False:
+    if cacto.rect.topright[0] <= 0 or dino_voador.rect.topright[0] <= 0:
+        escolha_obstaculo = choice([0,1])
+        cacto.rect.x = LARGURA
+        dino_voador.rect.x = LARGURA
+        cacto.escolha = escolha_obstaculo
+        dino_voador.escolha = escolha_obstaculo
+
+
+    if colisoes and colidiu == False: 
         som_colisao.play()
         colidiu = True
 
@@ -176,5 +219,6 @@ while True:
         pass
     else: 
         todas_sprites.update()
+
 
     pygame.display.flip()

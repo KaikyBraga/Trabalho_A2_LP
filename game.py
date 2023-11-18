@@ -27,7 +27,32 @@ som_colisao = pygame.mixer.Sound(os.path.join(diretorio_sons, "death_sound.wav")
 som_colisao.set_volume(1)
 colidiu = False
 
+som_pontuacao = pygame.mixer.Sound(os.path.join(diretorio_sons, "score_sound.wav"))
+som_pontuacao.set_volume(1)
+
 escolha_obstaculo = choice([0,1])
+
+pontos = 0
+
+velocidade_jogo = 10
+
+def exibe_mensagem(msg, tamanho, cor):
+    fonte = pygame.font.SysFont("comicsansms", tamanho, True, False)
+    mensagem = f"{msg}"
+    texto_formato = fonte.render(mensagem, True, cor)
+    return texto_formato
+
+def reiniciar_jogo():
+    global pontos, velocidade_jogo, colidiu, escolha_obstaculo
+    pontos = 0
+    velocidade_jogo = 10
+    colidiu = False
+    dino.rect.y = ALTURA - 64 - 96//2
+    dino.pulo = False
+    dino_voador.rect.x = LARGURA
+    cacto.rect.x = LARGURA
+    escolha_obstaculo = choice([0, 1])
+
 
 class Dino(pygame.sprite.Sprite):
     def __init__(self):
@@ -91,7 +116,7 @@ class Nuvens(pygame.sprite.Sprite):
             self.rect.y = randrange(50, 200, 50)
 
         # Velocidade com que a nuvem se movimenta
-        self.rect.x -= 10
+        self.rect.x -= velocidade_jogo
 
 class Chao(pygame.sprite.Sprite):
     def __init__(self, pos_x):
@@ -109,7 +134,7 @@ class Chao(pygame.sprite.Sprite):
     def update(self):
         if self.rect.topright[0] < 0:
             self.rect.x = LARGURA
-        self.rect.x -=10
+        self.rect.x -= 10
 
 class Cacto(pygame.sprite.Sprite):
     def __init__(self):
@@ -127,7 +152,7 @@ class Cacto(pygame.sprite.Sprite):
         if self.escolha == 0:
             if self.rect.topright[0] < 0:
                 self.rect.x = LARGURA
-            self.rect.x -= 10
+            self.rect.x -= velocidade_jogo
 
 class DinoVoador(pygame.sprite.Sprite):
     def __init__(self):
@@ -151,7 +176,7 @@ class DinoVoador(pygame.sprite.Sprite):
         if self.escolha == 1:
             if self.rect.topright[0] < 0:
                 self.rect.x = LARGURA
-            self.rect.x -= 10
+            self.rect.x -= velocidade_jogo
 
             if self.index_lista > 1:
                 self.index_lista = 0
@@ -192,12 +217,15 @@ while True:
             pygame.quit()
             exit()
         if event.type == KEYDOWN:
-            if event.key == K_SPACE:
+            if event.key == K_SPACE and colidiu == False:
                 # Se o personagem ainda estiver no ar, não se pode apertar a tecla espaço
                 if dino.rect.y != dino.pos_y_inicial:
                     pass
                 else:
                     dino.pular()
+
+            if event.key == K_r and colidiu == True:
+                reiniciar_jogo()
 
     colisoes = pygame.sprite.spritecollide(dino, grupo_obstaculos, False, pygame.sprite.collide_mask)
 
@@ -216,9 +244,28 @@ while True:
         colidiu = True
 
     if colidiu == True:
-        pass
-    else: 
+        if pontos % 100 == 0:
+            pontos += 1
+        mensagem_game_over = exibe_mensagem("GAME OVER", 40, (255,0,0))
+        tela.blit(mensagem_game_over, (LARGURA//2, ALTURA//2))
+
+        mensagem_restart = exibe_mensagem("Pressione R para reiniciar", 20, (255,0,0))
+        tela.blit(mensagem_restart, (LARGURA//2, (ALTURA//2) + 60))
+
+    else:
+        pontos += 1
         todas_sprites.update()
+        texto_pontos = exibe_mensagem(pontos, 40, (0,255,0))
+
+    if pontos % 100 == 0:
+        som_pontuacao.play()
+        if velocidade_jogo >= 23:
+            velocidade_jogo += 0
+        else:
+            velocidade_jogo += 1
+
+    # Inserindo o texto de pontos em determinada posição
+    tela.blit(texto_pontos, (520, 30))
 
 
     pygame.display.flip()

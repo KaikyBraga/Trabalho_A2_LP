@@ -36,7 +36,7 @@ class Dino(pygame.sprite.Sprite):
         self.image = self.imagens_dinossauro[self.index_lista]
         self.rect = self.image.get_rect()
         # Posição que fica o personagem
-        self.rect.center = (100,ALTURA-90)
+        self.rect.center = (100,ALTURA-64)
 
     def update(self):
         """
@@ -66,6 +66,24 @@ class Nuvens(pygame.sprite.Sprite):
         # Velocidade com que a nuvem se movimenta
         self.rect.x -= 10
 
+class Chao(pygame.sprite.Sprite):
+    def __init__(self, pos_x):
+        pygame.sprite.Sprite.__init__(self)
+        # Posição do Frame do Chão
+        self.image = sprite_sheet.subsurface((6*32,0), (32,32))
+        # Tamanho da imagem
+        self.image = pygame.transform.scale(self.image, (32*2, 32*2))
+        self.rect = self.image.get_rect()
+        self.rect.y = ALTURA - 64
+        self.rect.x = pos_x * 64
+
+
+    # Mudando a posição do chão ao longo do jogo
+    def update(self):
+        if self.rect.topright[0] < 0:
+            self.rect.x = LARGURA
+        self.rect.x -=10
+
 todas_sprites = pygame.sprite.Group()
 dino = Dino()
 todas_sprites.add(dino)
@@ -74,6 +92,11 @@ todas_sprites.add(dino)
 for i in range(0,4):
     nuvem = Nuvens()
     todas_sprites.add(nuvem)
+
+# Inserindo 10 chãos
+for i in range(0,LARGURA*2//64):
+    chao = Chao(i)
+    todas_sprites.add(chao)
 
 # Relógio controlando a taxa de frames do jogo
 relogio = pygame.time.Clock()

@@ -30,6 +30,10 @@ colidiu = False
 som_pontuacao = pygame.mixer.Sound(os.path.join(diretorio_sons, "score_sound.wav"))
 som_pontuacao.set_volume(1)
 
+trilha_sonora = pygame.mixer.Sound(os.path.join(diretorio_sons, "trilha_sonora.wav"))
+trilha_sonora.set_volume(0.3)
+trilha_sonora.play()
+
 escolha_obstaculo = choice([0,1])
 
 pontos = 0
@@ -43,7 +47,7 @@ def exibe_mensagem(msg, tamanho, cor):
     return texto_formato
 
 def reiniciar_jogo():
-    global pontos, velocidade_jogo, colidiu, escolha_obstaculo
+    global pontos, velocidade_jogo, colidiu, escolha_obstaculo, trilha_sonora
     pontos = 0
     velocidade_jogo = 10
     colidiu = False
@@ -52,6 +56,7 @@ def reiniciar_jogo():
     dino_voador.rect.x = LARGURA
     cacto.rect.x = LARGURA
     escolha_obstaculo = choice([0, 1])
+    trilha_sonora.play()
 
 
 class Dino(pygame.sprite.Sprite):
@@ -239,11 +244,13 @@ while True:
         dino_voador.escolha = escolha_obstaculo
 
 
-    if colisoes and colidiu == False: 
+    if colisoes and colidiu == False:
         som_colisao.play()
         colidiu = True
 
     if colidiu == True:
+        trilha_sonora.stop()
+
         if pontos % 100 == 0:
             pontos += 1
         mensagem_game_over = exibe_mensagem("GAME OVER", 40, (255,0,0))
@@ -251,6 +258,7 @@ while True:
 
         mensagem_restart = exibe_mensagem("Pressione R para reiniciar", 20, (255,0,0))
         tela.blit(mensagem_restart, (LARGURA//2, (ALTURA//2) + 60))
+
 
     else:
         pontos += 1

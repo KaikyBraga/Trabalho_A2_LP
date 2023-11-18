@@ -5,6 +5,9 @@ from sys import exit
 import os
 from random import randrange
 
+pygame.init()
+pygame.mixer.init()
+
 diretorio_principal = os.path.dirname(__file__)
 diretorio_imagens = os.path.join(diretorio_principal, "imagens")
 diretorio_sons = os.path.join(diretorio_principal, "sons")
@@ -24,6 +27,10 @@ sprite_sheet = pygame.image.load(os.path.join(diretorio_imagens,"dinoSpritesheet
 class Dino(pygame.sprite.Sprite):
     def __init__(self):
         pygame.sprite.Sprite.__init__(self)
+        # Unindo diretório com o arquivo de som
+        self.som_pulo = pygame.mixer.Sound(os.path.join(diretorio_sons, "jump_sound.wav"))
+        # Volume do som de pulo
+        self.som_pulo.set_volume(1)
         self.imagens_dinossauro = []
         # Recortando frames da Sprite Sheet
         for i in range(0,3):
@@ -35,15 +42,29 @@ class Dino(pygame.sprite.Sprite):
         self.index_lista = 0
         self.image = self.imagens_dinossauro[self.index_lista]
         self.rect = self.image.get_rect()
+        self.pos_y_inicial = ALTURA - 64 - 96/2
         # Posição que fica o personagem
-        self.rect.center = (100,ALTURA-64)
+        self.rect.center = [100,ALTURA-64]
+        self.pulo = False
+
+    def pular(self):
+        self.pulo = True
+        self.som_pulo.play()
 
     def update(self):
-        """
-        Velocidade ao trocar de frame da imagem
-        """
+        if self.pulo == True:
+            if self.rect.y <= 200:
+                self.pulo = False
+            self.rect.y -= 20
+        else:
+            if self.rect.y < self.pos_y_inicial:
+                self.rect.y += 20
+            else:
+                self.rect.y = self.pos_y_inicial
+
         if self.index_lista > 2:
             self.index_lista = 0
+        # Velocidade que aparece os frames 
         self.index_lista += 0.25
         self.image = self.imagens_dinossauro[int(self.index_lista)]
 
@@ -107,8 +128,15 @@ while True:
         if event.type == QUIT:
             pygame.quit()
             exit()
+        if event.type == KEYDOWN:
+            if event.key == K_SPACE:
+                # Se o personagem ainda estiver no ar, não se pode apertar a tecla espaço
+                if dino.rect.y != dino.pos_y_inicial:
+                    pass
+                else:
+                    dino.pular()
 
-        todas_sprites.draw(tela)
-        todas_sprites.update()
+    todas_sprites.draw(tela)
+    todas_sprites.update()
 
-        pygame.display.flip()
+    pygame.display.flip()

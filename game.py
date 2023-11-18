@@ -23,7 +23,7 @@ pygame.display.set_caption("Jogo Maneiro")
 
 sprite_sheet = pygame.image.load(os.path.join(diretorio_imagens,"dinoSpritesheet.png")).convert_alpha()
 
-som_colisao = pygame.mixer.Sound(os.path.join(diretorio_sons, "death_sound.wav"))
+som_colisao = pygame.mixer.Sound(os.path.join(diretorio_sons, "som_game_over.wav"))
 som_colisao.set_volume(1)
 colidiu = False
 
@@ -58,7 +58,7 @@ class Dino(pygame.sprite.Sprite):
     def __init__(self):
         pygame.sprite.Sprite.__init__(self)
         # Unindo diretório com o arquivo de som
-        self.som_pulo = pygame.mixer.Sound(os.path.join(diretorio_sons, "jump_sound.wav"))
+        self.som_pulo = pygame.mixer.Sound(os.path.join(diretorio_sons, "som_pulo.wav"))
         # Volume do som de pulo
         self.som_pulo.set_volume(1)
         self.imagens_dinossauro = []

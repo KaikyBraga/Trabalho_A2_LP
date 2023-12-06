@@ -8,7 +8,7 @@ y = 720
 screen = pygame.display.set_mode((x,y))
 pygame.display.set_caption("Meu jogo")
 
-bg = pygame.image.load("imagens/cidade.png").convert_alpha()
+bg = pygame.image.load("sprites/cenario/background.png").convert_alpha()
 bg = pygame.transform.scale(bg, (x,y))
 
 rodando = True
@@ -25,6 +25,6 @@ while rodando:
     if rel_x < 1280:
         screen.blit(bg, (rel_x, 0))
 
-    x -= 1
+    x -= 1.5
 
     pygame.display.update()

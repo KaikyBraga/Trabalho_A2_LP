@@ -1,53 +1,39 @@
-import pygame
+import os
 import sys
+import pygame
 from pygame.locals import *
 
 class Menu:
     def __init__(self):
         pygame.init()
         self.mainClock = pygame.time.Clock()
-        self.screen = pygame.display.set_mode((500, 500), 0, 32)
+        self.screen = pygame.display.set_mode((1280, 720), 0, 32)
         pygame.display.set_caption('game base')
         self.font = pygame.font.SysFont(None, 20)
         self.click = False
+        # Carrega a imagem de fundo do menu
+        self.background_image = pygame.image.load(os.path.join(os.path.dirname(__file__), "sprites/paginas/menu.png")).convert()
 
     def draw_text(self, text, color, x, y, rect):
+        # Desenha a imagem de fundo do menu
+        self.screen.blit(self.background_image, (0, 0))
         text_surface = self.font.render(text, True, color)
         text_rect = text_surface.get_rect(center=(rect.centerx, rect.centery))
         self.screen.blit(text_surface, text_rect)
 
     def main_menu(self):
         while True:
-            self.screen.fill((0, 0, 0))
-
             mx, my = pygame.mouse.get_pos()
 
+            # Desenha a imagem de fundo do menu
+            self.screen.blit(self.background_image, (0, 0))
+
             # Mudar as coordenadas do botão
-            botao_jogar = pygame.Rect(50, 100, 200, 50)
-            botao_loja = pygame.Rect(50, 200, 200, 50)
-            botao_sair = pygame.Rect(50, 300, 200, 50)
+            botao_jogar = pygame.Rect(520, 250, 240, 95)
+            botao_loja = pygame.Rect(520, 400, 240, 95)
+            botao_sair = pygame.Rect(520, 550, 240, 95)
             
-            if botao_jogar.collidepoint((mx, my)):
-                if self.click:
-                    self.jogar()
-            elif botao_loja.collidepoint((mx, my)):
-                if self.click:
-                    self.loja()
-            elif botao_sair.collidepoint((mx, my)):
-                if self.click:
-                    self.sair()        
-
-            pygame.draw.rect(self.screen, (128, 128, 128), botao_jogar) 
-            pygame.draw.rect(self.screen, (128, 128, 128), botao_loja)  
-            pygame.draw.rect(self.screen, (128, 128, 128), botao_sair)
-
-            # Essa parte não vai precisar, pq a imagem já tem as palavras
-            self.draw_text('JOGAR', (255, 255, 255), 50 + 100, 100 + 25, botao_jogar)
-            self.draw_text('LOJA', (255, 255, 255), 50 + 100, 200 + 25, botao_loja)
-            self.draw_text('SAIR', (255, 255, 255), 50 + 100, 300 + 25, botao_sair)
-
-            self.click = False
-
+            # Event Loop
             for event in pygame.event.get():
                 if event.type == QUIT:
                     pygame.quit()
@@ -57,6 +43,19 @@ class Menu:
                     sys.exit()
                 elif event.type == MOUSEBUTTONDOWN and event.button == 1:
                     self.click = True
+
+            # Verifica as colisões com o mouse
+            if botao_jogar.collidepoint((mx, my)):
+                if self.click:
+                    self.jogar()
+            elif botao_loja.collidepoint((mx, my)):
+                if self.click:
+                    self.loja()
+            elif botao_sair.collidepoint((mx, my)):
+                if self.click:
+                    self.sair()
+
+            self.click = False
 
             pygame.display.update()
             self.mainClock.tick(60)

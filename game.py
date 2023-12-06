@@ -11,8 +11,8 @@ diretorio_principal = os.path.dirname(__file__)
 diretorio_imagens = os.path.join(diretorio_principal, "imagens")
 diretorio_sons = os.path.join(diretorio_principal, "sons")
 
-LARGURA = 640
-ALTURA = 480
+LARGURA = 1280
+ALTURA = 720
 
 BRANCO = (255,255,255)
 

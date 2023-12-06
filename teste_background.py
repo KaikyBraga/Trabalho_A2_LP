@@ -1,30 +1,93 @@
+import os
+import sys
 import pygame
+from variaveis_globais import *
 
 pygame.init()
 
-x = 1280
-y = 720
+tela = pygame.display.set_mode((LARGURA, ALTURA))
+pygame.display.set_caption("JOGO")
 
-screen = pygame.display.set_mode((x,y))
-pygame.display.set_caption("Meu jogo")
+class ElementoMovivel:
+    """
+    Classe base que representa os elementos móveis do jogo.
+    """
+    def __init__(self, x, imagem, velocidade):
+        self.largura = LARGURA
+        self.altura = ALTURA
+        self.posicao_x = x
+        self.posicao_y = 0
+        self.velocidade = velocidade
+        self.carregar_imagem(imagem)
+        self.exibir()
 
-bg = pygame.image.load("sprites/cenario/background.png").convert_alpha()
-bg = pygame.transform.scale(bg, (x,y))
+    def atualizar(self, deslocamento):
+        self.posicao_x += deslocamento
+        if self.posicao_x <= -LARGURA:
+            self.posicao_x = LARGURA
 
-rodando = True
+    def exibir(self):
+        tela.blit(self.textura, (self.posicao_x, self.posicao_y))
 
-while rodando:
-    for event in pygame.event.get():
-        if event.type == pygame.QUIT:
-            rodando = False
+    def carregar_imagem(self, imagem):
+        caminho_imagem = os.path.join("sprites/cenario", imagem)
+        self.textura = pygame.image.load(caminho_imagem).convert_alpha()
+        self.textura = pygame.transform.scale(self.textura, (self.largura, self.altura))
 
-    screen.blit(bg,(0,0))
 
-    rel_x = x % bg.get_rect().width
-    screen.blit(bg, (rel_x - bg.get_rect().width,0))
-    if rel_x < 1280:
-        screen.blit(bg, (rel_x, 0))
+class FundoCarrossel(ElementoMovivel):
+    """
+    Classe que representa o carrossel de fundo no jogo.
+    """
+    def __init__(self, x, velocidade):
+        super().__init__(x, "background.png", velocidade)
 
-    x -= 1.5
 
-    pygame.display.update()
+class Ponte(ElementoMovivel):
+    """
+    Classe que representa a ponte no jogo.
+    """
+    def __init__(self, x, velocidade):
+        super().__init__(x, "ponte_teste.png", velocidade)
+
+
+class JogoPrincipal:
+    """
+    Classe principal que representa o jogo.
+    """
+    def __init__(self):
+        # Inicialização do Fundo de Carrossel
+        self.fundos_bg = [FundoCarrossel(x=0, velocidade=2.0), FundoCarrossel(x=LARGURA, velocidade=2.0)]
+        self.fundos_ponte = [Ponte(x=0, velocidade=5.0), Ponte(x=LARGURA, velocidade=5.0)]
+
+
+def loop_principal():
+    """
+    Função inicilizadora do loop principal do jogo.
+    """
+    jogo = JogoPrincipal()
+
+    relogio = pygame.time.Clock()
+
+    while True:
+        # Exibição do carrosel do cenário.
+        for fundo in jogo.fundos_bg:
+            fundo.atualizar(-fundo.velocidade)
+            fundo.exibir()
+
+        for fundo in jogo.fundos_ponte:
+            fundo.atualizar(-fundo.velocidade)
+            fundo.exibir()
+
+        for evento in pygame.event.get():
+            if evento.type == pygame.QUIT:
+                pygame.quit()
+                sys.exit()
+
+        # Taxa de quadros do jogo
+        relogio.tick(80)
+
+        pygame.display.update()
+
+
+loop_principal()

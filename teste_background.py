@@ -31,11 +31,11 @@ class ElementoMovivel:
 
     def carregar_imagem(self, imagem):
         caminho_imagem = os.path.join("sprites/cenario", imagem)
-        self.textura = pygame.image.load(caminho_imagem).convert_alpha()
+        self.textura = pygame.image.load(caminho_imagem)
         self.textura = pygame.transform.scale(self.textura, (self.largura, self.altura))
 
 
-class FundoCarrossel(ElementoMovivel):
+class Paisagem(ElementoMovivel):
     """
     Classe que representa o carrossel de fundo no jogo.
     """
@@ -51,31 +51,24 @@ class Ponte(ElementoMovivel):
         super().__init__(x, "ponte_teste.png", velocidade)
 
 
-class JogoPrincipal:
-    """
-    Classe principal que representa o jogo.
-    """
-    def __init__(self):
-        # Inicialização do Fundo de Carrossel
-        self.fundos_bg = [FundoCarrossel(x=0, velocidade=2.0), FundoCarrossel(x=LARGURA, velocidade=2.0)]
-        self.fundos_ponte = [Ponte(x=0, velocidade=5.0), Ponte(x=LARGURA, velocidade=5.0)]
+fundos_paisagem = [Paisagem(x=0, velocidade=2.0), Paisagem(x=LARGURA, velocidade=2.0)]
+fundos_ponte = [Ponte(x=0, velocidade=5.0), Ponte(x=LARGURA, velocidade=5.0)]
 
 
 def loop_principal():
     """
     Função inicilizadora do loop principal do jogo.
     """
-    jogo = JogoPrincipal()
 
     relogio = pygame.time.Clock()
 
     while True:
         # Exibição do carrosel do cenário.
-        for fundo in jogo.fundos_bg:
+        for fundo in fundos_paisagem:
             fundo.atualizar(-fundo.velocidade)
             fundo.exibir()
 
-        for fundo in jogo.fundos_ponte:
+        for fundo in fundos_ponte:
             fundo.atualizar(-fundo.velocidade)
             fundo.exibir()
 

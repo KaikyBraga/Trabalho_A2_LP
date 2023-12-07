@@ -6,6 +6,7 @@ from pygame.locals import *
 class Menu:
     def __init__(self):
         pygame.init()
+        pygame.mixer.init()
         self.mainClock = pygame.time.Clock()
         self.screen = pygame.display.set_mode((1280, 720), 0, 32)
         pygame.display.set_caption('game base')
@@ -15,12 +16,19 @@ class Menu:
         # Carrega a imagem de fundo do menu
         self.background_img = pygame.image.load(os.path.join(os.path.dirname(__file__), "sprites/paginas/menu.png")).convert()
 
+        # Carrega a música
+        pygame.mixer.music.load(os.path.join(os.path.dirname(__file__), "sons/menu_som.wav"))
+
+        # Inicia a reprodução contínua da música
+        pygame.mixer.music.play(-1)  
+
         #TODO: Usar as variáveis globais para os caminhos 
         # Carrega as imagens dos botões normais
         self.menu_jogar_img = pygame.image.load(os.path.join(os.path.dirname(__file__), "sprites/paginas/menu_jogar.png")).convert()
         self.menu_loja_img = pygame.image.load(os.path.join(os.path.dirname(__file__), "sprites/paginas/menu_loja.png")).convert()
         self.menu_sair_img = pygame.image.load(os.path.join(os.path.dirname(__file__), "sprites/paginas/menu_sair.png")).convert()
 
+    #TODO: Arrumar esse código
     def draw_text(self, text, color, x, y, rect):
         # Desenha a imagem de fundo do menu
         self.screen.blit(self.background_img, (0, 0))
@@ -42,9 +50,11 @@ class Menu:
             # Event Loop
             for event in pygame.event.get():
                 if event.type == QUIT:
+                    pygame.mixer.music.stop()  # Para a música antes de fechar o programa
                     pygame.quit()
                     sys.exit()
                 elif event.type == KEYDOWN and event.key == K_ESCAPE:
+                    pygame.mixer.music.stop()  # Para a música antes de fechar o programa
                     pygame.quit()
                     sys.exit()
                 elif event.type == MOUSEBUTTONDOWN and event.button == 1:
@@ -54,16 +64,19 @@ class Menu:
             if botao_jogar.collidepoint((mx, my)):
                 self.screen.blit(self.menu_jogar_img, (0, 0))
                 if self.click:
+                    pygame.mixer.music.stop()  # Para a música antes de chamar a função
                     self.jogar()
 
             elif botao_loja.collidepoint((mx, my)):
                 self.screen.blit(self.menu_loja_img, (0, 0))
                 if self.click:
+                    pygame.mixer.music.stop()  # Para a música antes de chamar a função
                     self.loja()
 
             elif botao_sair.collidepoint((mx, my)):
                 self.screen.blit(self.menu_sair_img, (0, 0))
                 if self.click:
+                    pygame.mixer.music.stop()  # Para a música antes de chamar a função
                     self.sair()
                  
             self.click = False

@@ -1,7 +1,7 @@
 import pygame
 
-LARGURA = 1280
-ALTURA = 720
+LARGURA_TELA = 1280
+ALTURA_TELA = 720
 
 # SPRITES
 

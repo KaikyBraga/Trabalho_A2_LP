@@ -5,7 +5,7 @@ from variaveis_globais import *
 
 pygame.init()
 
-tela = pygame.display.set_mode((LARGURA, ALTURA))
+tela = pygame.display.set_mode((LARGURA_TELA, ALTURA_TELA))
 pygame.display.set_caption("JOGO")
 
 class ElementoMovivel:
@@ -13,8 +13,8 @@ class ElementoMovivel:
     Classe base que representa os elementos móveis do jogo.
     """
     def __init__(self, x, imagem, velocidade):
-        self.largura = LARGURA
-        self.altura = ALTURA
+        self.largura = LARGURA_TELA
+        self.altura = ALTURA_TELA
         self.posicao_x = x
         self.posicao_y = 0
         self.velocidade = velocidade
@@ -23,8 +23,8 @@ class ElementoMovivel:
 
     def atualizar(self, deslocamento):
         self.posicao_x += deslocamento
-        if self.posicao_x <= -LARGURA:
-            self.posicao_x = LARGURA
+        if self.posicao_x <= -LARGURA_TELA:
+            self.posicao_x = LARGURA_TELA
 
     def exibir(self):
         tela.blit(self.textura, (self.posicao_x, self.posicao_y))
@@ -51,8 +51,8 @@ class Ponte(ElementoMovivel):
         super().__init__(x, "ponte_teste.png", velocidade)
 
 
-fundos_paisagem = [Paisagem(x=0, velocidade=2.0), Paisagem(x=LARGURA, velocidade=2.0)]
-fundos_ponte = [Ponte(x=0, velocidade=5.0), Ponte(x=LARGURA, velocidade=5.0)]
+fundos_paisagem = [Paisagem(x=0, velocidade=2.0), Paisagem(x=LARGURA_TELA, velocidade=2.0)]
+fundos_ponte = [Ponte(x=0, velocidade=5.0), Ponte(x=LARGURA_TELA, velocidade=5.0)]
 
 
 def loop_principal():

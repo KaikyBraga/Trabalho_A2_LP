@@ -11,12 +11,18 @@ class Menu:
         pygame.display.set_caption('game base')
         self.font = pygame.font.SysFont(None, 20)
         self.click = False
+
         # Carrega a imagem de fundo do menu
-        self.background_image = pygame.image.load(os.path.join(os.path.dirname(__file__), "sprites/paginas/menu.png")).convert()
+        self.background_img = pygame.image.load(os.path.join(os.path.dirname(__file__), "sprites/paginas/menu.png")).convert()
+
+        # Carrega as imagens dos botões normais
+        self.menu_jogar_img = pygame.image.load(os.path.join(os.path.dirname(__file__), "sprites/paginas/menu_jogar.png")).convert()
+        self.menu_loja_img = pygame.image.load(os.path.join(os.path.dirname(__file__), "sprites/paginas/menu_loja.png")).convert()
+        self.menu_sair_img = pygame.image.load(os.path.join(os.path.dirname(__file__), "sprites/paginas/menu_sair.png")).convert()
 
     def draw_text(self, text, color, x, y, rect):
         # Desenha a imagem de fundo do menu
-        self.screen.blit(self.background_image, (0, 0))
+        self.screen.blit(self.background_img, (0, 0))
         text_surface = self.font.render(text, True, color)
         text_rect = text_surface.get_rect(center=(rect.centerx, rect.centery))
         self.screen.blit(text_surface, text_rect)
@@ -26,9 +32,8 @@ class Menu:
             mx, my = pygame.mouse.get_pos()
 
             # Desenha a imagem de fundo do menu
-            self.screen.blit(self.background_image, (0, 0))
+            self.screen.blit(self.background_img, (0, 0))
 
-            # Mudar as coordenadas do botão
             botao_jogar = pygame.Rect(520, 250, 240, 95)
             botao_loja = pygame.Rect(520, 400, 240, 95)
             botao_sair = pygame.Rect(520, 550, 240, 95)
@@ -46,15 +51,20 @@ class Menu:
 
             # Verifica as colisões com o mouse
             if botao_jogar.collidepoint((mx, my)):
+                self.screen.blit(self.menu_jogar_img, (0, 0))
                 if self.click:
                     self.jogar()
+
             elif botao_loja.collidepoint((mx, my)):
+                self.screen.blit(self.menu_loja_img, (0, 0))
                 if self.click:
                     self.loja()
+
             elif botao_sair.collidepoint((mx, my)):
+                self.screen.blit(self.menu_sair_img, (0, 0))
                 if self.click:
                     self.sair()
-
+                 
             self.click = False
 
             pygame.display.update()

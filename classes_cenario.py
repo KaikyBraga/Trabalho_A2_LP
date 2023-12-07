@@ -48,7 +48,7 @@ class Ponte(ElementoMovivel):
     Classe que representa a ponte no jogo.
     """
     def __init__(self, x, velocidade):
-        super().__init__(x, "ponte_teste.png", velocidade)
+        super().__init__(x, "ponte.png", velocidade)
 
 
 fundos_paisagem = [Paisagem(x=0, velocidade=2.0), Paisagem(x=LARGURA_TELA, velocidade=2.0)]

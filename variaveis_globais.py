@@ -40,6 +40,9 @@ for i in range(1,5):
 
 # PÁGINAS
 MENU = pygame.image.load("sprites/paginas/menu.png")
+MENU_JOGAR = pygame.image.load("sprites/paginas/menu_jogar.png")
+MENU_LOJA = pygame.image.load("sprites/paginas/menu_loja.png")
+MENU_SAIR = pygame.image.load("sprites/paginas/menu_sair.png")
 LOJA = pygame.image.load("sprites/paginas/loja.png")
 
 

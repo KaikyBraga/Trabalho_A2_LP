@@ -15,6 +15,7 @@ class Menu:
         # Carrega a imagem de fundo do menu
         self.background_img = pygame.image.load(os.path.join(os.path.dirname(__file__), "sprites/paginas/menu.png")).convert()
 
+        #TODO: Usar as variáveis globais para os caminhos 
         # Carrega as imagens dos botões normais
         self.menu_jogar_img = pygame.image.load(os.path.join(os.path.dirname(__file__), "sprites/paginas/menu_jogar.png")).convert()
         self.menu_loja_img = pygame.image.load(os.path.join(os.path.dirname(__file__), "sprites/paginas/menu_loja.png")).convert()

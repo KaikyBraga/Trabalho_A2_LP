@@ -12,26 +12,115 @@ tela = pygame.display.set_mode((LARGURA_TELA, ALTURA_TELA))
 pygame.display.set_caption("JOGO")
 
 class Personagem:
-    def __init__(self):
-        self.frames_corrida = AVENTUREIRO_CORRIDA
-        self.largura = 44
-        self.altura = 44
-        # Posição do personagem
-        self.x = 100
-        self.y = 500
-        self.textura_num = 0
+    def __init__(self, nome_personagem = "Aventureiro"):
+        self.nome_personagem = nome_personagem
+        if self.nome_personagem == "Aventureiro":
+            self.frames_corrida = AVENTUREIRO_CORRIDA
+            self.frames_pulo = AVENTUREIRO_PULO
+            self.frames_deslizamento = AVENTUREIRO_DESLIZAMENTO
+            self.frames_morte = AVENTUREIRO_MORTE
+            # Posição do Personagem
+            self.x = 20
+            self.y = 350
+            self.textura_num = 0
+            # Velocidade do pulo
+            self.velocidade_pulo = 8
+            self.gravidade = 1.3
+            # Altura do pulo (Quanto menor o valormais alto fica o pulo)
+            self.parar_pulo = 80
+
+        elif self.nome_personagem == "Cavaleiro":
+            self.frames_corrida = CAVALEIRO_CORRIDA
+            self.frames_pulo = CAVALEIRO_PULO
+            self.frames_deslizamento = CAVALEIRO_DESLIZAMENTO
+            self.frames_morte = CAVALEIRO_PULO
+            # Posição do Personagem
+            self.x = -65
+            self.y = 212
+            self.textura_num = 0
+            # Velocidade do pulo
+            self.velocidade_pulo = 8
+            self.gravidade = 1.3
+            # Altura do pulo (Quanto menor o valormais alto fica o pulo)
+            self.parar_pulo = -30
+
+        elif self.nome_personagem == "Guerreiro":
+            self.frames_corrida = GUERREIRO_CORRIDA
+            self.frames_pulo = GUERREIRO_PULO
+            self.frames_deslizamento = GUERREIRO_DESLIZAMENTO
+            self.frames_morte = GUERREIRO_PULO
+            # Posição do Personagem
+            self.x = -20
+            self.y = 285
+            self.textura_num = 0
+            # Velocidade do pulo
+            self.velocidade_pulo = 8
+            self.gravidade = 1.3
+            # Altura do pulo (Quanto menor o valormais alto fica o pulo)
+            self.parar_pulo = 80
+        
+        elif self.nome_personagem == "Guerreira":
+            self.frames_corrida = GUERREIRA_CORRIDA
+            self.frames_pulo = GUERREIRA_PULO
+            self.frames_deslizamento = GUERREIRA_DESLIZAMENTO
+            self.frames_morte = GUERREIRA_MORTE
+            # Posição do Personagem
+            self.x = 20
+            self.y = 318
+            self.textura_num = 0
+            # Velocidade do pulo
+            self.velocidade_pulo = 8
+            self.gravidade = 1.3
+            # Altura do pulo (Quanto menor o valormais alto fica o pulo)
+            self.parar_pulo = 80
+
+        
+        self.no_chao = True
+        self.pulando = False
+        self.parar_cair = self.y
+        self.caindo = False
         self.carregar_imagem()
         self.exibir()
 
-    def atualizar(self):
-        self.textura_num = (self.textura_num + 1) % len(self.frames_corrida)
-        self.carregar_imagem()
+    def atualizar(self, loops):
+        # Personagem pulando
+        if self.pulando:
+            self.y -= self.velocidade_pulo
+            if self.y <= self.parar_pulo:
+                self.cair()
+
+        # Personagem caindo
+        elif self.caindo:
+            self.y += self.gravidade * self.velocidade_pulo
+            if self.y >= self.parar_cair:
+                self.parar()
+
+        # Personagem caminhando
+        elif loops % 7 == 0:
+            self.textura_num = (self.textura_num + 1) % len(self.frames_corrida)
+            self.carregar_imagem()
 
     def exibir(self):
         tela.blit(self.textura, (self.x, self.y))
 
     def carregar_imagem(self):
         self.textura = self.frames_corrida[self.textura_num]
+
+    def pular(self):
+        """
+        Define a responsabilidade dos booleanos
+        """
+        self.pulando = True
+        self.no_chao = False
+
+    def cair(self):
+        self.pulando = False
+        self.caindo = True
+
+    def parar(self):
+        self.caindo = False
+        self.no_chao = True
+
 
 class ElementoMovivel:
     """
@@ -80,7 +169,7 @@ class Jogo:
 
         self.fundos_paisagem = [Paisagem(x=0, velocidade=2.0), Paisagem(x=LARGURA_TELA, velocidade=2.0)]
         self.fundos_ponte = [Ponte(x=0, velocidade=5.0), Ponte(x=LARGURA_TELA, velocidade=5.0)]
-        self.personagem = Personagem()
+        self.personagem = Personagem("Cavaleiro")
 
 
 def loop_principal():
@@ -94,7 +183,12 @@ def loop_principal():
 
     relogio = pygame.time.Clock()
 
+    loops = 0
+
     while True:
+
+        loops += 1
+
         # Exibição do carrosel do cenário.
         for fundo in jogo.fundos_paisagem:
             fundo.atualizar(-fundo.velocidade)
@@ -104,7 +198,7 @@ def loop_principal():
             fundo.atualizar(-fundo.velocidade)
             fundo.exibir()
 
-        personagem.atualizar()
+        personagem.atualizar(loops)
         personagem.exibir()
 
         for evento in pygame.event.get():
@@ -112,7 +206,12 @@ def loop_principal():
                 pygame.quit()
                 sys.exit()
 
-        # Taxa de quadros do jogo
+            if evento.type == pygame.KEYDOWN:   
+                if evento.key == pygame.K_w:
+                    if personagem.no_chao:
+                        personagem.pular()
+
+        # Taxa de quadros padrão do jogo
         relogio.tick(80)
 
         pygame.display.update()

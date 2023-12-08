@@ -28,51 +28,34 @@ class SpritesJogo:
         """
         self.caminho_principal = caminho_principal
         self.num_frames = num_frames
-    def carregar_frames(self):
+    def carregar_frames(self, escala):
         """
         Carrega os frames da animação, caso seja um conjunto de imagens unitário, retorna apenas a imagem carregada. Caso contrário,
         retorna o conjunto de imagens carregadas em uma lista.
 
         Parameters:
-            None
+            escala (int): Escala em que o conjunto de imagens fica sem perder 
 
         Returns:
             pygame.Surface or list[pygame.Surface]: Retorna a imagem unitária carregada ou a lista de imagens carregadas.
         """
+        self.escala = escala
+
         if self.num_frames == 1:
-            return pygame.image.load(self.caminho_principal)
+            conjunto_imagens = pygame.image.load(self.caminho_principal)
+            largura_sprite = conjunto_imagens.get_width()
+            altura_sprite = conjunto_imagens.get_height()
+            return pygame.transform.scale(conjunto_imagens, (largura_sprite * self.escala, altura_sprite * self.escala))
         else:
             lista_frames = []
             for i in range(1, self.num_frames + 1):
                 caminho_frame = f"{self.caminho_principal}{i}.png"
-                lista_frames.append(pygame.image.load(caminho_frame))
+                frame = pygame.image.load(caminho_frame)
+                largura_sprite = frame.get_width()
+                altura_sprite = frame.get_height()
+                frame = pygame.transform.scale(frame, (largura_sprite * self.escala, altura_sprite * self.escala))
+                lista_frames.append(frame)
             return lista_frames
-
-    def transformar_escala(self, conjunto_sprites, escala_sprites):
-        """
-        Muda a escala de resolução de um conjunto de Sprites.
-
-        Parameters:
-            conjunto_sprites (pygame.Surface or list[pygame.Surface]): Conjunto de Sprites que geram uma animação ou uma imagem estática.
-            escala_sprites (int): Fator de escala aplicado aos Sprites.
-            
-        Returns:
-            pygame.Surface or list[pygame.Surface]: Retorna uma única imagem escalada ou uma lista de imagens escaladas.
-        """
-        self.conjunto_sprites = conjunto_sprites
-        self.escala_sprites = escala_sprites
-
-        if isinstance(self.conjunto_sprites, list):
-            for index, sprite in enumerate(self.conjunto_sprites):
-                largura_sprite = self.conjunto_sprites[index].get_width()
-                altura_sprite = self.conjunto_sprites[index].get_height()
-                self.conjunto_sprites[index] = pygame.transform.scale(sprite, (largura_sprite * escala_sprites, altura_sprite * escala_sprites))
-            return self.conjunto_sprites
-
-        else:
-            largura_sprite = self.conjunto_sprites.get_width()
-            altura_sprite = self.conjunto_sprites.get_height()
-            return pygame.transform.scale(self.conjunto_sprites, (largura_sprite * escala_sprites, altura_sprite * escala_sprites))
         
 
 # Função para criar o texto

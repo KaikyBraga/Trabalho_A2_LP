@@ -2,6 +2,7 @@ import os
 import sys
 import pygame
 from pygame.locals import *
+from teste_jogo import Jogo
 
 class Menu:
     def __init__(self):
@@ -85,21 +86,13 @@ class Menu:
             self.mainClock.tick(60)
 
     def jogar(self):
-        running = True
-        while running:
-            self.screen.fill((0, 0, 0))
-            self.draw_text('Game started!', (255, 255, 255), 250, 250, pygame.Rect(100, 100, 100, 100))
+        pygame.mixer.music.stop()  # Para a música antes de chamar a função
+        jogo = Jogo()
+        jogo_retornou_ao_menu = jogo.loop_principal()
 
-            for event in pygame.event.get():
-                if event.type == QUIT:
-                    pygame.quit()
-                    sys.exit()
-                elif event.type == KEYDOWN:
-                    if event.key == K_ESCAPE:
-                        running = False
-
-            pygame.display.update()
-            self.mainClock.tick(60)
+        if jogo_retornou_ao_menu:
+            # Reinicia a música ao retornar ao menu
+            pygame.mixer.music.play(-1)
 
     def loja(self):
         running = True

@@ -24,17 +24,27 @@ class SpritesJogo:
             num_frames (int): Número de frames da animação.
 
         Returns:
-            list or pygame.Surface: Lista de sprites ou um único sprite.
+            None
         """
         self.caminho_principal = caminho_principal
         self.num_frames = num_frames
+    def carregar_frames(self):
+        """
+        Carrega os frames da animação, caso seja um conjunto de imagens unitário, retorna apenas a imagem carregada. Caso contrário,
+        retorna o conjunto de imagens carregadas em uma lista.
 
+        Parameters:
+            None
+
+        Returns:
+            pygame.Surface or list[pygame.Surface]: Retorna a imagem unitária carregada ou a lista de imagens carregadas.
+        """
         if self.num_frames == 1:
-            return pygame.image.load(caminho_principal)
+            return pygame.image.load(self.caminho_principal)
         else:
             lista_frames = []
-            for i in range(1, num_frames + 1):
-                caminho_frame = f"{caminho_principal}{i}.png"
+            for i in range(1, self.num_frames + 1):
+                caminho_frame = f"{self.caminho_principal}{i}.png"
                 lista_frames.append(pygame.image.load(caminho_frame))
             return lista_frames
 
@@ -88,3 +98,6 @@ def criar_texto(mensagem_texto, tamanho_fonte, nome_fonte, cor_fonte, texto_cerr
     texto = fonte.render(mensagem_texto, texto_cerrilhado, cor_fonte)
     
     return print(texto)
+
+
+PONTE = SpritesJogo("sprites/cenario/ponte.png", 1)

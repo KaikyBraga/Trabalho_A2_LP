@@ -4,6 +4,7 @@ import math
 import random
 import pygame
 from variaveis_globais import *
+from variaveis_sprites import *
 from utils import *
 
 pygame.init()

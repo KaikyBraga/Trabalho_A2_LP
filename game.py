@@ -85,12 +85,19 @@ class Personagem:
     def atualizar(self, loops):
         # Personagem pulando
         if self.pulando:
+            if loops % 20 == 0:
+                self.textura_num = (self.textura_num + 1) % len(self.frames_pulo)
+                self.carregar_imagem()
+          
             self.y -= self.velocidade_pulo
             if self.y <= self.parar_pulo:
                 self.cair()
 
         # Personagem caindo
         elif self.caindo:
+            if loops % 20 == 0:
+                self.textura_num = (self.textura_num + 1) % len(self.frames_pulo)
+                self.carregar_imagem()
             self.y += self.gravidade * self.velocidade_pulo
             if self.y >= self.parar_cair:
                 self.parar()
@@ -104,7 +111,10 @@ class Personagem:
         tela.blit(self.textura, (self.x, self.y))
 
     def carregar_imagem(self):
-        self.textura = self.frames_corrida[self.textura_num]
+        if self.pulando or self.caindo:
+            self.textura = self.frames_pulo[self.textura_num]
+        else:
+            self.textura = self.frames_corrida[self.textura_num]
 
     def pular(self):
         """
@@ -169,7 +179,7 @@ class Jogo:
 
         self.fundos_paisagem = [Paisagem(x=0, velocidade=2.0), Paisagem(x=LARGURA_TELA, velocidade=2.0)]
         self.fundos_ponte = [Ponte(x=0, velocidade=5.0), Ponte(x=LARGURA_TELA, velocidade=5.0)]
-        self.personagem = Personagem("Cavaleiro")
+        self.personagem = Personagem()
 
 
 def loop_principal():

@@ -25,13 +25,14 @@ FOGO = SpritesJogo("sprites/obstaculos/fogo/fogo_", 6)
 # Morcego
 MORCEGO = SpritesJogo("sprites/obstaculos/morcego/morcego_", 4)
 
-# PÁGINAS
-MENU = SpritesJogo("sprites/paginas/menu.png", 1)
+# PÁGINASss/menu.png", 1)
 MENU_JOGAR = SpritesJogo("sprites/paginas/menu_jogar.png", 1)
 MENU_LOJA = SpritesJogo("sprites/paginas/menu_loja.png", 1)
 MENU_SAIR = SpritesJogo("sprites/paginas/menu_sair.png", 1)
-LOJA = SpritesJogo("sprites/paginas/loja.png", 1)
-
+LOJA_AVENTUREIRO = SpritesJogo("sprites/paginas/loja_aventureiro.png", 1)
+LOJA_CAVALEIRO = SpritesJogo("sprites/paginas/loja_cavaleiro.png", 1)
+LOJA_GUERREIRO = SpritesJogo("sprites/paginas/loja_guerreiro.png", 1)
+LOJA_GUERREIRA = SpritesJogo("sprites/paginas/loja_guerreira.png", 1)
 
 # PERSONAGENS
 # Aventureiro

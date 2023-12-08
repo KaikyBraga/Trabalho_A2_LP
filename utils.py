@@ -48,7 +48,7 @@ class SpritesJogo:
                 lista_frames.append(pygame.image.load(caminho_frame))
             return lista_frames
 
-    def tranformar_escala(self, conjunto_sprites, escala_sprites):
+    def transformar_escala(self, conjunto_sprites, escala_sprites):
         """
         Muda a escala de resolução de um conjunto de Sprites.
 

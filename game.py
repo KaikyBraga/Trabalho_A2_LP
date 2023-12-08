@@ -8,11 +8,30 @@ from utils import *
 
 pygame.init()
 
-LARGURA_TELA = 1280
-ALTURA_TELA = 720
-
 tela = pygame.display.set_mode((LARGURA_TELA, ALTURA_TELA))
 pygame.display.set_caption("JOGO")
+
+class Personagem:
+    def __init__(self):
+        self.frames_corrida = AVENTUREIRO_CORRIDA
+        self.largura = 44
+        self.altura = 44
+        # Posição do personagem
+        self.x = 100
+        self.y = 500
+        self.textura_num = 0
+        self.carregar_imagem()
+        self.exibir()
+
+    def atualizar(self):
+        self.textura_num = (self.textura_num + 1) % len(self.frames_corrida)
+        self.carregar_imagem()
+
+    def exibir(self):
+        tela.blit(self.textura, (self.x, self.y))
+
+    def carregar_imagem(self):
+        self.textura = self.frames_corrida[self.textura_num]
 
 class ElementoMovivel:
     """
@@ -61,6 +80,7 @@ class Jogo:
 
         self.fundos_paisagem = [Paisagem(x=0, velocidade=2.0), Paisagem(x=LARGURA_TELA, velocidade=2.0)]
         self.fundos_ponte = [Ponte(x=0, velocidade=5.0), Ponte(x=LARGURA_TELA, velocidade=5.0)]
+        self.personagem = Personagem()
 
 
 def loop_principal():
@@ -68,7 +88,9 @@ def loop_principal():
     Função inicilizadora do loop principal do jogo.
     """
 
+    # Objetos
     jogo = Jogo()
+    personagem = jogo.personagem
 
     relogio = pygame.time.Clock()
 
@@ -81,6 +103,9 @@ def loop_principal():
         for fundo in jogo.fundos_ponte:
             fundo.atualizar(-fundo.velocidade)
             fundo.exibir()
+
+        personagem.atualizar()
+        personagem.exibir()
 
         for evento in pygame.event.get():
             if evento.type == pygame.QUIT:

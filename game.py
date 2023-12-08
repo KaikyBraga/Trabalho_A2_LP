@@ -28,6 +28,9 @@ class Personagem:
             self.gravidade = 1.3
             # Altura do pulo (Quanto menor o valormais alto fica o pulo)
             self.parar_pulo = 80
+            # Tempo do deslizamento
+            self.tempo_inicio_deslizamento = 0
+            self.tempo_deslizamento = 3500
 
         elif self.nome_personagem == "Cavaleiro":
             self.frames_corrida = CAVALEIRO_CORRIDA
@@ -74,7 +77,7 @@ class Personagem:
             # Altura do pulo (Quanto menor o valormais alto fica o pulo)
             self.parar_pulo = 80
 
-        
+        self.deslizando = False
         self.no_chao = True
         self.pulando = False
         self.parar_cair = self.y
@@ -98,9 +101,22 @@ class Personagem:
             if loops % 20 == 0:
                 self.textura_num = (self.textura_num + 1) % len(self.frames_pulo)
                 self.carregar_imagem()
+
             self.y += self.gravidade * self.velocidade_pulo
             if self.y >= self.parar_cair:
                 self.parar()
+
+        # Personagem deslizando
+        elif self.deslizando:
+            tempo_atual = pygame.time.get_ticks()
+            if loops % 20 == 0:
+                self.textura_num = (self.textura_num + 1) % len(self.frames_deslizamento)  
+                self.carregar_imagem()   
+
+            if self.deslizando and tempo_atual - self.tempo_inicio_deslizamento >= self.tempo_deslizamento:
+                self.terminar_deslizar()
+                self.deslizando = False
+                self.tempo_inicio_deslizamento = tempo_atual
 
         # Personagem caminhando
         elif loops % 7 == 0:
@@ -113,7 +129,11 @@ class Personagem:
     def carregar_imagem(self):
         if self.pulando or self.caindo:
             self.textura = self.frames_pulo[self.textura_num]
-        else:
+        
+        elif self.deslizando:
+            self.textura = self.frames_deslizamento[self.textura_num]
+
+        elif self.no_chao:
             self.textura = self.frames_corrida[self.textura_num]
 
     def pular(self):
@@ -129,7 +149,16 @@ class Personagem:
 
     def parar(self):
         self.caindo = False
+        self.deslizando = False
         self.no_chao = True
+
+    def deslizar(self):
+        self.deslizando = True   
+        self.no_chao = True 
+
+    def terminar_deslizar(self):
+        self.deslizando = False 
+        self.no_chao = True   
 
 
 class ElementoMovivel:
@@ -216,7 +245,10 @@ def loop_principal():
                 pygame.quit()
                 sys.exit()
 
-            if evento.type == pygame.KEYDOWN:   
+            if evento.type == pygame.KEYDOWN: 
+                if evento.key == pygame.K_s:
+                    if  personagem.no_chao:
+                        personagem.deslizar()
                 if evento.key == pygame.K_w:
                     if personagem.no_chao:
                         personagem.pular()

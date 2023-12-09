@@ -3,8 +3,8 @@ import sys
 import pygame
 import pandas as pd
 from utils import *
+from game import Jogo
 from pygame.locals import *
-from teste_jogo import Jogo
 
 class Menu:
     def __init__(self):
@@ -50,6 +50,11 @@ class Menu:
             botao_loja = pygame.Rect(520, 400, 240, 95)
             botao_sair = pygame.Rect(520, 550, 240, 95)
 
+            dados_jogo = pd.read_csv("informacoes_jogo.csv")
+            texto_record = str(dados_jogo["Score_Record"][0])
+            mensagem_record = criar_texto(texto_record, 40, "Arial", (255,0,0), texto_negrito=True)
+            self.screen.blit(mensagem_record, (100, 80))
+
             # Event Loop
             for event in pygame.event.get():
                 if event.type == QUIT:
@@ -66,18 +71,30 @@ class Menu:
             # Verifica as colisões com o mouse
             if botao_jogar.collidepoint((mx, my)):
                 self.screen.blit(self.menu_jogar_img, (0, 0))
+                dados_jogo = pd.read_csv("informacoes_jogo.csv")
+                texto_record = str(dados_jogo["Score_Record"][0])
+                mensagem_record = criar_texto(texto_record, 40, "Arial", (255,0,0), texto_negrito=True)
+                self.screen.blit(mensagem_record, (100, 80))
                 if self.click:
                     pygame.mixer.music.stop()  # Para a música antes de chamar a função
                     self.jogar()
 
             elif botao_loja.collidepoint((mx, my)):
                 self.screen.blit(self.menu_loja_img, (0, 0))
+                dados_jogo = pd.read_csv("informacoes_jogo.csv")
+                texto_record = str(dados_jogo["Score_Record"][0])
+                mensagem_record = criar_texto(texto_record, 40, "Arial", (255,0,0), texto_negrito=True)
+                self.screen.blit(mensagem_record, (100, 80))
                 if self.click:
                     pygame.mixer.music.stop()  # Para a música antes de chamar a função
                     self.loja()
 
             elif botao_sair.collidepoint((mx, my)):
                 self.screen.blit(self.menu_sair_img, (0, 0))
+                dados_jogo = pd.read_csv("informacoes_jogo.csv")
+                texto_record = str(dados_jogo["Score_Record"][0])
+                mensagem_record = criar_texto(texto_record, 40, "Arial", (255,0,0), texto_negrito=True)
+                self.screen.blit(mensagem_record, (100, 80))
                 if self.click:
                     pygame.mixer.music.stop()  # Para a música antes de chamar a função
                     self.sair()

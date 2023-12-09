@@ -81,6 +81,3 @@ def criar_texto(mensagem_texto, tamanho_fonte, nome_fonte, cor_fonte, texto_cerr
     texto = fonte.render(mensagem_texto, texto_cerrilhado, cor_fonte)
     
     return print(texto)
-
-
-PONTE = SpritesJogo("sprites/cenario/ponte.png", 1)

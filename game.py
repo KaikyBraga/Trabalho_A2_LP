@@ -91,7 +91,7 @@ class Personagem:
             if loops % 20 == 0:
                 self.textura_num = (self.textura_num + 1) % len(self.frames_pulo)
                 self.carregar_imagem()
-          
+           
             self.y -= self.velocidade_pulo
             if self.y <= self.parar_pulo:
                 self.cair()

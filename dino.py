@@ -7,9 +7,8 @@ pygame.init()
 screen = pygame.display.set_mode((WIDTH, HEIGHT))
 pygame.display.set_caption("Dino")
 
-class Dino(pygame.sprite.Sprite):
+class Dino():
     def __init__(self) -> None:
-        pygame.sprite.Sprite.__init__(self)
         self.width = 44
         self.height = 44
 
@@ -59,9 +58,8 @@ class Dino(pygame.sprite.Sprite):
             self.jumping = True
             self.texture_num=0
 
-class Cactus(pygame.sprite.Sprite):
+class Cactus():
     def __init__(self, x) -> None:
-        pygame.sprite.Sprite.__init__(self)
         self.width = 34
         self.height = 44
 
@@ -77,9 +75,6 @@ class Cactus(pygame.sprite.Sprite):
     
     def update(self, dx):
         self.x += dx
-
-        #if self.x<=-34:
-        #    self.x=WIDTH
         
         self.rect.x = self.x
         self.rect.y = self.y

@@ -3,6 +3,7 @@ import sys
 import pygame
 from pygame.locals import *
 from variaveis_globais import *
+from variaveis_sprites import *
 
 tela = pygame.display.set_mode((LARGURA_TELA, ALTURA_TELA))
 
@@ -57,17 +58,18 @@ class Loja:
         self.guerreira_img = GUERREIRA_CORRIDA
 
 # Carrega a música
-        pygame.mixer.music.load(os.path.join(os.path.dirname(__file__), "sons/loja_som.wav"))
+        pygame.mixer.music.load(os.path.join(os.path.dirname(__file__), "sons\som_loja.wav"))
         
 # Inicia a reprodução contínua da música
         pygame.mixer.music.play(-1)
 
     def main_loja(self):
     
-        relogio = pygame.time.Clock()
+        loops = 0
+        
         while True:
             mx, my = pygame.mouse.get_pos()
-
+            loops += 1
         # Desenha a imagem de fundo da loja
             self.screen.blit(self.background_img, (0, 0))
 
@@ -77,14 +79,11 @@ class Loja:
             botao_guerreiro = pygame.Rect(680, 220, 220, 400)
             botao_guerreira = pygame.Rect(950, 220, 240, 400)
 
-            for aventureiro in self.aventureiro_img:
-                self.screen.blit(aventureiro, (140, 400))
-            for cavaleiro in self.cavaleiro_img:
-                self.screen.blit(cavaleiro, (440, 400))
-            for guerreiro in self.guerreiro_img:
-                self.screen.blit(guerreiro, (720, 400))
-            for guerreira in self.guerreira_img:
-                self.screen.blit(guerreira, (990, 400))
+            
+            self.screen.blit(self.aventureiro_img[loops % len(self.aventureiro_img)], (100, 250))
+            self.screen.blit(self.cavaleiro_img[loops % len(self.cavaleiro_img)], (400, 250))
+            self.screen.blit(self.guerreiro_img[loops % len(self.guerreiro_img)], (650, 250))
+            self.screen.blit(self.guerreira_img[loops % len(self.guerreira_img)], (950, 250))
         
         # Event Loop
             for event in pygame.event.get():
@@ -102,56 +101,40 @@ class Loja:
         # Verifica as colisões com o mouse
             if botao_aventureiro.collidepoint((mx, my)):
                 self.screen.blit(self.loja_aventureiro, (0,0))
-                for aventureiro in self.aventureiro_img:
-                    self.screen.blit(aventureiro, (140, 400))
-                for cavaleiro in self.cavaleiro_img:
-                    self.screen.blit(cavaleiro, (440, 400))
-                for guerreiro in self.guerreiro_img:
-                    self.screen.blit(guerreiro, (720, 400))
-                for guerreira in self.guerreira_img:
-                    self.screen.blit(guerreira, (990, 400))
+                self.screen.blit(self.aventureiro_img[loops % len(self.aventureiro_img)], (100, 250))
+                self.screen.blit(self.cavaleiro_img[loops % len(self.cavaleiro_img)], (400, 250))
+                self.screen.blit(self.guerreiro_img[loops % len(self.guerreiro_img)], (650, 250))
+                self.screen.blit(self.guerreira_img[loops % len(self.guerreira_img)], (950, 250))
                 if self.click:
                     pygame.mixer.music.stop()  # Para a música antes de chamar a função
                     
 
             elif botao_cavaleiro.collidepoint((mx, my)):
                 self.screen.blit(self.loja_cavaleiro, (0,0))
-                for aventureiro in self.aventureiro_img:
-                    self.screen.blit(aventureiro, (140, 400))
-                for cavaleiro in self.cavaleiro_img:
-                    self.screen.blit(cavaleiro, (440, 400))
-                for guerreiro in self.guerreiro_img:
-                    self.screen.blit(guerreiro, (720, 400))
-                for guerreira in self.guerreira_img:
-                    self.screen.blit(guerreira, (990, 400))
+                self.screen.blit(self.aventureiro_img[loops % len(self.aventureiro_img)], (100, 250))
+                self.screen.blit(self.cavaleiro_img[loops % len(self.cavaleiro_img)], (400, 250))
+                self.screen.blit(self.guerreiro_img[loops % len(self.guerreiro_img)], (650, 250))
+                self.screen.blit(self.guerreira_img[loops % len(self.guerreira_img)], (950, 250))
                 if self.click:
                     pygame.mixer.music.stop()  # Para a música antes de chamar a função
                     
 
             elif botao_guerreiro.collidepoint((mx, my)):
                 self.screen.blit(self.loja_guerreiro, (0,0))
-                for aventureiro in self.aventureiro_img:
-                    self.screen.blit(aventureiro, (140, 400))
-                for cavaleiro in self.cavaleiro_img:
-                    self.screen.blit(cavaleiro, (440, 400))
-                for guerreiro in self.guerreiro_img:
-                    self.screen.blit(guerreiro, (720, 400))
-                for guerreira in self.guerreira_img:
-                    self.screen.blit(guerreira, (990, 400))
+                self.screen.blit(self.aventureiro_img[loops % len(self.aventureiro_img)], (100, 250))
+                self.screen.blit(self.cavaleiro_img[loops % len(self.cavaleiro_img)], (400, 250))
+                self.screen.blit(self.guerreiro_img[loops % len(self.guerreiro_img)], (650, 250))
+                self.screen.blit(self.guerreira_img[loops % len(self.guerreira_img)], (950, 250))
                 if self.click:
                     pygame.mixer.music.stop()  # Para a música antes de chamar a função
                     
                     
             elif botao_guerreira.collidepoint((mx, my)):
                 self.screen.blit(self.loja_guerreira, (0,0))
-                for aventureiro in self.aventureiro_img:
-                    self.screen.blit(aventureiro, (140, 400))
-                for cavaleiro in self.cavaleiro_img:
-                    self.screen.blit(cavaleiro, (440, 400))
-                for guerreiro in self.guerreiro_img:
-                    self.screen.blit(guerreiro, (720, 400))
-                for guerreira in self.guerreira_img:
-                    self.screen.blit(guerreira, (990, 400))
+                self.screen.blit(self.aventureiro_img[loops % len(self.aventureiro_img)], (100, 250))
+                self.screen.blit(self.cavaleiro_img[loops % len(self.cavaleiro_img)], (400, 250))
+                self.screen.blit(self.guerreiro_img[loops % len(self.guerreiro_img)], (650, 250))
+                self.screen.blit(self.guerreira_img[loops % len(self.guerreira_img)], (950, 250))
                 if self.click:
                     pygame.mixer.music.stop()  # Para a música antes de chamar a função
                     

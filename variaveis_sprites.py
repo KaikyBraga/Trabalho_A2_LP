@@ -1,5 +1,6 @@
 from utils import *
 
+
 # CENÁRIO
 PONTE = SpritesJogo("sprites/cenario/ponte.png", 1)
 PONTE = PONTE.carregar_frames(1)

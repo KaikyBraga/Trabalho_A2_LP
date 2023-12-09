@@ -1,279 +1,268 @@
-import pygame
-from pygame.locals import *
-from sys import exit
 import os
-from random import randrange, choice
+import sys
+import math
+import random
+import pygame
+from variaveis_globais import *
+from variaveis_sprites import *
+from utils import *
 
 pygame.init()
-pygame.mixer.init()
 
-diretorio_principal = os.path.dirname(__file__)
-diretorio_imagens = os.path.join(diretorio_principal, "imagens")
-diretorio_sons = os.path.join(diretorio_principal, "sons")
+tela = pygame.display.set_mode((LARGURA_TELA, ALTURA_TELA))
+pygame.display.set_caption("JOGO")
 
-LARGURA = 1280
-ALTURA = 720
+class Personagem:
+    def __init__(self, nome_personagem = "Aventureiro"):
+        self.nome_personagem = nome_personagem
+        if self.nome_personagem == "Aventureiro":
+            self.frames_corrida = AVENTUREIRO_CORRIDA
+            self.frames_pulo = AVENTUREIRO_PULO
+            self.frames_deslizamento = AVENTUREIRO_DESLIZAMENTO
+            self.frames_morte = AVENTUREIRO_MORTE
+            # Posição do Personagem
+            self.x = 20
+            self.y = 350
+            self.textura_num = 0
+            # Velocidade do pulo
+            self.velocidade_pulo = 8
+            self.gravidade = 1.3
+            # Altura do pulo (Quanto menor o valormais alto fica o pulo)
+            self.parar_pulo = 80
+            # Tempo do deslizamento
+            self.tempo_inicio_deslizamento = 0
+            self.tempo_deslizamento = 3500
 
-BRANCO = (255,255,255)
+        elif self.nome_personagem == "Cavaleiro":
+            self.frames_corrida = CAVALEIRO_CORRIDA
+            self.frames_pulo = CAVALEIRO_PULO
+            self.frames_deslizamento = CAVALEIRO_DESLIZAMENTO
+            self.frames_morte = CAVALEIRO_PULO
+            # Posição do Personagem
+            self.x = -65
+            self.y = 212
+            self.textura_num = 0
+            # Velocidade do pulo
+            self.velocidade_pulo = 8
+            self.gravidade = 1.3
+            # Altura do pulo (Quanto menor o valormais alto fica o pulo)
+            self.parar_pulo = -30
 
-tela = pygame.display.set_mode((LARGURA, ALTURA))
+        elif self.nome_personagem == "Guerreiro":
+            self.frames_corrida = GUERREIRO_CORRIDA
+            self.frames_pulo = GUERREIRO_PULO
+            self.frames_deslizamento = GUERREIRO_DESLIZAMENTO
+            self.frames_morte = GUERREIRO_PULO
+            # Posição do Personagem
+            self.x = -20
+            self.y = 285
+            self.textura_num = 0
+            # Velocidade do pulo
+            self.velocidade_pulo = 8
+            self.gravidade = 1.3
+            # Altura do pulo (Quanto menor o valormais alto fica o pulo)
+            self.parar_pulo = 80
+        
+        elif self.nome_personagem == "Guerreira":
+            self.frames_corrida = GUERREIRA_CORRIDA
+            self.frames_pulo = GUERREIRA_PULO
+            self.frames_deslizamento = GUERREIRA_DESLIZAMENTO
+            self.frames_morte = GUERREIRA_MORTE
+            # Posição do Personagem
+            self.x = 20
+            self.y = 318
+            self.textura_num = 0
+            # Velocidade do pulo
+            self.velocidade_pulo = 8
+            self.gravidade = 1.3
+            # Altura do pulo (Quanto menor o valormais alto fica o pulo)
+            self.parar_pulo = 80
+        
+        # Tempo do deslizamento
+        self.tempo_inicio_deslizamento = 0
+        self.tempo_deslizamento = 2800
 
-# Título da tela
-pygame.display.set_caption("Jogo Maneiro")
+        self.deslizando = False
+        self.no_chao = True
+        self.pulando = False
+        self.parar_cair = self.y
+        self.caindo = False
+        self.carregar_imagem()
+        self.exibir()
 
-sprite_sheet = pygame.image.load(os.path.join(diretorio_imagens,"dinoSpritesheet.png")).convert_alpha()
+    def atualizar(self, loops):
+        # Personagem pulando
+        if self.pulando:
+            if loops % 20 == 0:
+                self.textura_num = (self.textura_num + 1) % len(self.frames_pulo)
+                self.carregar_imagem()
+           
+            self.y -= self.velocidade_pulo
+            if self.y <= self.parar_pulo:
+                self.cair()
 
-som_colisao = pygame.mixer.Sound(os.path.join(diretorio_sons, "som_game_over.wav"))
-som_colisao.set_volume(1)
-colidiu = False
+        # Personagem caindo
+        elif self.caindo:
+            if loops % 20 == 0:
+                self.textura_num = (self.textura_num + 1) % len(self.frames_pulo)
+                self.carregar_imagem()
 
-som_pontuacao = pygame.mixer.Sound(os.path.join(diretorio_sons, "score_sound.wav"))
-som_pontuacao.set_volume(1)
+            self.y += self.gravidade * self.velocidade_pulo
+            if self.y >= self.parar_cair:
+                self.parar()
 
-trilha_sonora = pygame.mixer.Sound(os.path.join(diretorio_sons, "trilha_sonora.wav"))
-trilha_sonora.set_volume(0.3)
-trilha_sonora.play()
+        # Personagem deslizando
+        elif self.deslizando:
+            tempo_atual = pygame.time.get_ticks()
+            if loops % 20 == 0:
+                self.textura_num = (self.textura_num + 1) % len(self.frames_deslizamento)  
+                self.carregar_imagem()   
 
-escolha_obstaculo = choice([0,1])
+            if tempo_atual - self.tempo_inicio_deslizamento >= self.tempo_deslizamento:
+                self.terminar_deslizar()
+                self.tempo_inicio_deslizamento = tempo_atual
 
-pontos = 0
+        # Personagem caminhando
+        elif loops % 7 == 0:
+            self.textura_num = (self.textura_num + 1) % len(self.frames_corrida)
+            self.carregar_imagem()
 
-velocidade_jogo = 10
+    def exibir(self):
+        tela.blit(self.textura, (self.x, self.y))
 
-def exibe_mensagem(msg, tamanho, cor):
-    fonte = pygame.font.SysFont("comicsansms", tamanho, True, False)
-    mensagem = f"{msg}"
-    texto_formato = fonte.render(mensagem, True, cor)
-    return texto_formato
+    def carregar_imagem(self):
+        if self.pulando or self.caindo:
+            self.textura = self.frames_pulo[self.textura_num]
+        
+        elif self.deslizando:
+            self.textura = self.frames_deslizamento[self.textura_num]
 
-def reiniciar_jogo():
-    global pontos, velocidade_jogo, colidiu, escolha_obstaculo, trilha_sonora
-    pontos = 0
-    velocidade_jogo = 10
-    colidiu = False
-    dino.rect.y = ALTURA - 64 - 96//2
-    dino.pulo = False
-    dino_voador.rect.x = LARGURA
-    cacto.rect.x = LARGURA
-    escolha_obstaculo = choice([0, 1])
-    trilha_sonora.play()
-
-
-class Dino(pygame.sprite.Sprite):
-    def __init__(self):
-        pygame.sprite.Sprite.__init__(self)
-        # Unindo diretório com o arquivo de som
-        self.som_pulo = pygame.mixer.Sound(os.path.join(diretorio_sons, "som_pulo.wav"))
-        # Volume do som de pulo
-        self.som_pulo.set_volume(1)
-        self.imagens_dinossauro = []
-        # Recortando frames da Sprite Sheet
-        for i in range(0,3):
-            img = sprite_sheet.subsurface((i*32,0), (32,32))
-            # Alteração da escala do personagem (Naturalmente 32x32)
-            img = pygame.transform.scale(img,(32*3,32*3))
-            self.imagens_dinossauro.append(img)
-
-        self.index_lista = 0
-        self.image = self.imagens_dinossauro[self.index_lista]
-        self.rect = self.image.get_rect()
-        self.mask = pygame.mask.from_surface(self.image)
-        self.pos_y_inicial = ALTURA - 64 - 96/2
-        # Posição que fica o personagem
-        self.rect.center = [100,ALTURA-64]
-        self.pulo = False
+        elif self.no_chao:
+            self.textura = self.frames_corrida[self.textura_num]
 
     def pular(self):
-        self.pulo = True
-        self.som_pulo.play()
+        """
+        Define a responsabilidade dos booleanos
+        """
+        self.pulando = True
+        self.no_chao = False
 
-    def update(self):
-        if self.pulo == True:
-            if self.rect.y <= 200:
-                self.pulo = False
-            self.rect.y -= 20
-        else:
-            if self.rect.y < self.pos_y_inicial:
-                self.rect.y += 20
-            else:
-                self.rect.y = self.pos_y_inicial
+    def cair(self):
+        self.pulando = False
+        self.caindo = True
 
-        if self.index_lista > 2:
-            self.index_lista = 0
-        # Velocidade que aparece os frames 
-        self.index_lista += 0.25
-        self.image = self.imagens_dinossauro[int(self.index_lista)]
+    def parar(self):
+        self.caindo = False
+        self.deslizando = False
+        self.no_chao = True
 
-class Nuvens(pygame.sprite.Sprite):
+    def deslizar(self):
+        self.deslizando = True   
+        self.no_chao = True 
+
+    def terminar_deslizar(self):
+        self.deslizando = False 
+        self.no_chao = True   
+
+
+class ElementoMovivel:
+    """
+    Classe base que representa os elementos móveis do jogo.
+    """
+    def __init__(self, x, imagem, velocidade):
+        self.largura = LARGURA_TELA
+        self.altura = ALTURA_TELA
+        self.posicao_x = x
+        self.posicao_y = 0
+        self.velocidade = velocidade
+        self.carregar_imagem(imagem)
+        self.exibir()
+
+    def atualizar(self, deslocamento):
+        self.posicao_x += deslocamento
+        if self.posicao_x <= -LARGURA_TELA:
+            self.posicao_x = LARGURA_TELA
+
+    def exibir(self):
+        tela.blit(self.textura, (self.posicao_x, self.posicao_y))
+
+    def carregar_imagem(self, imagem):
+        caminho_imagem = os.path.join("sprites/cenario", imagem)
+        self.textura = pygame.image.load(caminho_imagem)
+        self.textura = pygame.transform.scale(self.textura, (self.largura, self.altura))
+
+
+class Paisagem(ElementoMovivel):
+    """
+    Classe que representa o carrossel de fundo no jogo.
+    """
+    def __init__(self, x, velocidade):
+        super().__init__(x, "background.png", velocidade)
+
+
+class Ponte(ElementoMovivel):
+    """
+    Classe que representa a ponte no jogo.
+    """
+    def __init__(self, x, velocidade):
+        super().__init__(x, "ponte.png", velocidade)
+
+class Jogo:
     def __init__(self):
-        pygame.sprite.Sprite.__init__(self)
-        self.image = sprite_sheet.subsurface((7*32,0), (32,32))
-        self.image = pygame.transform.scale(self.image, (32*3,32*3))
-        self.rect = self.image.get_rect()
-        # Posição da nuvem
-        self.rect.y = randrange(50, 200, 50)
-        self.rect.x = LARGURA - randrange(30,300,90)
-        
-    def update(self):
-        # Quando o canto superior direito da nuvem ultrapassar a tela, ela muda para o outro lado da tela
-        if self.rect.topright[0] < 0:
-            self.rect.x = LARGURA
-            self.rect.y = randrange(50, 200, 50)
 
-        # Velocidade com que a nuvem se movimenta
-        self.rect.x -= velocidade_jogo
-
-class Chao(pygame.sprite.Sprite):
-    def __init__(self, pos_x):
-        pygame.sprite.Sprite.__init__(self)
-        # Posição do Frame do Chão
-        self.image = sprite_sheet.subsurface((6*32,0), (32,32))
-        # Tamanho da imagem
-        self.image = pygame.transform.scale(self.image, (32*2, 32*2))
-        self.rect = self.image.get_rect()
-        self.rect.y = ALTURA - 64
-        self.rect.x = pos_x * 64
+        self.fundos_paisagem = [Paisagem(x=0, velocidade=2.0), Paisagem(x=LARGURA_TELA, velocidade=2.0)]
+        self.fundos_ponte = [Ponte(x=0, velocidade=5.0), Ponte(x=LARGURA_TELA, velocidade=5.0)]
+        self.personagem = Personagem("Aventureiro")
+    
+    #TODO: Criar uma função/método que muda o self.personagem   
 
 
-    # Mudando a posição do chão ao longo do jogo
-    def update(self):
-        if self.rect.topright[0] < 0:
-            self.rect.x = LARGURA
-        self.rect.x -= 10
+def loop_principal():
+    """
+    Função inicilizadora do loop principal do jogo.
+    """
 
-class Cacto(pygame.sprite.Sprite):
-    def __init__(self):
-        pygame.sprite.Sprite.__init__(self)
-        self.image = sprite_sheet.subsurface((5*32,0), (32,32))
-        self.image = pygame.transform.scale(self.image, (32*2, 32*2))
-        self.rect = self.image.get_rect()
-        self.mask = pygame.mask.from_surface(self.image)
-        self.escolha = escolha_obstaculo
-        # Posição do cacto logo acima do chão
-        self.rect.center = (LARGURA, ALTURA - 64)
-        self.rect.x = LARGURA
+    # Objetos
+    jogo = Jogo()
+    personagem = jogo.personagem
 
-    def update(self):
-        if self.escolha == 0:
-            if self.rect.topright[0] < 0:
-                self.rect.x = LARGURA
-            self.rect.x -= velocidade_jogo
+    relogio = pygame.time.Clock()
 
-class DinoVoador(pygame.sprite.Sprite):
-    def __init__(self):
-        pygame.sprite.Sprite.__init__(self)
-        self.imagens_dinossauro_voador = []
-        for i in range(3,5):
-            img = sprite_sheet.subsurface((i*32,0), (32,32))
-            img = pygame.transform.scale(img, (32*3, 32*3))
-            self.imagens_dinossauro_voador.append(img)
-        
-        self.index_lista = 0
-        self.image = self.imagens_dinossauro_voador[self.index_lista]
-        self.mask = pygame.mask.from_surface(self.image)
-        self.escolha = escolha_obstaculo
-        self.rect = self.image.get_rect()
-        self.rect.center = (LARGURA, 300)
-        self.rect.x = LARGURA
+    loops = 0
 
-    def update(self):
-        # Se a escolha aleatória for igual a 0, o cacto aparece na tela
-        if self.escolha == 1:
-            if self.rect.topright[0] < 0:
-                self.rect.x = LARGURA
-            self.rect.x -= velocidade_jogo
+    while True:
 
-            if self.index_lista > 1:
-                self.index_lista = 0
-            self.index_lista += 0.25
-            self.image = self.imagens_dinossauro_voador[int(self.index_lista)]
+        loops += 1
 
-todas_sprites = pygame.sprite.Group()
-dino = Dino()
-todas_sprites.add(dino)
+        # Exibição do carrosel do cenário.
+        for fundo in jogo.fundos_paisagem:
+            fundo.atualizar(-fundo.velocidade)
+            fundo.exibir()
+
+        for fundo in jogo.fundos_ponte:
+            fundo.atualizar(-fundo.velocidade)
+            fundo.exibir()
+
+        personagem.atualizar(loops)
+        personagem.exibir()
+
+        for evento in pygame.event.get():
+            if evento.type == pygame.QUIT:
+                pygame.quit()
+                sys.exit()
+
+            if evento.type == pygame.KEYDOWN: 
+                if evento.key == pygame.K_s:
+                    if  personagem.no_chao:
+                        personagem.deslizar()
+                if evento.key == pygame.K_w:
+                    if personagem.no_chao:
+                        personagem.pular()
+
+        # Taxa de quadros padrão do jogo
+        relogio.tick(80)
+
+        pygame.display.update()
 
 
-for i in range(0,4):
-    nuvem = Nuvens()
-    todas_sprites.add(nuvem)
-
-# Inserindo 10 chãos
-for i in range(0,LARGURA*2//64):
-    chao = Chao(i)
-    todas_sprites.add(chao)
-
-cacto = Cacto()
-todas_sprites.add(cacto)
-
-dino_voador = DinoVoador()
-todas_sprites.add(dino_voador)
-
-grupo_obstaculos = pygame.sprite.Group()
-grupo_obstaculos.add(cacto)
-grupo_obstaculos.add(dino_voador)
-
-# Relógio controlando a taxa de frames do jogo
-relogio = pygame.time.Clock()
-while True:
-    relogio.tick(30)
-    tela.fill(BRANCO)
-    for event in pygame.event.get():
-        if event.type == QUIT:
-            pygame.quit()
-            exit()
-        if event.type == KEYDOWN:
-            if event.key == K_SPACE and colidiu == False:
-                # Se o personagem ainda estiver no ar, não se pode apertar a tecla espaço
-                if dino.rect.y != dino.pos_y_inicial:
-                    pass
-                else:
-                    dino.pular()
-
-            if event.key == K_r and colidiu == True:
-                reiniciar_jogo()
-
-    colisoes = pygame.sprite.spritecollide(dino, grupo_obstaculos, False, pygame.sprite.collide_mask)
-
-    todas_sprites.draw(tela)
-
-    if cacto.rect.topright[0] <= 0 or dino_voador.rect.topright[0] <= 0:
-        escolha_obstaculo = choice([0,1])
-        cacto.rect.x = LARGURA
-        dino_voador.rect.x = LARGURA
-        cacto.escolha = escolha_obstaculo
-        dino_voador.escolha = escolha_obstaculo
-
-
-    if colisoes and colidiu == False:
-        som_colisao.play()
-        colidiu = True
-
-    if colidiu == True:
-        trilha_sonora.stop()
-
-        if pontos % 100 == 0:
-            pontos += 1
-        mensagem_game_over = exibe_mensagem("GAME OVER", 40, (255,0,0))
-        tela.blit(mensagem_game_over, (LARGURA//2, ALTURA//2))
-
-        mensagem_restart = exibe_mensagem("Pressione R para reiniciar", 20, (255,0,0))
-        tela.blit(mensagem_restart, (LARGURA//2, (ALTURA//2) + 60))
-
-
-    else:
-        pontos += 1
-        todas_sprites.update()
-        texto_pontos = exibe_mensagem(pontos, 40, (0,255,0))
-
-    if pontos % 100 == 0:
-        som_pontuacao.play()
-        if velocidade_jogo >= 23:
-            velocidade_jogo += 0
-        else:
-            velocidade_jogo += 1
-
-    # Inserindo o texto de pontos em determinada posição
-    tela.blit(texto_pontos, (520, 30))
-
-
-    pygame.display.flip()
+loop_principal()

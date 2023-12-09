@@ -1,3 +1,4 @@
+import pandas as pd
 import os
 import sys
 import pygame
@@ -6,32 +7,6 @@ from variaveis_globais import *
 from variaveis_sprites import *
 
 tela = pygame.display.set_mode((LARGURA_TELA, ALTURA_TELA))
-
-class ElementoMovivel:
-    """
-    Classe base que representa os elementos móveis do jogo.
-    """
-    def __init__(self, x, imagem, velocidade):
-        self.largura = LARGURA_TELA
-        self.altura = ALTURA_TELA
-        self.posicao_x = x
-        self.posicao_y = 0
-        self.velocidade = velocidade
-        self.carregar_imagem(imagem)
-        self.exibir()
-
-    def atualizar(self, deslocamento):
-        self.posicao_x += deslocamento
-        if self.posicao_x <= -LARGURA_TELA:
-            self.posicao_x = LARGURA_TELA
-
-    def exibir(self):
-        tela.blit(self.textura, (self.posicao_x, self.posicao_y))
-
-    def carregar_imagem(self, imagem):
-        caminho_imagem = os.path.join("sprites/cenario", imagem)
-        self.textura = pygame.image.load(caminho_imagem)
-        self.textura = pygame.transform.scale(self.textura, (self.largura, self.altura))
 
 class Loja:
     def __init__(self):
@@ -72,6 +47,13 @@ class Loja:
             loops += 1
         # Desenha a imagem de fundo da loja
             self.screen.blit(self.background_img, (0, 0))
+            dados_jogo = pd.read_csv("informacoes_jogo.csv")
+            quantidade_moedas = (dados_jogo["Quantidade_de_Moedas"])
+            aventureiro_desbloqueado = (dados_jogo["Aventureiro_Desbloqueado"]).bool()
+            cavaleiro_desbloqueado = (dados_jogo["Cavaleiro_Desbloqueado"]).bool()
+            guerreiro_desbloqueado = (dados_jogo["Guerreiro_Desbloqueado"]).bool()
+            guerreira_desbloqueado = (dados_jogo["Guerreira_Desbloqueada"]).bool()
+
 
         #Cria os botões
             botao_aventureiro = pygame.Rect(100, 220, 240, 400)
@@ -80,9 +62,9 @@ class Loja:
             botao_guerreira = pygame.Rect(950, 220, 240, 400)
 
             
-            self.screen.blit(self.aventureiro_img[loops % len(self.aventureiro_img)], (100, 250))
-            self.screen.blit(self.cavaleiro_img[loops % len(self.cavaleiro_img)], (400, 250))
-            self.screen.blit(self.guerreiro_img[loops % len(self.guerreiro_img)], (650, 250))
+            self.screen.blit(self.aventureiro_img[loops % len(self.aventureiro_img)], (60, 280))
+            self.screen.blit(self.cavaleiro_img[loops % len(self.cavaleiro_img)], (270, 150))
+            self.screen.blit(self.guerreiro_img[loops % len(self.guerreiro_img)], (600, 220))
             self.screen.blit(self.guerreira_img[loops % len(self.guerreira_img)], (950, 250))
         
         # Event Loop
@@ -99,56 +81,39 @@ class Loja:
                     self.click = True
 
         # Verifica as colisões com o mouse
-            if botao_aventureiro.collidepoint((mx, my)):
-                self.screen.blit(self.loja_aventureiro, (0,0))
-                self.screen.blit(self.aventureiro_img[loops % len(self.aventureiro_img)], (100, 250))
-                self.screen.blit(self.cavaleiro_img[loops % len(self.cavaleiro_img)], (400, 250))
-                self.screen.blit(self.guerreiro_img[loops % len(self.guerreiro_img)], (650, 250))
+            if botao_aventureiro.collidepoint((mx, my)) and aventureiro_desbloqueado == True and self.click:
+                self.background_img = LOJA_AVENTUREIRO
+                self.screen.blit(self.aventureiro_img[loops % len(self.aventureiro_img)], (60, 280))
+                self.screen.blit(self.cavaleiro_img[loops % len(self.cavaleiro_img)], (270, 150))
+                self.screen.blit(self.guerreiro_img[loops % len(self.guerreiro_img)], (600, 220))
                 self.screen.blit(self.guerreira_img[loops % len(self.guerreira_img)], (950, 250))
-                if self.click:
-                    pygame.mixer.music.stop()  # Para a música antes de chamar a função
-                    
-
-            elif botao_cavaleiro.collidepoint((mx, my)):
-                self.screen.blit(self.loja_cavaleiro, (0,0))
-                self.screen.blit(self.aventureiro_img[loops % len(self.aventureiro_img)], (100, 250))
-                self.screen.blit(self.cavaleiro_img[loops % len(self.cavaleiro_img)], (400, 250))
-                self.screen.blit(self.guerreiro_img[loops % len(self.guerreiro_img)], (650, 250))
-                self.screen.blit(self.guerreira_img[loops % len(self.guerreira_img)], (950, 250))
-                if self.click:
-                    pygame.mixer.music.stop()  # Para a música antes de chamar a função
-                    
-
-            elif botao_guerreiro.collidepoint((mx, my)):
-                self.screen.blit(self.loja_guerreiro, (0,0))
-                self.screen.blit(self.aventureiro_img[loops % len(self.aventureiro_img)], (100, 250))
-                self.screen.blit(self.cavaleiro_img[loops % len(self.cavaleiro_img)], (400, 250))
-                self.screen.blit(self.guerreiro_img[loops % len(self.guerreiro_img)], (650, 250))
-                self.screen.blit(self.guerreira_img[loops % len(self.guerreira_img)], (950, 250))
-                if self.click:
-                    pygame.mixer.music.stop()  # Para a música antes de chamar a função
-                    
-                    
-            elif botao_guerreira.collidepoint((mx, my)):
-                self.screen.blit(self.loja_guerreira, (0,0))
-                self.screen.blit(self.aventureiro_img[loops % len(self.aventureiro_img)], (100, 250))
-                self.screen.blit(self.cavaleiro_img[loops % len(self.cavaleiro_img)], (400, 250))
-                self.screen.blit(self.guerreiro_img[loops % len(self.guerreiro_img)], (650, 250))
-                self.screen.blit(self.guerreira_img[loops % len(self.guerreira_img)], (950, 250))
-                if self.click:
-                    pygame.mixer.music.stop()  # Para a música antes de chamar a função
-                    
                 
+            elif botao_cavaleiro.collidepoint((mx, my)) and cavaleiro_desbloqueado == True and self.click:
+                self.background_img = LOJA_CAVALEIRO
+                self.screen.blit(self.aventureiro_img[loops % len(self.aventureiro_img)], (60, 280))
+                self.screen.blit(self.cavaleiro_img[loops % len(self.cavaleiro_img)], (270, 150))
+                self.screen.blit(self.guerreiro_img[loops % len(self.guerreiro_img)], (600, 220))
+                self.screen.blit(self.guerreira_img[loops % len(self.guerreira_img)], (950, 250))
+                    
+            elif botao_guerreiro.collidepoint((mx, my)) and guerreiro_desbloqueado == True and self.click:
+                self.background_img = LOJA_GUERREIRO 
+                self.screen.blit(self.aventureiro_img[loops % len(self.aventureiro_img)], (60, 280))
+                self.screen.blit(self.cavaleiro_img[loops % len(self.cavaleiro_img)], (270, 150))
+                self.screen.blit(self.guerreiro_img[loops % len(self.guerreiro_img)], (600, 220))
+                self.screen.blit(self.guerreira_img[loops % len(self.guerreira_img)], (950, 250))
+                           
+            elif botao_guerreira.collidepoint((mx, my)) and guerreira_desbloqueado == True and self.click:
+                self.background_img = LOJA_GUERREIRA
+                self.screen.blit(self.aventureiro_img[loops % len(self.aventureiro_img)], (60, 280))
+                self.screen.blit(self.cavaleiro_img[loops % len(self.cavaleiro_img)], (270, 150))
+                self.screen.blit(self.guerreiro_img[loops % len(self.guerreiro_img)], (600, 220))
+                self.screen.blit(self.guerreira_img[loops % len(self.guerreira_img)], (950, 250))
+    
+            
             self.click = False
 
             pygame.display.update()
-            self.mainClock.tick(60)
-            
-class Moeda:
-    def __init__(self):
-        self.quantidade_moeda = 1000 #padrao
-
-    
+            self.mainClock.tick(15)
                 
 if __name__ == "__main__":
     loja_instance = Loja()

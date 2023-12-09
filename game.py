@@ -3,9 +3,9 @@ import sys
 import math
 import random
 import pygame
+from utils import *
 from variaveis_globais import *
 from variaveis_sprites import *
-from utils import *
 
 pygame.init()
 
@@ -217,52 +217,58 @@ class Jogo:
     #TODO: Criar uma função/método que muda o self.personagem   
 
 
-def loop_principal():
-    """
-    Função inicilizadora do loop principal do jogo.
-    """
+    def loop_principal(self):
+        """
+        Função inicilizadora do loop principal do jogo.
+        """
 
-    # Objetos
-    jogo = Jogo()
-    personagem = jogo.personagem
+        # Objetos
+        jogo = Jogo()
+        personagem = jogo.personagem
 
-    relogio = pygame.time.Clock()
+        relogio = pygame.time.Clock()
 
-    loops = 0
+        loops = 0
 
-    while True:
+        while True:
 
-        loops += 1
+            loops += 1
 
-        # Exibição do carrosel do cenário.
-        for fundo in jogo.fundos_paisagem:
-            fundo.atualizar(-fundo.velocidade)
-            fundo.exibir()
+            # Exibição do carrosel do cenário.
+            for fundo in jogo.fundos_paisagem:
+                fundo.atualizar(-fundo.velocidade)
+                fundo.exibir()
 
-        for fundo in jogo.fundos_ponte:
-            fundo.atualizar(-fundo.velocidade)
-            fundo.exibir()
+            for fundo in jogo.fundos_ponte:
+                fundo.atualizar(-fundo.velocidade)
+                fundo.exibir()
 
-        personagem.atualizar(loops)
-        personagem.exibir()
+            personagem.atualizar(loops)
+            personagem.exibir()
 
-        for evento in pygame.event.get():
-            if evento.type == pygame.QUIT:
-                pygame.quit()
-                sys.exit()
+            for evento in pygame.event.get():
+                if evento.type == pygame.QUIT:
+                    pygame.quit()
+                    sys.exit()
 
-            if evento.type == pygame.KEYDOWN: 
-                if evento.key == pygame.K_s:
-                    if  personagem.no_chao:
-                        personagem.deslizar()
-                if evento.key == pygame.K_w:
-                    if personagem.no_chao:
-                        personagem.pular()
+                if evento.type == pygame.KEYDOWN and evento.key == pygame.K_ESCAPE:
+                    # Retorna ao menu se a tecla ESC for pressionada
+                    return True    
 
-        # Taxa de quadros padrão do jogo
-        relogio.tick(80)
+                if evento.type == pygame.KEYDOWN: 
+                    if evento.key == pygame.K_s:
+                        if  personagem.no_chao:
+                            personagem.deslizar()
+                    if evento.key == pygame.K_w:
+                        if personagem.no_chao:
+                            personagem.pular()
 
-        pygame.display.update()
+            # Taxa de quadros padrão do jogo
+            relogio.tick(80)
+
+            pygame.display.update()
 
 
-loop_principal()
+if __name__ == "__main__":
+     jogo = Jogo()
+     jogo.loop_principal()

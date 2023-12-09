@@ -50,9 +50,10 @@ class Dino(pygame.sprite.Sprite):
         self.rect = self.texture[0].get_rect()
 
     def jump(self):
-        self.dy=10
-        self.jumping = True
-        self.texture_num=0
+        if self.jumping==False:
+            self.dy=10
+            self.jumping = True
+            self.texture_num=0
 
 class Cactus(pygame.sprite.Sprite):
     def __init__(self, x) -> None:
@@ -112,6 +113,7 @@ class BG:
 class Game():
     def __init__(self) -> None:
         self.speed = 5
+        self.running = True
 
         self.bg = [BG(0), BG(WIDTH)]
         
@@ -120,13 +122,31 @@ class Game():
         self.obstacule = []
         self.start_obstacle()
 
+    def start_game(self):
+        if self.running==False:
+            self.speed = 5
+            self.running = True
+
+            self.bg = [BG(0), BG(WIDTH)]
+            
+            self.dino = Dino()
+
+            self.obstacule = []
+            self.start_obstacle()
+
     def check_colision(self):
         group_obstacule = pygame.sprite.Group()
         
         for obstacule in self.obstacule:
+            obstacule.rect.x = obstacule.x
+            obstacule.rect.y = obstacule.y
+
             group_obstacule.add(obstacule)
 
-        collision = pygame.sprite.spritecollide(self.dino, group_obstacule, True, pygame.sprite.collide_mask)
+        self.dino.rect.x = self.dino.x
+        self.dino.rect.y = self.dino.y
+
+        collision = pygame.sprite.spritecollide(self.dino, group_obstacule, False, pygame.sprite.collide_mask)
 
         return collision
     
@@ -134,7 +154,7 @@ class Game():
         self.obstacule.append(Cactus(WIDTH))
         for i in range(2):
             self.obstacule.append(
-                Cactus(random.randint(self.obstacule[-1].x+3*self.dino.width, self.obstacule[-1].x+WIDTH//1.5)))
+                Cactus(random.randint(self.obstacule[-1].x+4*self.dino.width, self.obstacule[-1].x+WIDTH//1.5)))
 
     def spawn_cactus(self):
         if self.obstacule[0].x <= -self.obstacule[0].width:
@@ -148,7 +168,6 @@ class Game():
 def main():
 
     game = Game()
-    dino = game.dino
 
     clock = pygame.time.Clock()
 
@@ -158,25 +177,29 @@ def main():
                 pygame.quit()
                 sys.exit()
             if event.type == pygame.KEYDOWN:
-                if event.key == pygame.K_SPACE and dino.jumping==False:
-                    dino.jump()
+                if event.key == pygame.K_SPACE:
+                    game.dino.jump()
+                if event.key == pygame.K_r:
+                    game.start_game()
 
-        for bg in game.bg:
-            bg.update(-game.speed)
-            bg.show()
-        
-        dino.update()
-        dino.show()
+        if game.running:
+            for bg in game.bg:
+                bg.update(-game.speed)
+                bg.show()
+            
+            game.dino.update()
+            game.dino.show()
 
-        game.spawn_cactus()
+            game.spawn_cactus()
 
-        for obstacule in game.obstacule:
-            obstacule.update(-game.speed)
-            obstacule.show()
-        
-        #print(game.check_colision())
-        if game.check_colision():
-            print("Colisao")
+            for obstacule in game.obstacule:
+                obstacule.update(-game.speed)
+                obstacule.show()
+            
+            #print(game.check_colision())
+            if game.check_colision():
+                print("Colisao")
+                game.running = False
 
         clock.tick(30)
         pygame.display.update()

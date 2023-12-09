@@ -4,6 +4,7 @@ import math
 import random
 import pygame
 from variaveis_globais import *
+from variaveis_sprites import *
 from utils import *
 
 pygame.init()
@@ -76,6 +77,10 @@ class Personagem:
             self.gravidade = 1.3
             # Altura do pulo (Quanto menor o valormais alto fica o pulo)
             self.parar_pulo = 80
+        
+        # Tempo do deslizamento
+        self.tempo_inicio_deslizamento = 0
+        self.tempo_deslizamento = 2800
 
         self.deslizando = False
         self.no_chao = True
@@ -113,9 +118,8 @@ class Personagem:
                 self.textura_num = (self.textura_num + 1) % len(self.frames_deslizamento)  
                 self.carregar_imagem()   
 
-            if self.deslizando and tempo_atual - self.tempo_inicio_deslizamento >= self.tempo_deslizamento:
+            if tempo_atual - self.tempo_inicio_deslizamento >= self.tempo_deslizamento:
                 self.terminar_deslizar()
-                self.deslizando = False
                 self.tempo_inicio_deslizamento = tempo_atual
 
         # Personagem caminhando
@@ -204,11 +208,13 @@ class Ponte(ElementoMovivel):
         super().__init__(x, "ponte.png", velocidade)
 
 class Jogo:
-    def __init__(self) -> None:
+    def __init__(self):
 
         self.fundos_paisagem = [Paisagem(x=0, velocidade=2.0), Paisagem(x=LARGURA_TELA, velocidade=2.0)]
         self.fundos_ponte = [Ponte(x=0, velocidade=5.0), Ponte(x=LARGURA_TELA, velocidade=5.0)]
-        self.personagem = Personagem()
+        self.personagem = Personagem("Aventureiro")
+    
+    #TODO: Criar uma função/método que muda o self.personagem   
 
 
 def loop_principal():

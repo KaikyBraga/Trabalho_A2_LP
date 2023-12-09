@@ -1,12 +1,11 @@
-import pygame
+import os
 from pygame.locals import *
 
-caminho_som = "sons/"
-som_loja = pygame.mixer.Sound(caminho_som + "loja_som.wav")
-som_menu = pygame.mixer.Sound(caminho_som + "menu_som.wav")
-som_moeda = pygame.mixer.Sound(caminho_som + "moeda_som.wav")
-som_score = pygame.mixer.Sound(caminho_som + "score_som.wav")
-som_game_over = pygame.mixer.Sound(caminho_som + "som_game_over.wav")
-som_pulo = pygame.mixer.Sound(caminho_som + "som_pulo.wav")
-som_deslizamento = pygame.mixer.Sound(caminho_som + "som_deslizamento.wav")
-som_jogo = pygame.mixer.Sound(caminho_som + "som_jogo.wav")
+som_loja = os.path.join(os.path.dirname(__file__), "sons/som_loja.wav")
+som_menu = os.path.join(os.path.dirname(__file__), "sons/som_menu.wav")
+som_moeda = os.path.join(os.path.dirname(__file__), "sons/som_moeda.wav")
+som_score = os.path.join(os.path.dirname(__file__), "sons/som_score.wav")
+som_game_over = os.path.join(os.path.dirname(__file__), "sons/som_game_over.wav")
+som_pulo = os.path.join(os.path.dirname(__file__), "sons/som_pulo.wav")
+som_deslizamento = os.path.join(os.path.dirname(__file__), "sons/som_deslizamento.wav")
+som_jogo = os.path.join(os.path.dirname(__file__), "sons/som_jogo.wav")

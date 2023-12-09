@@ -1,6 +1,8 @@
 import os
 import sys
 import pygame
+import pandas as pd
+from utils import *
 from pygame.locals import *
 from teste_jogo import Jogo
 
@@ -18,7 +20,7 @@ class Menu:
         self.background_img = pygame.image.load(os.path.join(os.path.dirname(__file__), "sprites/paginas/menu.png")).convert()
 
         # Carrega a música
-        pygame.mixer.music.load(os.path.join(os.path.dirname(__file__), "sons/menu_som.wav"))
+        pygame.mixer.music.load(os.path.join(os.path.dirname(__file__), "sons/som_menu.wav"))
 
         # Inicia a reprodução contínua da música
         pygame.mixer.music.play(-1)  
@@ -47,7 +49,7 @@ class Menu:
             botao_jogar = pygame.Rect(520, 250, 240, 95)
             botao_loja = pygame.Rect(520, 400, 240, 95)
             botao_sair = pygame.Rect(520, 550, 240, 95)
-            
+
             # Event Loop
             for event in pygame.event.get():
                 if event.type == QUIT:

@@ -28,6 +28,8 @@ MORCEGO = MORCEGO.carregar_frames(1)
 
 
 # PÁGINAS
+MENU = SpritesJogo("sprites/paginas/menu.png", 1)
+MENU = MENU.carregar_frames(1)
 MENU_JOGAR = SpritesJogo("sprites/paginas/menu_jogar.png", 1)
 MENU_JOGAR = MENU_JOGAR.carregar_frames(1)
 MENU_LOJA = SpritesJogo("sprites/paginas/menu_loja.png", 1)

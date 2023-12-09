@@ -18,7 +18,7 @@ class Dino(pygame.sprite.Sprite):
 
         self.jumping = False
         self.dy = 0
-        self.ddy = 0.75
+        self.ddy = 0.75 #*alpha**2
 
         self.texture_num = 0
         self.texture = [None, None, None]
@@ -37,6 +37,8 @@ class Dino(pygame.sprite.Sprite):
         else:
             self.texture_num  = (self.texture_num + 0.25)%3
 
+        self.rect.x = self.x
+        self.rect.y = self.y
     def show(self): 
         screen.blit(self.texture[int(self.texture_num)], (self.x, self.y))
 
@@ -51,7 +53,7 @@ class Dino(pygame.sprite.Sprite):
 
     def jump(self):
         if self.jumping==False:
-            self.dy=10
+            self.dy=10 #*alpha
             self.jumping = True
             self.texture_num=0
 
@@ -72,10 +74,13 @@ class Cactus(pygame.sprite.Sprite):
         self.set_texture()
     
     def update(self, dx):
-       self.x += dx
+        self.x += dx
 
-       if self.x<=-34:
-           self.x=WIDTH
+        #if self.x<=-34:
+        #    self.x=WIDTH
+        
+        self.rect.x = self.x
+        self.rect.y = self.y
 
     def show(self): 
         screen.blit(self.texture, (self.x, self.y))
@@ -135,20 +140,11 @@ class Game():
             self.start_obstacle()
 
     def check_colision(self):
-        group_obstacule = pygame.sprite.Group()
-        
         for obstacule in self.obstacule:
-            obstacule.rect.x = obstacule.x
-            obstacule.rect.y = obstacule.y
-
-            group_obstacule.add(obstacule)
-
-        self.dino.rect.x = self.dino.x
-        self.dino.rect.y = self.dino.y
-
-        collision = pygame.sprite.spritecollide(self.dino, group_obstacule, False, pygame.sprite.collide_mask)
-
-        return collision
+            pos = (obstacule.x-self.dino.x, obstacule.y-self.dino.y)
+            if self.dino.mask.overlap(obstacule.mask, pos)!=None:
+                return True
+        return False
     
     def start_obstacle(self):
         self.obstacule.append(Cactus(WIDTH))
@@ -158,11 +154,15 @@ class Game():
 
     def spawn_cactus(self):
         if self.obstacule[0].x <= -self.obstacule[0].width:
-            self.obstacule.remove(0)
+            self.obstacule.pop(0)
 
-            x_max_obstaculo = self.obstacule[-1].x
+            x_min = self.obstacule[-1].x + 4 * self.dino.width
+            x_max = self.obstacule[-1].x + WIDTH//1.5
 
-            x_new_cactus = random.randint(x_max_obstaculo+self.dino*3, x_max_obstaculo+WIDTH//1.5)
+            x_new_cactus = random.randint(x_min, x_max)
+
+            #print(x_max_obstaculo, x_new_cactus)
+
             self.obstacule.append( Cactus(x_new_cactus) )
         
 def main():
@@ -196,7 +196,6 @@ def main():
                 obstacule.update(-game.speed)
                 obstacule.show()
             
-            #print(game.check_colision())
             if game.check_colision():
                 print("Colisao")
                 game.running = False

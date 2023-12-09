@@ -17,8 +17,9 @@ class Dino(pygame.sprite.Sprite):
         self.y= 80
 
         self.jumping = False
+        self.alpha = 1
         self.dy = 0
-        self.ddy = 0.75 #*alpha**2
+        self.ddy = 0.75*(self.alpha**2)
 
         self.texture_num = 0
         self.texture = [None, None, None]
@@ -53,7 +54,8 @@ class Dino(pygame.sprite.Sprite):
 
     def jump(self):
         if self.jumping==False:
-            self.dy=10 #*alpha
+            self.dy=10*self.alpha
+            self.ddy = 0.75*(self.alpha**2)
             self.jumping = True
             self.texture_num=0
 
@@ -117,7 +119,8 @@ class BG:
 
 class Game():
     def __init__(self) -> None:
-        self.speed = 5
+        self.speed = 8
+        self.score = 0 
         self.running = True
 
         self.bg = [BG(0), BG(WIDTH)]
@@ -127,8 +130,14 @@ class Game():
         self.obstacule = []
         self.start_obstacle()
 
+    def update(self):
+        self.score += 1
+        self.speed = 8 + 2*(self.score//100)
+        self.dino.alpha = self.speed/5
+
     def start_game(self):
         if self.running==False:
+            self.score = 8
             self.speed = 5
             self.running = True
 
@@ -169,6 +178,8 @@ def main():
 
     game = Game()
 
+    loop = 0
+
     clock = pygame.time.Clock()
 
     while(True):
@@ -199,6 +210,14 @@ def main():
             if game.check_colision():
                 print("Colisao")
                 game.running = False
+
+            
+            loop = (loop+1)%100
+            
+            if(loop%2==0):
+                game.update()
+
+            print(game.score)
 
         clock.tick(30)
         pygame.display.update()

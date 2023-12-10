@@ -6,6 +6,7 @@ WIDTH = 1200
 HEIGHT = 720   
 
 Y_FLOOR_BOMB = 435
+Y_FLOOR_BAT  = 375
 Y_FLOOR_AVENTUREIRO = 355
 Y_FLOOR_CAVALEIRO   = 215
 
@@ -126,7 +127,7 @@ class Aventureiro():
     def deslizar(self):
         if self.deslizamento==False and self.jumping==False and self.alive:
             self.deslizamento = True
-            self.deslizamento_time = 20
+            self.deslizamento_time = 30
             self.deslizamento_tick = 1
             self.texture_num=0
 
@@ -270,7 +271,44 @@ class Bomb():
             path = os.path.join(explosao_path)
             img = (pygame.image.load(path))
             self.texture_explosion.append(pygame.transform.scale(img, (self.width, self.height))) 
+    
+    def get_mask(self):
+        return self.mask
 
+class Bat():
+    def __init__(self, x) -> None:
+        self.width = 93
+        self.height = 63
+
+        self.x = x
+        self.y = Y_FLOOR_BAT
+
+        self.texture_num = 0
+        self.texture = []
+        self.mask = []
+
+        self.set_texture()
+    
+    def update(self, dx=0):
+        self.x += dx
+        self.texture_num  = (self.texture_num + 0.25)%len(self.texture)
+    
+    def show(self):
+        screen.blit(self.texture[int(self.texture_num)], (self.x, self.y))
+
+    def set_texture(self):
+        for i in range(1, 5):
+            bat_path = f'sprites/obstaculos/morcego/morcego_{i}.png'
+            path = os.path.join(bat_path)
+
+            img = (pygame.image.load(path))
+            
+            self.texture.append(pygame.transform.scale(img, (self.width, self.height)))
+            self.mask.append(pygame.mask.from_surface(self.texture[-1]))
+
+    def get_mask(self):
+        return self.mask[int(self.texture_num)]
+    
 class BG:
     def __init__(self, img_path, x=0, mult_speed=1) -> None:
         self.width = WIDTH
@@ -320,33 +358,37 @@ class Game():
             
             self.char = Aventureiro()
 
-            self.obstacule = []
-            self.start_obstacle()
+            self.obstacle = []
+            self.start_obstacles()
 
     def check_colision(self):
-        for obstacule in self.obstacule:
-            pos = (obstacule.x-self.char.x, obstacule.y-self.char.y)
-            if self.char.current_mask().overlap(obstacule.mask, pos)!=None:
+        for obstacle in self.obstacle:
+            pos = (obstacle.x-self.char.x, obstacle.y-self.char.y)
+            if self.char.current_mask().overlap(obstacle.get_mask(), pos)!=None:
                 return True
         return False
     
-    def start_obstacle(self):
-        self.obstacule.append(Bomb(WIDTH))
+    def start_obstacles(self):
+        self.obstacle.append(Bomb(WIDTH))
         for i in range(2):
-            x_min = self.obstacule[-1].x+self.obstacule[-1].width + 300
-            x_max = self.obstacule[-1].x+self.obstacule[-1].width + 600
-            self.obstacule.append(Bomb(random.randint(x_min, x_max)))
+            x_min = self.obstacle[-1].x+self.obstacle[-1].width + 300
+            x_max = self.obstacle[-1].x+self.obstacle[-1].width + 600
+            self.obstacle.append(Bomb(random.randint(x_min, x_max)))
 
-    def spawn_cactus(self):
-        if self.obstacule[0].x <= -self.obstacule[0].width:
-            self.obstacule.pop(0)
+    def spawn_obstacles(self):
+        if self.obstacle[0].x <= -self.obstacle[0].width:
+            self.obstacle.pop(0)
 
-            x_min = self.obstacule[-1].x+self.obstacule[-1].width + 200
-            x_max = self.obstacule[-1].x+self.obstacule[-1].width + 500
+            x_min = self.obstacle[-1].x+self.obstacle[-1].width + 200
+            x_max = self.obstacle[-1].x+self.obstacle[-1].width + 500
 
-            x_new_cactus = random.randint(x_min, x_max)
+            x_new_obstacle = random.randint(x_min, x_max)
 
-            self.obstacule.append( Bomb(x_new_cactus) )
+            rand_type = random.randint(1, 100)
+            if rand_type <= 50:
+                self.obstacle.append( Bomb(x_new_obstacle) )
+            else:
+                self.obstacle.append( Bat(x_new_obstacle) )
         
 def main():
 
@@ -374,11 +416,11 @@ def main():
                 bg.update(-game.speed)
                 bg.show()
 
-            game.spawn_cactus()
+            game.spawn_obstacles()
 
-            for obstacule in game.obstacule:
-                obstacule.update(-game.speed)
-                obstacule.show()
+            for obstacle in game.obstacle:
+                obstacle.update(-game.speed)
+                obstacle.show()
 
             game.char.update()
             game.char.show()
@@ -388,7 +430,8 @@ def main():
 
                 game.running = False
                 game.char.alive=False
-                game.obstacule[0].exploded=True
+                if isinstance(game.obstacle[0], Bomb):
+                    game.obstacle[0].exploded=True
 
             loop = (loop+1)%100
             
@@ -399,9 +442,9 @@ def main():
         else:
             for bg in game.bg:
                 bg.show()
-            for obstacule in game.obstacule:
-                obstacule.update()
-                obstacule.show()
+            for obstacle in game.obstacle:
+                obstacle.update()
+                obstacle.show()
 
             game.char.update()
             game.char.show()

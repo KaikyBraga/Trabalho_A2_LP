@@ -34,7 +34,7 @@ Dentro do menu inicial do jogo estão presentes três botões, o botão Jogar (I
 ## Loja:
 Dentro da loja é possível adquirir os personagens por meio das moedas coletadas em jogo, basta comprá-los nos botões verdes. Além disso, na parte de loja, é possível selecionar os personagens comprados, basta clicar na caixa de seleção correspondente ao personagem que já foi adquirido, e então sua cor ficará amarela.
 
-(GIF DA LOJA)
+![GIF_LOJA](https://github.com/KaikyBraga/Trabalho_A2_LP/assets/126474113/c3d3b36d-d677-46ab-8569-c4da80f81754)
 
 ## Fontes dos Assets utilizados para a confecção do Jogo:
 ### Sprites:

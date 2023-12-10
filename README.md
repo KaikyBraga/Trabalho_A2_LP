@@ -37,11 +37,12 @@ Dentro da loja é possível adquirir os personagens por meio das moedas coletada
 
 ## Fontes dos Assets utilizados para a confecção do Jogo:
 ### Sprites:
-- [Canva dos Páginas](https://www.canva.com/design/DAF2JdFXhp8/JgDLtnD9ElvoRKzK5LV2Jg/edit?utm_content=DAF2JdFXhp8&utm_campaign=designshare&utm_medium=link2&utm_source=sharebutton)
+- [Canva das Páginas](https://www.canva.com/design/DAF2JdFXhp8/JgDLtnD9ElvoRKzK5LV2Jg/edit?utm_content=DAF2JdFXhp8&utm_campaign=designshare&utm_medium=link2&utm_source=sharebutton)
 - [https://itch.io/](https://itch.io/)
 - [https://www.deviantart.com/](https://www.deviantart.com/)
 - [https://www.vhv.rs/](https://www.vhv.rs/)
 - [https://opengameart.org/](https://opengameart.org/)
+
 **OBS:** As páginas do Menu são de autoria dos membros do grupo.
   
 ### Sons:

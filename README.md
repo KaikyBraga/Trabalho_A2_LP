@@ -6,25 +6,24 @@
 - [Ramyro Corrêa](https://github.com/rcorreaa)
 - [Samuel Lima](https://github.com/samucaaaaaa)
 
-O jogo Emap'S Running consiste em um jogo de corrida sem fim. Nele, o jogador tem o objetivo de desviar ao máximo os obstáculos gerados ao decorrer do percurso e coletar as moedas para serem utilizadas na loja.
+O jogo EMAp's Running consiste em um jogo de corrida sem fim. Nele, o jogador tem o objetivo de desviar ao máximo os obstáculos gerados ao decorrer do percurso e coletar as moedas para serem utilizadas na loja.
 
 ## Intruções:
 1. Instalar os pacotes necessários: pip install -r requeriments.txt
 2. Executar o arquivo main.py
 
 ## Controles:
-- Para pular pressione a seta para cima
-- Para deslizar pressione a seta para baixo
+- Para pular pressione a tecla W
+- Para deslizar pressione a tecla S
 
 ## Jogabilidade:
-Iniciando o Emap'S Running, o jogador se depara com três diferentes tipos de obstáculos:
+Iniciando o EMAp's Running, o jogador se depara com dois diferentes tipos de obstáculos:
 - Bombas
-- Fogo
 - Morcegos
  
 **OBS:** O jogador não deve escostar nesses obstáculos, então deve usar os controles ao seu favor. Além disso, ao passar do tempo o jogo vai ficando mais difícil, tendo em vista que a velocidade dele é gradativa. Ao perder a corrida, é possível jogar novamente por meio da tecla R.
 
-(GIF JOGANDO)
+<img src="https://github.com/KaikyBraga/Trabalho_A2_LP/assets/126474113/0af30155-07f5-488d-a54a-08eb21224d7c" width="1000">
 
 ## Navegando entre as páginas:
 Dentro do menu inicial do jogo estão presentes três botões, o botão Jogar (Inicializador do Jogo), o botão Loja (Local de compra dos personagens), e o botão Sair (Finalizador do Jogo). Caso o jogador esteja dentro do jogo ou da loja, é possível retornar ao menu principal por meio da tecla ESC.
@@ -34,7 +33,7 @@ Dentro do menu inicial do jogo estão presentes três botões, o botão Jogar (I
 ## Loja:
 Dentro da loja é possível adquirir os personagens por meio das moedas coletadas em jogo, basta comprá-los nos botões verdes. Além disso, na parte de loja, é possível selecionar os personagens comprados, basta clicar na caixa de seleção correspondente ao personagem que já foi adquirido, e então sua cor ficará amarela.
 
-<img src="https://github.com/KaikyBraga/Trabalho_A2_LP/assets/126474113/c3d3b36d-d677-46ab-8569-c4da80f81754" width="1000">
+<img src="https://github.com/KaikyBraga/Trabalho_A2_LP/assets/126474113/f2425225-9c04-4894-8526-2b8014ca494b" width="1000">
 
 ## Fontes dos Assets utilizados para a confecção do Jogo:
 ### Sprites:

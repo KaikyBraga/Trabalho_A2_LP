@@ -298,6 +298,10 @@ class BG:
 class Game():
     def __init__(self) -> None:
         self.running = False
+
+        self.sound_score = pygame.mixer.Sound(os.path.join("sons/som_score.wav"))
+        self.sound_score.set_volume(0.25)
+
         self.start_game()
 
     def update(self):

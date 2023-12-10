@@ -1,6 +1,9 @@
 WIDTH = 1200
 HEIGHT = 720   
 
+COR_FONTE = (255, 255, 255)
+NOME_FONTE = "Verdana"
+
 BRIDGE_PATH = 'sprites/cenario/ponte.png'
 WOODS_PATH = 'sprites/cenario/background.png'
 

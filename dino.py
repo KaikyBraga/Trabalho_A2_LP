@@ -322,6 +322,7 @@ class Game():
 
     def start_game(self, op=1):
         if self.running==False:
+            self.moedas_rodada = 0
             self.score = 0
             self.speed = 8
             self.running = True
@@ -372,6 +373,11 @@ class Game():
             else:
                 self.obstacle.append( Coin(x_new_obstacle) )
 
+    def increase_coins(self):
+        if self.moedas_rodada>0:
+            #adiciona no csv aqui
+            self.moedas_rodada = 0
+            
 def loop_jogo():
     game = Game()
 
@@ -380,7 +386,6 @@ def loop_jogo():
     sound_background.play(-1)
 
     loop = 0
-    moedas_rodada = 0
 
     clock = pygame.time.Clock()
 
@@ -429,7 +434,7 @@ def loop_jogo():
                     if game.obstacle[0].recebida==False:
                         print("+1 MOEDA")
 
-                        moedas_rodada += 1
+                        game.moedas_rodada += 1
                         game.obstacle[0].receber()
 
             loop = (loop+1)%100
@@ -439,6 +444,8 @@ def loop_jogo():
 
             print(game.score)
         else:
+            game.increase_coins()
+
             for bg in game.bg:
                 bg.show()
             for obstacle in game.obstacle:

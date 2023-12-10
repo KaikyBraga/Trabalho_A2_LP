@@ -6,11 +6,11 @@
 - [Ramyro Corrêa](https://github.com/rcorreaa)
 - [Samuel Lima](https://github.com/samucaaaaaa)
 
-O jogo EMAp's Running consiste em um jogo de corrida sem fim. Nele, o jogador tem o objetivo de desviar ao máximo os obstáculos gerados ao decorrer do percurso e coletar as moedas para serem utilizadas na loja.
+O jogo EMAp's Running consiste em um jogo de corrida sem fim. Nele, o jogador tem o objetivo de desviar ao máximo dos obstáculos gerados ao decorrer do percurso e coletar as moedas para serem utilizadas na loja.
 
 ## Intruções:
 1. Instalar os pacotes necessários: pip install -r requeriments.txt
-2. Executar o jogo com `menu.py`
+2. Executar o jogo com `main.py`
 3. Abrir a documentação sphinx: `docs/build/html/index.html`
 
 ## Controles:

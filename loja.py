@@ -45,7 +45,7 @@ class Loja:
         self.loja_guerreiro = pygame.image.load(os.path.join(os.path.dirname(__file__), "sprites/paginas/loja/loja_guerreiro.png"))
         self.loja_guerreira = pygame.image.load(os.path.join(os.path.dirname(__file__), "sprites/paginas/loja/loja_guerreira.png"))
 
-#Carrega as imagens dos personagens da loja
+# Carrega as imagens dos personagens da loja
         self.aventureiro_img = AVENTUREIRO_CORRIDA
         self.cavaleiro_img = CAVALEIRO_CORRIDA
         self.guerreiro_img = GUERREIRO_CORRIDA
@@ -66,22 +66,27 @@ class Loja:
         while True:
             mx, my = pygame.mouse.get_pos()
             loops += 1
-        # Desenha a imagem de fundo da loja
+
+            # Desenha a imagem de fundo da loja
             self.screen.blit(self.background_img, (0, 0))
             
+            # Dados do arquivo csv   
             dados_jogo = pd.read_csv("informacoes_jogo.csv")
             quantidade_moedas = dados_jogo["Quantidade_de_Moedas"][0]
             aventureiro_desbloqueado = (dados_jogo["Aventureiro_Desbloqueado"]).bool()
             cavaleiro_desbloqueado = (dados_jogo["Cavaleiro_Desbloqueado"]).bool()
             guerreiro_desbloqueado = (dados_jogo["Guerreiro_Desbloqueado"]).bool()
-            guerreira_desbloqueado = (dados_jogo["Guerreira_Desbloqueada"]).bool()
+            guerreira_desbloqueado = (dados_jogo["Guerreira_Desbloqueada"]).bool()   
         
-        #Plota a quantidade de moedas
+            # Plota a quantidade de moedas
             texto_moeda = str(dados_jogo["Quantidade_de_Moedas"][0])
             mensagem_moeda = criar_texto(texto_moeda, 40, "Arial", (255, 255, 255), texto_negrito = True)
             self.screen.blit(mensagem_moeda, (1118, 35))
             
-        #Cria os botões
+            # Botão de voltar
+            botao_voltar = pygame.draw.circle(self.screen, color=(255,255,255), center=(150,50), radius=40) 
+
+            # Cria os botões
             botao_aventureiro = pygame.Rect(100, 220, 240, 340)
             botao_cavaleiro = pygame.Rect(400, 220, 240, 340)
             botao_guerreiro = pygame.Rect(680, 220, 220, 340)
@@ -91,19 +96,33 @@ class Loja:
             comprar_guerreiro = pygame.Rect(672, 570, 250, 60)
             comprar_guerreira = pygame.Rect(962, 570, 250, 60)
             
-        #Coloca os personangens em seus respectivos retângulos de acordo com o loop
+            # Coloca os personangens em seus respectivos retângulos de acordo com o loop
             self.screen.blit(self.aventureiro_img[loops % len(self.aventureiro_img)], (60, 280))
             self.screen.blit(self.cavaleiro_img[loops % len(self.cavaleiro_img)], (270, 150))
             self.screen.blit(self.guerreiro_img[loops % len(self.guerreiro_img)], (600, 220))
             self.screen.blit(self.guerreira_img[loops % len(self.guerreira_img)], (950, 250))
+
+            # Carrega a imagens do botão de voltar
+            self.botao_voltar_img = pygame.image.load(os.path.join(os.path.dirname(__file__), "sprites/paginas/loja/botao_voltar.png"))
+            self.botao_voltar_escuro_img = pygame.image.load(os.path.join(os.path.dirname(__file__), "sprites/paginas/loja/botao_voltar_selecionado.png"))
         
-        #Carrega as imagens dos botões de compra/adquirido
+            # Carrega as imagens dos botões de compra/adquirido
             self.botao_adquirido = pygame.image.load(os.path.join(os.path.dirname(__file__), "sprites/paginas/loja/botao_adquirido.png"))
             self.botao_preco_50 = pygame.image.load(os.path.join(os.path.dirname(__file__), "sprites/paginas/loja/botao_preco_50.png"))
             self.botao_preco_100 = pygame.image.load(os.path.join(os.path.dirname(__file__), "sprites/paginas/loja/botao_preco_100.png"))
             self.botao_preco_200 = pygame.image.load(os.path.join(os.path.dirname(__file__), "sprites/paginas/loja/botao_preco_200.png"))
-        
-        #Plota as imagens dos botões de compra/adquirido
+            
+            # Coloca o botão de voltar na loja
+            self.screen.blit(self.botao_voltar_img, (105, 5))
+            
+            # Verifica as colisões com o mouse
+            if botao_voltar.collidepoint((mx, my)):
+                self.screen.blit(self.botao_voltar_escuro_img, (105, 5))
+                if self.click:
+                    pygame.mixer.music.stop()  
+                    self.voltar()
+
+            # Plota as imagens dos botões de compra/adquirido
             self.screen.blit(self.botao_adquirido, (87, 570))
             if cavaleiro_desbloqueado == False:
                 self.screen.blit(self.botao_preco_200, (375, 570))
@@ -118,7 +137,7 @@ class Loja:
             elif guerreira_desbloqueado == True:
                 self.screen.blit(self.botao_adquirido, (960, 570))
             
-        # Event Loop
+            # Event Loop
             for event in pygame.event.get():
                 if event.type == QUIT:
                     pygame.mixer.music.stop()  # Para a música antes de fechar o programa
@@ -133,7 +152,7 @@ class Loja:
                 elif event.type == MOUSEBUTTONDOWN and event.button == 1:
                     self.click = True
 
-        # Verifica as colisões com o mouse
+            # Verifica as colisões com o mouse
             if botao_aventureiro.collidepoint((mx, my)) and aventureiro_desbloqueado == True and self.click:
                 self.background_img = LOJA_AVENTUREIRO
                 dados_jogo["Personagem_Selecionado"] = "Aventureiro"
@@ -173,6 +192,10 @@ class Loja:
             
             pygame.display.update()
             self.mainClock.tick(15)
+
+    def voltar():
+        return True
+
                 
 if __name__ == "__main__":
     loja_instance = Loja()

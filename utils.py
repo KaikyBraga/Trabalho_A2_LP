@@ -12,6 +12,7 @@ class SpritesJogo:
         num_frames (int): Número de frames da animação.
 
     Methods:
+        __init__: Inicializa a classe.
         carregar_frames(): Carrega os frames da animação com a escala desejada.
     """
     def __init__(self, caminho_principal, num_frames):

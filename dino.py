@@ -202,6 +202,9 @@ class Bat():
         self.texture = []
         self.mask = []
 
+        self.sound_bat = pygame.mixer.Sound(os.path.join("sons/som_morcego.wav"))
+        self.sound_bat.set_volume(0.25)
+
         self.set_texture()
     
     def update(self, dx=0):
@@ -223,6 +226,9 @@ class Bat():
 
     def get_mask(self):
         return self.mask[int(self.texture_num)]
+    
+    def ataque(self):
+        self.sound_bat.play()
 
 class Coin():
     def __init__(self, x) -> None:
@@ -407,6 +413,9 @@ def loop_jogo():
                 elif isinstance(game.obstacle[0], Bat):
                     game.running = False
                     game.char.alive=False
+                    
+                    game.obstacle[0].ataque()
+
                 else:
                     if game.obstacle[0].recebida==False:
                         print("+1 MOEDA")

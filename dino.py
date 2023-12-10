@@ -7,6 +7,7 @@ HEIGHT = 720
 
 Y_FLOOR = 450
 Y_FLOOR_AVENTUREIRO = 450
+Y_FLOOR_CAVALEIRO   = 215
 
 pygame.init()
 screen = pygame.display.set_mode((WIDTH, HEIGHT), flags=pygame.SCALED, vsync=1)
@@ -17,7 +18,7 @@ class Aventureiro():
         self.width = 50 * 5
         self.height = 37 * 5
 
-        self.x = 30
+        self.x = 150 - self.width//2
         self.y = Y_FLOOR_AVENTUREIRO - self.height//2
 
         self.jumping = False
@@ -83,6 +84,95 @@ class Aventureiro():
         for i in range(1, 7):
             aventureiro_dead_path = f'sprites/personagens/aventureiro/morte/aventureiro_morte_{i}.png'  
             path = os.path.join(aventureiro_dead_path)
+
+            img = pygame.image.load(path)
+
+            self.texture_dead.append(pygame.transform.scale(img, (self.width, self.height)))
+
+    def jump(self):
+        if self.jumping==False and self.alive:
+            self.dy=17*self.alpha
+            self.ddy = 0.75*(self.alpha**2)
+            self.jumping = True
+            self.texture_num=0
+    
+    def current_mask(self):
+        if self.jumping:
+            return self.mask_jump[int(self.texture_num)]
+        else:
+            return self.mask_run[int(self.texture_num)]
+
+class Cavaleiro():
+    def __init__(self) -> None:
+        self.width = 120 * 4
+        self.height = 80 * 4
+
+        self.x = 200 - self.width//2
+        self.y = Y_FLOOR_CAVALEIRO
+
+        self.jumping = False
+        self.alpha = 1
+        self.dy = 0
+        self.ddy = 0.75*(self.alpha**2)
+
+        self.alive = True
+
+        self.texture_num = 0
+        self.texture_run = []
+        self.texture_jump = []
+        self.texture_dead = []
+        self.mask_run = []
+        self.mask_jump = []
+        self.set_texture()
+    
+    def update(self):
+        if self.jumping:
+            self.y -= self.dy
+            self.dy -= self.ddy
+
+            if self.y >= Y_FLOOR_CAVALEIRO:
+                self.jumping = False
+                self.y = Y_FLOOR_CAVALEIRO
+            
+            self.texture_num  = (min(self.texture_num + 0.25, len(self.texture_jump)-1))%len(self.texture_jump)
+        elif self.alive:
+            self.texture_num  = (self.texture_num + 0.25)%len(self.texture_run)
+        else:
+            self.texture_num  = min(self.texture_num + 0.125, len(self.texture_dead)-1)
+
+    def show(self):
+        if self.jumping: 
+            screen.blit(self.texture_jump[int(self.texture_num)], (self.x, self.y))
+        elif self.alive:
+            screen.blit(self.texture_run[int(self.texture_num)], (self.x, self.y))
+        else:
+            screen.blit(self.texture_dead[int(self.texture_num)], (self.x, self.y))
+
+    def set_texture(self):
+        #carrega sprites de corrida
+        for i in range(1, 11):
+            cavaleiro_run_path = f'sprites/personagens/cavaleiro/corrida/cavaleiro_corrida_{i}.png'  
+            path = os.path.join(cavaleiro_run_path)
+
+            img = pygame.image.load(path)
+
+            self.texture_run.append(pygame.transform.scale(img, (self.width, self.height)))
+            self.mask_run.append(pygame.mask.from_surface(self.texture_run[-1]))
+
+        #carrega sprites de pulo
+        for i in range(1, 4):
+            cavaleiro_jump_path = f'sprites/personagens/cavaleiro/pulo/cavaleiro_pulo_{i}.png'  
+            path = os.path.join(cavaleiro_jump_path)
+
+            img = pygame.image.load(path)
+
+            self.texture_jump.append(pygame.transform.scale(img, (self.width, self.height)))
+            self.mask_jump.append(pygame.mask.from_surface(self.texture_jump[-1]))
+        
+        #carrega sprites de morte
+        for i in range(1, 11):
+            cavaleiro_dead_path = f'sprites/personagens/cavaleiro/morte/cavaleiro_morte_{i}.png'  
+            path = os.path.join(cavaleiro_dead_path)
 
             img = pygame.image.load(path)
 
@@ -192,7 +282,7 @@ class Game():
             self.bg = [BG(WOODS_PATH, 0, 0.25), BG(WOODS_PATH, WIDTH, 0.25),
                         BG(BRIDGE_PATH, 0), BG(BRIDGE_PATH, WIDTH)]
             
-            self.char = Aventureiro()
+            self.char = Cavaleiro()
 
             self.obstacule = []
             self.start_obstacle()
@@ -207,16 +297,16 @@ class Game():
     def start_obstacle(self):
         self.obstacule.append(Bomb(WIDTH))
         for i in range(2):
-            x_min = self.obstacule[-1].x+1*self.char.width
-            x_max = self.obstacule[-1].x+5*self.char.width
+            x_min = self.obstacule[-1].x+self.obstacule[-1].width + 300
+            x_max = self.obstacule[-1].x+self.obstacule[-1].width + 600
             self.obstacule.append(Bomb(random.randint(x_min, x_max)))
 
     def spawn_cactus(self):
         if self.obstacule[0].x <= -self.obstacule[0].width:
             self.obstacule.pop(0)
 
-            x_min = self.obstacule[-1].x+1*self.char.width
-            x_max = self.obstacule[-1].x+5*self.char.width
+            x_min = self.obstacule[-1].x+self.obstacule[-1].width + 200
+            x_max = self.obstacule[-1].x+self.obstacule[-1].width + 500
 
             x_new_cactus = random.randint(x_min, x_max)
 

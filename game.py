@@ -1,274 +1,484 @@
-import os
-import sys
-import math
-import random
-import pygame
-from utils import *
+import os, sys, pygame, random
+import pandas as pd
 from variaveis_globais import *
-from variaveis_sprites import *
+from utils import criar_texto
 
 pygame.init()
+screen = pygame.display.set_mode((WIDTH, HEIGHT), flags=pygame.SCALED, vsync=1)
+pygame.display.set_caption("Dino")
 
-tela = pygame.display.set_mode((LARGURA_TELA, ALTURA_TELA))
-pygame.display.set_caption("JOGO")
+class Personagem():
+    def __init__(self, name, qnt_run, qnt_jump, qnt_die, qnt_deslizamento, width, height, y_floor) -> None:
+        self.name = name
+        self.qnt_run = qnt_run
+        self.qnt_jump = qnt_jump
+        self.qnt_die = qnt_die
+        self.qnt_deslizamento = qnt_deslizamento
 
-class Personagem:
-    def __init__(self, nome_personagem = "Aventureiro"):
-        self.nome_personagem = nome_personagem
-        if self.nome_personagem == "Aventureiro":
-            self.frames_corrida = AVENTUREIRO_CORRIDA
-            self.frames_pulo = AVENTUREIRO_PULO
-            self.frames_deslizamento = AVENTUREIRO_DESLIZAMENTO
-            self.frames_morte = AVENTUREIRO_MORTE
-            # Posição do Personagem
-            self.x = 20
-            self.y = 350
-            self.textura_num = 0
-            # Velocidade do pulo
-            self.velocidade_pulo = 8
-            self.gravidade = 1.3
-            # Altura do pulo (Quanto menor o valormais alto fica o pulo)
-            self.parar_pulo = 80
-            # Tempo do deslizamento
-            self.tempo_inicio_deslizamento = 0
-            self.tempo_deslizamento = 3500
+        self.width = width
+        self.height = height
 
-        elif self.nome_personagem == "Cavaleiro":
-            self.frames_corrida = CAVALEIRO_CORRIDA
-            self.frames_pulo = CAVALEIRO_PULO
-            self.frames_deslizamento = CAVALEIRO_DESLIZAMENTO
-            self.frames_morte = CAVALEIRO_PULO
-            # Posição do Personagem
-            self.x = -65
-            self.y = 212
-            self.textura_num = 0
-            # Velocidade do pulo
-            self.velocidade_pulo = 8
-            self.gravidade = 1.3
-            # Altura do pulo (Quanto menor o valormais alto fica o pulo)
-            self.parar_pulo = -30
+        self.x = 200 - self.width//2
+        self.y_floor = y_floor
+        self.y = self.y_floor
 
-        elif self.nome_personagem == "Guerreiro":
-            self.frames_corrida = GUERREIRO_CORRIDA
-            self.frames_pulo = GUERREIRO_PULO
-            self.frames_deslizamento = GUERREIRO_DESLIZAMENTO
-            self.frames_morte = GUERREIRO_PULO
-            # Posição do Personagem
-            self.x = -20
-            self.y = 285
-            self.textura_num = 0
-            # Velocidade do pulo
-            self.velocidade_pulo = 8
-            self.gravidade = 1.3
-            # Altura do pulo (Quanto menor o valormais alto fica o pulo)
-            self.parar_pulo = 80
-        
-        elif self.nome_personagem == "Guerreira":
-            self.frames_corrida = GUERREIRA_CORRIDA
-            self.frames_pulo = GUERREIRA_PULO
-            self.frames_deslizamento = GUERREIRA_DESLIZAMENTO
-            self.frames_morte = GUERREIRA_MORTE
-            # Posição do Personagem
-            self.x = 20
-            self.y = 318
-            self.textura_num = 0
-            # Velocidade do pulo
-            self.velocidade_pulo = 8
-            self.gravidade = 1.3
-            # Altura do pulo (Quanto menor o valormais alto fica o pulo)
-            self.parar_pulo = 80
-        
-        # Tempo do deslizamento
-        self.tempo_inicio_deslizamento = 0
-        self.tempo_deslizamento = 2800
+        self.jumping = False
+        self.alpha = 1
+        self.dy = 0
+        self.ddy = 0.75*(self.alpha**2)
 
-        self.deslizando = False
-        self.no_chao = True
-        self.pulando = False
-        self.parar_cair = self.y
-        self.caindo = False
-        self.carregar_imagem()
-        self.exibir()
+        self.deslizamento = False
+        self.deslizamento_time = 20
+        self.deslizamento_tick = 1
 
-    def atualizar(self, loops):
-        # Personagem pulando
-        if self.pulando:
-            if loops % 20 == 0:
-                self.textura_num = (self.textura_num + 1) % len(self.frames_pulo)
-                self.carregar_imagem()
-           
-            self.y -= self.velocidade_pulo
-            if self.y <= self.parar_pulo:
-                self.cair()
+        self.alive = True
 
-        # Personagem caindo
-        elif self.caindo:
-            if loops % 20 == 0:
-                self.textura_num = (self.textura_num + 1) % len(self.frames_pulo)
-                self.carregar_imagem()
+        self.texture_num = 0
+        self.texture_run = []
+        self.texture_jump = []
+        self.texture_dead = []
+        self.texture_deslizamento = []
 
-            self.y += self.gravidade * self.velocidade_pulo
-            if self.y >= self.parar_cair:
-                self.parar()
+        self.mask_run = []
+        self.mask_jump = []
+        self.mask_deslizamento = []
 
-        # Personagem deslizando
-        elif self.deslizando:
-            tempo_atual = pygame.time.get_ticks()
-            if loops % 20 == 0:
-                self.textura_num = (self.textura_num + 1) % len(self.frames_deslizamento)  
-                self.carregar_imagem()   
-
-            if tempo_atual - self.tempo_inicio_deslizamento >= self.tempo_deslizamento:
-                self.terminar_deslizar()
-                self.tempo_inicio_deslizamento = tempo_atual
-
-        # Personagem caminhando
-        elif loops % 7 == 0:
-            self.textura_num = (self.textura_num + 1) % len(self.frames_corrida)
-            self.carregar_imagem()
-
-    def exibir(self):
-        tela.blit(self.textura, (self.x, self.y))
-
-    def carregar_imagem(self):
-        if self.pulando or self.caindo:
-            self.textura = self.frames_pulo[self.textura_num]
-        
-        elif self.deslizando:
-            self.textura = self.frames_deslizamento[self.textura_num]
-
-        elif self.no_chao:
-            self.textura = self.frames_corrida[self.textura_num]
-
-    def pular(self):
-        """
-        Define a responsabilidade dos booleanos
-        """
-        self.pulando = True
-        self.no_chao = False
-
-    def cair(self):
-        self.pulando = False
-        self.caindo = True
-
-    def parar(self):
-        self.caindo = False
-        self.deslizando = False
-        self.no_chao = True
-
-    def deslizar(self):
-        self.deslizando = True   
-        self.no_chao = True 
-
-    def terminar_deslizar(self):
-        self.deslizando = False 
-        self.no_chao = True   
-
-
-class ElementoMovivel:
-    """
-    Classe base que representa os elementos móveis do jogo.
-    """
-    def __init__(self, x, imagem, velocidade):
-        self.largura = LARGURA_TELA
-        self.altura = ALTURA_TELA
-        self.posicao_x = x
-        self.posicao_y = 0
-        self.velocidade = velocidade
-        self.carregar_imagem(imagem)
-        self.exibir()
-
-    def atualizar(self, deslocamento):
-        self.posicao_x += deslocamento
-        if self.posicao_x <= -LARGURA_TELA:
-            self.posicao_x = LARGURA_TELA
-
-    def exibir(self):
-        tela.blit(self.textura, (self.posicao_x, self.posicao_y))
-
-    def carregar_imagem(self, imagem):
-        caminho_imagem = os.path.join("sprites/cenario", imagem)
-        self.textura = pygame.image.load(caminho_imagem)
-        self.textura = pygame.transform.scale(self.textura, (self.largura, self.altura))
-
-
-class Paisagem(ElementoMovivel):
-    """
-    Classe que representa o carrossel de fundo no jogo.
-    """
-    def __init__(self, x, velocidade):
-        super().__init__(x, "background.png", velocidade)
-
-
-class Ponte(ElementoMovivel):
-    """
-    Classe que representa a ponte no jogo.
-    """
-    def __init__(self, x, velocidade):
-        super().__init__(x, "ponte.png", velocidade)
-
-class Jogo:
-    def __init__(self):
-
-        self.fundos_paisagem = [Paisagem(x=0, velocidade=2.0), Paisagem(x=LARGURA_TELA, velocidade=2.0)]
-        self.fundos_ponte = [Ponte(x=0, velocidade=5.0), Ponte(x=LARGURA_TELA, velocidade=5.0)]
-        self.personagem = Personagem("Cavaleiro")
+        self.set_texture()
     
-    #TODO: Criar uma função/método que muda o self.personagem   
+    def update(self):
+        if self.jumping:
+            self.y -= self.dy
+            self.dy -= self.ddy
 
+            if self.y >= self.y_floor:
+                self.jumping = False
+                self.y = self.y_floor
+            
+            self.texture_num  = (min(self.texture_num + 0.25, len(self.texture_jump)-1))%len(self.texture_jump)
+        elif self.deslizamento:
+            self.deslizamento_time -= self.deslizamento_tick*self.alpha/2
+            
+            if self.deslizamento_time <= 0:
+                self.deslizamento = False
 
-    def loop_principal(self):
-        """
-        Função inicilizadora do loop principal do jogo.
-        """
+            self.texture_num  = (self.texture_num + 0.25)%len(self.texture_deslizamento)
+        elif self.alive:
+            self.texture_num  = (self.texture_num + 0.25)%len(self.texture_run)
+        else:
+            self.texture_num  = min(self.texture_num + 0.125, len(self.texture_dead)-1)
 
-        # Objetos
-        jogo = Jogo()
-        personagem = jogo.personagem
+    def show(self):
+        if self.jumping: 
+            screen.blit(self.texture_jump[int(self.texture_num)], (self.x, self.y))
+        elif self.deslizamento:
+            screen.blit(self.texture_deslizamento[int(self.texture_num)], (self.x, self.y))
+        elif self.alive:
+            screen.blit(self.texture_run[int(self.texture_num)], (self.x, self.y))
+        else:
+            screen.blit(self.texture_dead[int(self.texture_num)], (self.x, self.y))
 
-        relogio = pygame.time.Clock()
+    def set_texture(self):
+        #carrega sprites de corrida
+        for i in range(1, self.qnt_run+1):
+            run_path = f'sprites/personagens/{self.name}/corrida/{self.name}_corrida_{i}.png'  
+            path = os.path.join(run_path)
 
-        loops = 0
+            img = pygame.image.load(path)
 
-        while True:
+            self.texture_run.append(pygame.transform.scale(img, (self.width, self.height)))
+            self.mask_run.append(pygame.mask.from_surface(self.texture_run[-1]))
 
-            loops += 1
+        #carrega sprites de pulo
+        for i in range(1, self.qnt_jump+1):
+            jump_path = f'sprites/personagens/{self.name}/pulo/{self.name}_pulo_{i}.png'  
+            path = os.path.join(jump_path)
 
-            # Exibição do carrosel do cenário.
-            for fundo in jogo.fundos_paisagem:
-                fundo.atualizar(-fundo.velocidade)
-                fundo.exibir()
+            img = pygame.image.load(path)
 
-            for fundo in jogo.fundos_ponte:
-                fundo.atualizar(-fundo.velocidade)
-                fundo.exibir()
+            self.texture_jump.append(pygame.transform.scale(img, (self.width, self.height)))
+            self.mask_jump.append(pygame.mask.from_surface(self.texture_jump[-1]))
+        
+        #carrega sprites de morte
+        for i in range(1, self.qnt_die+1):
+            dead_path = f'sprites/personagens/{self.name}/morte/{self.name}_morte_{i}.png'  
+            path = os.path.join(dead_path)
 
-            personagem.atualizar(loops)
-            personagem.exibir()
+            img = pygame.image.load(path)
 
-            for evento in pygame.event.get():
-                if evento.type == pygame.QUIT:
-                    pygame.quit()
-                    sys.exit()
+            self.texture_dead.append(pygame.transform.scale(img, (self.width, self.height)))
+        
+        #carrega sprites de deslizamento
+        for i in range(1, self.qnt_deslizamento+1):
+            deslizamento_path = f'sprites/personagens/{self.name}/deslizamento/{self.name}_deslizamento_{i}.png'  
+            path = os.path.join(deslizamento_path)
 
-                if evento.type == pygame.KEYDOWN and evento.key == pygame.K_ESCAPE:
-                    # Retorna ao menu se a tecla ESC for pressionada
-                    return True    
+            img = pygame.image.load(path)
 
-                if evento.type == pygame.KEYDOWN: 
-                    if evento.key == pygame.K_s:
-                        if  personagem.no_chao:
-                            personagem.deslizar()
-                    if evento.key == pygame.K_w:
-                        if personagem.no_chao:
-                            personagem.pular()
+            self.texture_deslizamento.append(pygame.transform.scale(img, (self.width, self.height)))
+            self.mask_deslizamento.append(pygame.mask.from_surface(self.texture_deslizamento[-1]))
 
-            # Taxa de quadros padrão do jogo
-            relogio.tick(80)
+    def jump(self):
+        if self.deslizamento==False and self.jumping==False and self.alive:
+            self.dy=17*self.alpha
+            self.ddy = 0.75*(self.alpha**2)
+            self.jumping = True
+            self.texture_num=0
+    
+    def deslizar(self):
+        if self.deslizamento==False and self.jumping==False and self.alive:
+            self.deslizamento = True
+            self.deslizamento_time = 30
+            self.deslizamento_tick = 1
+            self.texture_num=0
 
-            pygame.display.update()
+    def current_mask(self):
+        if self.jumping:
+            return self.mask_jump[int(self.texture_num)]
+        elif self.deslizamento:
+            return self.mask_deslizamento[int(self.texture_num)]
+        else:
+            return self.mask_run[int(self.texture_num)]
 
+class Bomb():
+    def __init__(self, x) -> None:
+        self.width = 100*0.85
+        self.height = 100*0.85
 
-if __name__ == "__main__":
-     jogo = Jogo()
-     jogo.loop_principal()
+        self.x = x
+        self.y = Y_FLOOR_BOMB
+
+        self.exploded = False
+
+        self.texture_num = 0
+        self.texture = None
+        self.texture_explosion = []
+        self.mask = None
+
+        self.sound_bomb = pygame.mixer.Sound(os.path.join("sons/som_bomba.wav"))
+        self.sound_bomb.set_volume(0.05)
+
+        self.set_texture()
+    
+    def update(self, dx=0):
+        if self.exploded==False:
+            self.x += dx
+        else:
+            self.texture_num  = min(self.texture_num + 0.5, len(self.texture_explosion)-1)
+    
+    def show(self):
+        if self.exploded==False:
+            screen.blit(self.texture, (self.x, self.y))
+        else:
+            screen.blit(self.texture_explosion[int(self.texture_num)], (self.x, self.y))
+
+    def set_texture(self):
+        bomba_path = f'sprites/obstaculos/bomba/bomba.png'
+        path = os.path.join(bomba_path)
+
+        self.texture = pygame.image.load(path)
+        self.texture = pygame.transform.scale(self.texture, (self.width, self.height))
+
+        self.mask = pygame.mask.from_surface(self.texture)
+
+        for i in range(1, 14):
+            explosao_path = f'sprites/obstaculos/bomba/explosao/explosao_{i}.png'
+            path = os.path.join(explosao_path)
+            img = (pygame.image.load(path))
+            self.texture_explosion.append(pygame.transform.scale(img, (3*self.width, 3*self.height))) 
+    
+    def get_mask(self):
+        return self.mask
+    
+    def explodir(self):
+        self.exploded = True
+        self.y -= self.height
+        self.x -= 30
+
+        self.sound_bomb.play()
+
+class Bat():
+    def __init__(self, x) -> None:
+        self.width = 93
+        self.height = 63
+
+        self.x = x
+        self.y = Y_FLOOR_BAT
+
+        self.texture_num = 0
+        self.texture = []
+        self.mask = []
+
+        self.sound_bat = pygame.mixer.Sound(os.path.join("sons/som_morcego.wav"))
+        self.sound_bat.set_volume(0.05)
+
+        self.set_texture()
+    
+    def update(self, dx=0):
+        self.x += dx
+        self.texture_num  = (self.texture_num + 0.25)%len(self.texture)
+    
+    def show(self):
+        screen.blit(self.texture[int(self.texture_num)], (self.x, self.y))
+
+    def set_texture(self):
+        for i in range(1, 5):
+            bat_path = f'sprites/obstaculos/morcego/morcego_{i}.png'
+            path = os.path.join(bat_path)
+
+            img = (pygame.image.load(path))
+            
+            self.texture.append(pygame.transform.scale(img, (self.width, self.height)))
+            self.mask.append(pygame.mask.from_surface(self.texture[-1]))
+
+    def get_mask(self):
+        return self.mask[int(self.texture_num)]
+    
+    def ataque(self):
+        self.sound_bat.play()
+
+class Coin():
+    def __init__(self, x) -> None:
+        self.width = 190/2
+        self.height = 170/2
+
+        self.x = x
+        self.y = Y_FLOOR_COIN
+
+        self.texture_num = 0
+        self.texture = []
+        self.mask = []
+
+        self.sound_coin = pygame.mixer.Sound(os.path.join("sons/som_moeda.wav"))
+        self.sound_coin.set_volume(0.05)
+        self.recebida = False
+
+        self.set_texture()
+    
+    def update(self, dx=0):
+        self.x += dx
+        self.texture_num  = (self.texture_num + 0.25)%len(self.texture)
+    
+    def show(self):
+        if self.recebida==False:
+            screen.blit(self.texture[int(self.texture_num)], (self.x, self.y))
+
+    def set_texture(self):
+        for i in range(1, 7):
+            bat_path = f'sprites/moeda/moeda_{i}.png'
+            path = os.path.join(bat_path)
+
+            img = (pygame.image.load(path))
+            
+            self.texture.append(pygame.transform.scale(img, (self.width, self.height)))
+            self.mask.append(pygame.mask.from_surface(self.texture[-1]))
+
+    def get_mask(self):
+        return self.mask[int(self.texture_num)] 
+
+    def receber(self):
+        self.recebida=True
+        self.sound_coin.play()
+
+class BG:
+    def __init__(self, img_path, x=0, mult_speed=1) -> None:
+        self.width = WIDTH
+        self.height = HEIGHT
+
+        self.x = x  
+        self.y = 0
+        
+        self.mult_speed = mult_speed
+
+        self.img_path = img_path
+        self.texture = None
+        self.set_texture()
+    
+    def update(self, dx):
+        self.x += int(dx*self.mult_speed)
+        if self.x <= -self.width:
+            self.x += 2*self.width
+
+    def show(self):
+        screen.blit(self.texture, (self.x, self.y))
+ 
+    def set_texture(self):
+        path = os.path.join(self.img_path)
+
+        self.texture = pygame.image.load(path)
+        self.texture = pygame.transform.scale(self.texture, (self.width, self.height))
+
+class Game():
+    def __init__(self, op_char) -> None:
+        self.running = False
+        self.op_char = op_char
+
+        self.sound_score = pygame.mixer.Sound(os.path.join("sons/som_score.wav"))
+        self.sound_score.set_volume(0.25)
+
+        self.start_game()
+
+    def update(self):
+        self.score += 1
+        self.speed  = min(20, 8 + 2*(self.score//100))
+        self.char.alpha = self.speed/5
+        
+        if self.score%100==0:
+            self.sound_score.play()
+
+    def start_game(self):
+        if self.running==False:
+            self.updated_record = False
+            self.moedas_rodada = 0
+            self.score = 0
+            self.speed = 8
+            self.running = True
+
+            self.bg = [BG(WOODS_PATH, 0, 0.25), BG(WOODS_PATH, WIDTH, 0.25),
+                        BG(BRIDGE_PATH, 0), BG(BRIDGE_PATH, WIDTH)]
+            
+            if self.op_char==1:
+                self.char = Personagem('aventureiro', 6, 4, 7, 2, WIDTH_AVENTUREIRO, HEIGHT_AVENTUREIRO, Y_FLOOR_AVENTUREIRO)
+            elif self.op_char==2:
+                self.char = Personagem('cavaleiro', 10, 3, 10, 2, WIDTH_CAVALEIRO, HEIGHT_CAVALEIRO, Y_FLOOR_CAVALEIRO)
+            elif self.op_char==3:
+                self.char = Personagem('guerreira', 8, 3, 11, 3, WIDTH_GUERREIRA, HEIGHT_GUERREIRA, Y_FLOOR_GUERREIRA)
+            else:
+                self.char = Personagem('guerreiro', 8, 2, 9, 2, WIDTH_GUERREIRO, HEIGHT_GUERREIRO, Y_FLOOR_GUERREIRO)
+            
+            self.obstacle = []
+            self.start_obstacles()
+
+    def check_colision(self):
+        for obstacle in self.obstacle:
+            pos = (obstacle.x-self.char.x, obstacle.y-self.char.y)
+            if self.char.current_mask().overlap(obstacle.get_mask(), pos)!=None:
+                return True
+        return False
+    
+    def start_obstacles(self):
+        self.obstacle.append(Bomb(WIDTH))
+        for i in range(2):
+            x_min = self.obstacle[-1].x+self.obstacle[-1].width + 300
+            x_max = self.obstacle[-1].x+self.obstacle[-1].width + 600
+            self.obstacle.append(Bomb(random.randint(x_min, x_max)))
+
+    def spawn_obstacles(self):
+        if self.obstacle[0].x <= -self.obstacle[0].width:
+            self.obstacle.pop(0)
+
+            x_min = self.obstacle[-1].x+self.obstacle[-1].width + 200
+            x_max = self.obstacle[-1].x+self.obstacle[-1].width + 800
+
+            x_new_obstacle = random.randint(x_min, x_max)
+
+            rand_type = random.randint(1, 100)
+            if rand_type <= 40:
+                self.obstacle.append( Bomb(x_new_obstacle) )
+            elif rand_type <= 80:
+                self.obstacle.append( Bat(x_new_obstacle) )
+            else:
+                self.obstacle.append( Coin(x_new_obstacle) )
+
+    def increase_coins(self):
+        if self.moedas_rodada>0:
+            dados_jogo = pd.read_csv("informacoes_jogo.csv")
+            dados_jogo["Quantidade_de_Moedas"] = self.moedas_rodada
+            dados_jogo.to_csv("informacoes_jogo.csv", index=False)
+            self.moedas_rodada = 0
+            
+    def update_record(self):
+        if self.updated_record==False:
+            
+            dados_jogo = pd.read_csv("informacoes_jogo.csv")
+            dados_jogo["Score_Record"] = max( dados_jogo["Score_Record"][0], self.score)
+            dados_jogo.to_csv("informacoes_jogo.csv", index=False)
+            self.moedas_rodada = 0
+
+            self.updated_record=True     
+
+def loop_jogo(op_char=1):
+    game = Game(op_char)
+
+    sound_background = pygame.mixer.Sound(os.path.join("sons/som_jogo.wav"))
+    sound_background.set_volume(0.01)
+    sound_background.play(-1)
+
+    loop = 0
+
+    clock = pygame.time.Clock()
+
+    while(True):
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                pygame.quit()
+                sys.exit()
+            if event.type == pygame.KEYDOWN:
+                if event.key == pygame.K_SPACE or event.key == pygame.K_w:
+                    game.char.jump()
+                if event.key == pygame.K_r:
+                    game.start_game()
+                if event.key == pygame.K_s:
+                    game.char.deslizar()
+
+        if game.running:
+            for bg in game.bg:
+                bg.update(-game.speed)
+                bg.show()
+
+            game.spawn_obstacles()
+
+            for obstacle in game.obstacle:
+                obstacle.update(-game.speed)
+                obstacle.show()
+
+            game.char.update()
+            game.char.show()
+
+            if game.check_colision():
+                print("Colisao")
+
+                if isinstance(game.obstacle[0], Bomb):
+                    game.running = False
+                    game.char.alive=False
+                    
+                    game.obstacle[0].explodir()
+                elif isinstance(game.obstacle[0], Bat):
+                    game.running = False
+                    game.char.alive=False
+                    
+                    game.obstacle[0].ataque()
+
+                else:
+                    if game.obstacle[0].recebida==False:
+                        print("+1 MOEDA")
+
+                        game.moedas_rodada += 1
+                        game.obstacle[0].receber()
+
+            loop = (loop+1)%100
+            
+            if(loop%5==0):
+                game.update()
+
+            print(game.score)
+        else:
+            game.increase_coins()
+            game.update_record()
+
+            for bg in game.bg:
+                bg.show()
+            for obstacle in game.obstacle:
+                obstacle.update()
+                obstacle.show()
+
+            game.char.update()
+            game.char.show()
+        
+        texto_score = criar_texto( "Score: " + str(game.score), 40, "Verdana", (255,255,0), True, True)
+        screen.blit(texto_score, (900,35))
+
+        texto_score = criar_texto( "Moedas: " + str(game.moedas_rodada), 40, "Verdana", (255,255,0), True, True)
+        screen.blit(texto_score, (600,35))
+
+        clock.tick(30)
+        pygame.display.update()

@@ -307,13 +307,13 @@ class BG:
         self.texture = pygame.transform.scale(self.texture, (self.width, self.height))
 
 class Game():
-    def __init__(self) -> None:
+    def __init__(self, op_char) -> None:
         self.running = False
 
         self.sound_score = pygame.mixer.Sound(os.path.join("sons/som_score.wav"))
         self.sound_score.set_volume(0.25)
 
-        self.start_game()
+        self.start_game(op_char)
 
     def update(self):
         self.score += 1
@@ -323,7 +323,7 @@ class Game():
         if self.score%100==0:
             self.sound_score.play()
 
-    def start_game(self, op=1):
+    def start_game(self, op_char):
         if self.running==False:
             self.updated_record = False
             self.moedas_rodada = 0
@@ -334,11 +334,11 @@ class Game():
             self.bg = [BG(WOODS_PATH, 0, 0.25), BG(WOODS_PATH, WIDTH, 0.25),
                         BG(BRIDGE_PATH, 0), BG(BRIDGE_PATH, WIDTH)]
             
-            if op==1:
+            if op_char==1:
                 self.char = Personagem('aventureiro', 6, 4, 7, 2, WIDTH_AVENTUREIRO, HEIGHT_AVENTUREIRO, Y_FLOOR_AVENTUREIRO)
-            elif op==2:
+            elif op_char==2:
                 self.char = Personagem('cavaleiro', 10, 3, 10, 2, WIDTH_CAVALEIRO, HEIGHT_CAVALEIRO, Y_FLOOR_CAVALEIRO)
-            elif op==3:
+            elif op_char==3:
                 self.char = Personagem('guerreira', 8, 3, 11, 3, WIDTH_GUERREIRA, HEIGHT_GUERREIRA, Y_FLOOR_GUERREIRA)
             else:
                 self.char = Personagem('guerreiro', 8, 2, 9, 2, WIDTH_GUERREIRO, HEIGHT_GUERREIRO, Y_FLOOR_GUERREIRO)
@@ -393,8 +393,9 @@ class Game():
             self.moedas_rodada = 0
 
             self.updated_record=True     
-def loop_jogo():
-    game = Game()
+
+def loop_jogo(op_char=1):
+    game = Game(op_char)
 
     sound_background = pygame.mixer.Sound(os.path.join("sons/som_jogo.wav"))
     sound_background.set_volume(0.01)

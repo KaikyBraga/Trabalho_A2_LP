@@ -167,8 +167,3 @@ class Menu:
         """
         pygame.quit()
         sys.exit()
-
-
-if __name__ == "__main__":
-    menu_instance = Menu()
-    menu_instance.main_menu()

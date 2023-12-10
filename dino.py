@@ -319,6 +319,9 @@ class Game():
         self.score += 1
         self.speed  = min(20, 8 + 2*(self.score//100))
         self.char.alpha = self.speed/5
+        
+        if self.score%100==0:
+            self.sound_score.play()
 
     def start_game(self, op=1):
         if self.running==False:
@@ -377,7 +380,7 @@ class Game():
         if self.moedas_rodada>0:
             #adiciona no csv aqui
             self.moedas_rodada = 0
-            
+
 def loop_jogo():
     game = Game()
 

@@ -25,6 +25,8 @@ class Character():
         self.dy = 0
         self.ddy = 0.75*(self.alpha**2)
 
+        self.alive = True
+
         self.texture_num = 0
         self.texture_run = []
         self.texture_jump = []
@@ -43,14 +45,18 @@ class Character():
                 self.y = Y_FLOOR_AVENTUREIRO - self.height//2
             
             self.texture_num  = (min(self.texture_num + 0.25, len(self.texture_jump)-1))%len(self.texture_jump)
-        else:
+        elif self.alive:
             self.texture_num  = (self.texture_num + 0.25)%len(self.texture_run)
+        else:
+            self.texture_num  = (min(self.texture_num + 0.125, len(self.texture_dead)-1))%len(self.texture_dead)
 
     def show(self):
-        if self.jumping==False: 
+        if self.jumping: 
+            screen.blit(self.texture_jump[int(self.texture_num)], (self.x, self.y))
+        elif self.alive:
             screen.blit(self.texture_run[int(self.texture_num)], (self.x, self.y))
         else:
-            screen.blit(self.texture_jump[int(self.texture_num)], (self.x, self.y))
+            screen.blit(self.texture_dead[int(self.texture_num)], (self.x, self.y))
 
     def set_texture(self):
         #carrega sprites de corrida
@@ -221,8 +227,6 @@ def main():
                     game.start_game()
 
         if game.running:
-            screen.fill((255,255,255))
-
             for bg in game.bg:
                 bg.update(-game.speed)
                 bg.show()
@@ -238,7 +242,8 @@ def main():
 
             if game.check_colision():
                 print("Colisao")
-                #game.running = False
+                game.running = False
+                game.dino.alive=False
 
             loop = (loop+1)%100
             
@@ -246,6 +251,14 @@ def main():
                 game.update()
 
             print(game.score)
+        else:
+            for bg in game.bg:
+                bg.show()
+            for obstacule in game.obstacule:
+                obstacule.show()
+
+            game.dino.update()
+            game.dino.show()
 
         clock.tick(30)
         pygame.display.update()

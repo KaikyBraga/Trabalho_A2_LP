@@ -14,13 +14,13 @@ class Menu:
 
     Inicializa a interface gráfica, os botões do menu e processa eventos de clique.
 
-    Atributos:
+    Attributes:
         mainClock: Relógio utilizado para controlar a taxa de quadros.
         screen: Tela onde o menu é renderizado.
         font: Fonte utilizada para desenhar texto.
         click: Flag indicando se um clique do mouse ocorreu.
 
-    Métodos:
+    Methods:
         __init__: Inicializa a classe e configura a interface gráfica.
         draw_text: Desenha a imagem de fundo do menu.
         main_menu: Loop principal do menu, processa eventos e atualiza a tela.

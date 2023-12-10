@@ -325,6 +325,7 @@ class Game():
 
     def start_game(self, op=1):
         if self.running==False:
+            self.updated_record = False
             self.moedas_rodada = 0
             self.score = 0
             self.speed = 8
@@ -383,7 +384,15 @@ class Game():
             dados_jogo.to_csv("informacoes_jogo.csv", index=False)
             self.moedas_rodada = 0
             
+    def update_record(self):
+        if self.updated_record==False:
             
+            dados_jogo = pd.read_csv("informacoes_jogo.csv")
+            dados_jogo["Score_Record"] = max( dados_jogo["Score_Record"][0], self.score)
+            dados_jogo.to_csv("informacoes_jogo.csv", index=False)
+            self.moedas_rodada = 0
+
+            self.updated_record=True     
 def loop_jogo():
     game = Game()
 
@@ -451,6 +460,7 @@ def loop_jogo():
             print(game.score)
         else:
             game.increase_coins()
+            game.update_record()
 
             for bg in game.bg:
                 bg.show()

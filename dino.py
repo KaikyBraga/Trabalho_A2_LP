@@ -26,14 +26,22 @@ class Aventureiro():
         self.dy = 0
         self.ddy = 0.75*(self.alpha**2)
 
+        self.deslizamento = False
+        self.deslizamento_time = 20
+        self.deslizamento_tick = 1
+
         self.alive = True
 
         self.texture_num = 0
         self.texture_run = []
         self.texture_jump = []
         self.texture_dead = []
+        self.texture_deslizamento = []
+
         self.mask_run = []
         self.mask_jump = []
+        self.mask_deslizamento = []
+
         self.set_texture()
     
     def update(self):
@@ -46,6 +54,13 @@ class Aventureiro():
                 self.y = Y_FLOOR_AVENTUREIRO - self.height//2
             
             self.texture_num  = (min(self.texture_num + 0.25, len(self.texture_jump)-1))%len(self.texture_jump)
+        elif self.deslizamento:
+            self.deslizamento_time -= self.deslizamento_tick
+            
+            if self.deslizamento_time <= 0:
+                self.deslizamento = False
+
+            self.texture_num  = (self.texture_num + 0.25)%len(self.texture_deslizamento)
         elif self.alive:
             self.texture_num  = (self.texture_num + 0.25)%len(self.texture_run)
         else:
@@ -54,6 +69,8 @@ class Aventureiro():
     def show(self):
         if self.jumping: 
             screen.blit(self.texture_jump[int(self.texture_num)], (self.x, self.y))
+        elif self.deslizamento:
+            screen.blit(self.texture_deslizamento[int(self.texture_num)], (self.x, self.y))
         elif self.alive:
             screen.blit(self.texture_run[int(self.texture_num)], (self.x, self.y))
         else:
@@ -88,17 +105,36 @@ class Aventureiro():
             img = pygame.image.load(path)
 
             self.texture_dead.append(pygame.transform.scale(img, (self.width, self.height)))
+        
+        #carrega sprites de deslizamento
+        for i in range(1, 3):
+            aventureiro_deslizamento_path = f'sprites/personagens/aventureiro/deslizamento/aventureiro_deslizamento_{i}.png'  
+            path = os.path.join(aventureiro_deslizamento_path)
+
+            img = pygame.image.load(path)
+
+            self.texture_deslizamento.append(pygame.transform.scale(img, (self.width, self.height)))
+            self.mask_deslizamento.append(pygame.mask.from_surface(self.texture_deslizamento[-1]))
 
     def jump(self):
-        if self.jumping==False and self.alive:
+        if self.deslizamento==False and self.jumping==False and self.alive:
             self.dy=17*self.alpha
             self.ddy = 0.75*(self.alpha**2)
             self.jumping = True
             self.texture_num=0
     
+    def deslizar(self):
+        if self.deslizamento==False and self.jumping==False and self.alive:
+            self.deslizamento = True
+            self.deslizamento_time = 20
+            self.deslizamento_tick = 1
+            self.texture_num=0
+
     def current_mask(self):
         if self.jumping:
             return self.mask_jump[int(self.texture_num)]
+        elif self.deslizamento:
+            return self.mask_deslizamento[int(self.texture_num)]
         else:
             return self.mask_run[int(self.texture_num)]
 
@@ -282,7 +318,7 @@ class Game():
             self.bg = [BG(WOODS_PATH, 0, 0.25), BG(WOODS_PATH, WIDTH, 0.25),
                         BG(BRIDGE_PATH, 0), BG(BRIDGE_PATH, WIDTH)]
             
-            self.char = Cavaleiro()
+            self.char = Aventureiro()
 
             self.obstacule = []
             self.start_obstacle()
@@ -326,10 +362,12 @@ def main():
                 pygame.quit()
                 sys.exit()
             if event.type == pygame.KEYDOWN:
-                if event.key == pygame.K_SPACE:
+                if event.key == pygame.K_SPACE or event.key == pygame.K_w:
                     game.char.jump()
                 if event.key == pygame.K_r:
                     game.start_game()
+                if event.key == pygame.K_s:
+                    game.char.deslizar()
 
         if game.running:
             for bg in game.bg:

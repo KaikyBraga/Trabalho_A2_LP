@@ -375,6 +375,10 @@ class Game():
 def loop_jogo():
     game = Game()
 
+    sound_background = pygame.mixer.Sound(os.path.join("sons/som_jogo.wav"))
+    sound_background.set_volume(0.01)
+    sound_background.play(-1)
+
     loop = 0
     moedas_rodada = 0
 

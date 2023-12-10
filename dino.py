@@ -12,7 +12,7 @@ pygame.init()
 screen = pygame.display.set_mode((WIDTH, HEIGHT), flags=pygame.SCALED, vsync=1)
 pygame.display.set_caption("Dino")
 
-class Character():
+class Aventureiro():
     def __init__(self) -> None:
         self.width = 50 * 5
         self.height = 37 * 5
@@ -181,7 +181,7 @@ class Game():
     def update(self):
         self.score += 1
         self.speed  = 8 + 2*(self.score//100) #dando erro
-        self.dino.alpha = self.speed/5
+        self.char.alpha = self.speed/5
 
     def start_game(self):
         if self.running==False:
@@ -192,31 +192,31 @@ class Game():
             self.bg = [BG(WOODS_PATH, 0, 0.25), BG(WOODS_PATH, WIDTH, 0.25),
                         BG(BRIDGE_PATH, 0), BG(BRIDGE_PATH, WIDTH)]
             
-            self.dino = Character()
+            self.char = Aventureiro()
 
             self.obstacule = []
             self.start_obstacle()
 
     def check_colision(self):
         for obstacule in self.obstacule:
-            pos = (obstacule.x-self.dino.x, obstacule.y-self.dino.y)
-            if self.dino.current_mask().overlap(obstacule.mask, pos)!=None:
+            pos = (obstacule.x-self.char.x, obstacule.y-self.char.y)
+            if self.char.current_mask().overlap(obstacule.mask, pos)!=None:
                 return True
         return False
     
     def start_obstacle(self):
         self.obstacule.append(Bomb(WIDTH))
         for i in range(2):
-            x_min = self.obstacule[-1].x+1*self.dino.width
-            x_max = self.obstacule[-1].x+5*self.dino.width
+            x_min = self.obstacule[-1].x+1*self.char.width
+            x_max = self.obstacule[-1].x+5*self.char.width
             self.obstacule.append(Bomb(random.randint(x_min, x_max)))
 
     def spawn_cactus(self):
         if self.obstacule[0].x <= -self.obstacule[0].width:
             self.obstacule.pop(0)
 
-            x_min = self.obstacule[-1].x+1*self.dino.width
-            x_max = self.obstacule[-1].x+5*self.dino.width
+            x_min = self.obstacule[-1].x+1*self.char.width
+            x_max = self.obstacule[-1].x+5*self.char.width
 
             x_new_cactus = random.randint(x_min, x_max)
 
@@ -237,7 +237,7 @@ def main():
                 sys.exit()
             if event.type == pygame.KEYDOWN:
                 if event.key == pygame.K_SPACE:
-                    game.dino.jump()
+                    game.char.jump()
                 if event.key == pygame.K_r:
                     game.start_game()
 
@@ -252,19 +252,19 @@ def main():
                 obstacule.update(-game.speed)
                 obstacule.show()
 
-            game.dino.update()
-            game.dino.show()
+            game.char.update()
+            game.char.show()
 
             if game.check_colision():
                 print("Colisao")
 
                 game.running = False
-                game.dino.alive=False
+                game.char.alive=False
                 game.obstacule[0].exploded=True
 
             loop = (loop+1)%100
             
-            if(loop%2==0):
+            if(loop%5==0):
                 game.update()
 
             print(game.score)
@@ -275,8 +275,8 @@ def main():
                 obstacule.update()
                 obstacule.show()
 
-            game.dino.update()
-            game.dino.show()
+            game.char.update()
+            game.char.show()
 
         clock.tick(30)
         pygame.display.update()

@@ -48,7 +48,7 @@ class Loja:
         # Desenha a imagem de fundo da loja
             self.screen.blit(self.background_img, (0, 0))
             dados_jogo = pd.read_csv("informacoes_jogo.csv")
-            quantidade_moedas = (dados_jogo["Quantidade_de_Moedas"])
+            quantidade_moedas = dados_jogo["Quantidade_de_Moedas"][0]
             aventureiro_desbloqueado = (dados_jogo["Aventureiro_Desbloqueado"]).bool()
             cavaleiro_desbloqueado = (dados_jogo["Cavaleiro_Desbloqueado"]).bool()
             guerreiro_desbloqueado = (dados_jogo["Guerreiro_Desbloqueado"]).bool()
@@ -56,15 +56,15 @@ class Loja:
 
 
         #Cria os botões
-            botao_aventureiro = pygame.Rect(100, 220, 240, 400)
-            botao_cavaleiro = pygame.Rect(400, 220, 240, 400)
-            botao_guerreiro = pygame.Rect(680, 220, 220, 400)
-            botao_guerreira = pygame.Rect(950, 220, 240, 400)
+            botao_aventureiro = pygame.Rect(100, 220, 240, 340)
+            botao_cavaleiro = pygame.Rect(400, 220, 240, 340)
+            botao_guerreiro = pygame.Rect(680, 220, 220, 340)
+            botao_guerreira = pygame.Rect(950, 220, 240, 340)
 
-            aventureiro_adquirido = pygame.Rect(88, 570, 240, 30)
-            comprar_cavaleiro = pygame.Rect(375, 570, 240, 30)
-            comprar_guerreiro = pygame.Rect(672, 570, 240, 30)
-            comprar_guerreira = pygame.Rect(960, 570, 240, 30)
+            aventureiro_adquirido = pygame.Rect(88, 570, 250, 60)
+            comprar_cavaleiro = pygame.Rect(370, 570, 250, 60)
+            comprar_guerreiro = pygame.Rect(672, 570, 250, 60)
+            comprar_guerreira = pygame.Rect(962, 570, 250, 60)
             
         #Coloca os personangens em seus respectivos retângulos de acordo com o loop
             self.screen.blit(self.aventureiro_img[loops % len(self.aventureiro_img)], (60, 280))
@@ -80,10 +80,19 @@ class Loja:
         
         #Plota as imagens dos botões de compra/adquirido
             self.screen.blit(self.botao_adquirido, (87, 570))
-            self.screen.blit(self.botao_preco_200, (375, 570))
-            self.screen.blit(self.botao_preco_50, (672, 570))
-            self.screen.blit(self.botao_preco_100, (960, 570))
-        
+            if cavaleiro_desbloqueado == False:
+                self.screen.blit(self.botao_preco_200, (375, 570))
+            elif cavaleiro_desbloqueado == True:
+                self.screen.blit(self.botao_adquirido, (375, 570))
+            if guerreiro_desbloqueado == False:
+                self.screen.blit(self.botao_preco_50, (672, 570))
+            elif guerreiro_desbloqueado == True:
+                self.screen.blit(self.botao_adquirido, (672, 570))
+            if guerreira_desbloqueado == False:
+                self.screen.blit(self.botao_preco_100, (960, 570))
+            elif guerreira_desbloqueado == True:
+                self.screen.blit(self.botao_adquirido, (960, 570))
+            
         # Event Loop
             for event in pygame.event.get():
                 if event.type == QUIT:
@@ -100,56 +109,41 @@ class Loja:
         # Verifica as colisões com o mouse
             if botao_aventureiro.collidepoint((mx, my)) and aventureiro_desbloqueado == True and self.click:
                 self.background_img = LOJA_AVENTUREIRO
-                self.screen.blit(self.aventureiro_img[loops % len(self.aventureiro_img)], (60, 280))
-                self.screen.blit(self.cavaleiro_img[loops % len(self.cavaleiro_img)], (270, 150))
-                self.screen.blit(self.guerreiro_img[loops % len(self.guerreiro_img)], (600, 220))
-                self.screen.blit(self.guerreira_img[loops % len(self.guerreira_img)], (950, 250))
                 dados_jogo["Personagem_Selecionado"] = "Aventureiro"
                 dados_jogo.to_csv("informacoes_jogo.csv", index=False)
              
             elif botao_cavaleiro.collidepoint((mx, my)) and cavaleiro_desbloqueado == True and self.click:
                 self.background_img = LOJA_CAVALEIRO
-                self.screen.blit(self.aventureiro_img[loops % len(self.aventureiro_img)], (60, 280))
-                self.screen.blit(self.cavaleiro_img[loops % len(self.cavaleiro_img)], (270, 150))
-                self.screen.blit(self.guerreiro_img[loops % len(self.guerreiro_img)], (600, 220))
-                self.screen.blit(self.guerreira_img[loops % len(self.guerreira_img)], (950, 250))
                 dados_jogo["Personagem_Selecionado"] = "Cavaleiro"
                 dados_jogo.to_csv("informacoes_jogo.csv", index=False)
                     
-            elif comprar_cavaleiro.collidepoint((mx, my)) and self.click and quantidade_moedas >= 200:
-                cavaleiro_desbloqueado = True
+            elif comprar_cavaleiro.collidepoint((mx, my)) and self.click and quantidade_moedas >= 200 and cavaleiro_desbloqueado == False:
+                dados_jogo["Cavaleiro_Desbloqueado"] = True
                 dados_jogo["Quantidade_de_Moedas"] = quantidade_moedas - 200
                 dados_jogo.to_csv("informacoes_jogo.csv", index = False)
             
             elif botao_guerreiro.collidepoint((mx, my)) and guerreiro_desbloqueado == True and self.click:
                 self.background_img = LOJA_GUERREIRO 
-                self.screen.blit(self.aventureiro_img[loops % len(self.aventureiro_img)], (60, 280))
-                self.screen.blit(self.cavaleiro_img[loops % len(self.cavaleiro_img)], (270, 150))
-                self.screen.blit(self.guerreiro_img[loops % len(self.guerreiro_img)], (600, 220))
-                self.screen.blit(self.guerreira_img[loops % len(self.guerreira_img)], (950, 250))
                 dados_jogo["Personagem_Selecionado"] = "Guerreiro"
                 dados_jogo.to_csv("informacoes_jogo.csv", index=False)
             
-            elif comprar_guerreiro.collidepoint((mx, my)) and self.click and quantidade_moedas >= 50:
-                guerreiro_desbloqueado = True
+            elif comprar_guerreiro.collidepoint((mx, my)) and self.click and quantidade_moedas >= 50 and guerreiro_desbloqueado == False:
+                dados_jogo["Guerreiro_Desbloqueado"] = True
                 dados_jogo["Quantidade_de_Moedas"] = quantidade_moedas - 50
                 dados_jogo.to_csv("informacoes_jogo.csv", index = False)
-                           
+                                     
             elif botao_guerreira.collidepoint((mx, my)) and guerreira_desbloqueado == True and self.click:
                 self.background_img = LOJA_GUERREIRA
-                self.screen.blit(self.aventureiro_img[loops % len(self.aventureiro_img)], (60, 280))
-                self.screen.blit(self.cavaleiro_img[loops % len(self.cavaleiro_img)], (270, 150))
-                self.screen.blit(self.guerreiro_img[loops % len(self.guerreiro_img)], (600, 220))
-                self.screen.blit(self.guerreira_img[loops % len(self.guerreira_img)], (950, 250))
                 dados_jogo["Personagem_Selecionado"] = "Guerreira"
                 dados_jogo.to_csv("informacoes_jogo.csv", index=False)
     
-            elif comprar_guerreira.collidepoint((mx, my)) and self.click and quantidade_moedas >= 100:
-                guerreira_desbloqueado = True
+            elif comprar_guerreira.collidepoint((mx, my)) and self.click and quantidade_moedas >= 100 and guerreira_desbloqueado == False:
+                dados_jogo["Guerreira_Desbloqueada"] = True
                 dados_jogo["Quantidade_de_Moedas"] = quantidade_moedas - 100
                 dados_jogo.to_csv("informacoes_jogo.csv", index = False)
-            self.click = False
 
+            self.click = False
+            
             pygame.display.update()
             self.mainClock.tick(15)
                 

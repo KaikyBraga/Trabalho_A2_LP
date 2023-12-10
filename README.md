@@ -21,7 +21,8 @@ Iniciando o Emap'S Running, o jogador se depara com três diferentes tipos de ob
 - Bombas
 - Fogo
 - Morcegos
-O jogador não deve escostar nesses obstáculos, então deve usar os controles ao seu favor. Além disso, ao passar do tempo o jogo vai ficando mais difícil, tendo em vista que a velocidade dele é gradativa. Ao perder a corrida, é possível jogar novamente por meio da tecla R.
+ 
+**OBS:** O jogador não deve escostar nesses obstáculos, então deve usar os controles ao seu favor. Além disso, ao passar do tempo o jogo vai ficando mais difícil, tendo em vista que a velocidade dele é gradativa. Ao perder a corrida, é possível jogar novamente por meio da tecla R.
 
 (GIF JOGANDO)
 

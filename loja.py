@@ -6,7 +6,7 @@ from pygame.locals import *
 from variaveis_globais import *
 from variaveis_sprites import *
 
-tela = pygame.display.set_mode((LARGURA_TELA, ALTURA_TELA))
+tela = pygame.display.set_mode((WIDTH, HEIGHT))
 
 class Loja:
     """
@@ -82,9 +82,6 @@ class Loja:
             texto_moeda = str(dados_jogo["Quantidade_de_Moedas"][0])
             mensagem_moeda = criar_texto(texto_moeda, 40, "Arial", (255, 255, 255), texto_negrito = True)
             self.screen.blit(mensagem_moeda, (1118, 35))
-            
-            # Botão de voltar
-            botao_voltar = pygame.draw.circle(self.screen, color=(255,255,255), center=(150,50), radius=40) 
 
             # Cria os botões
             botao_aventureiro = pygame.Rect(100, 220, 240, 340)
@@ -111,16 +108,6 @@ class Loja:
             self.botao_preco_50 = pygame.image.load(os.path.join(os.path.dirname(__file__), "sprites/paginas/loja/botao_preco_50.png"))
             self.botao_preco_100 = pygame.image.load(os.path.join(os.path.dirname(__file__), "sprites/paginas/loja/botao_preco_100.png"))
             self.botao_preco_200 = pygame.image.load(os.path.join(os.path.dirname(__file__), "sprites/paginas/loja/botao_preco_200.png"))
-            
-            # Coloca o botão de voltar na loja
-            self.screen.blit(self.botao_voltar_img, (105, 5))
-            
-            # Verifica as colisões com o mouse
-            if botao_voltar.collidepoint((mx, my)):
-                self.screen.blit(self.botao_voltar_escuro_img, (105, 5))
-                if self.click:
-                    pygame.mixer.music.stop()  
-                    self.voltar()
 
             # Plota as imagens dos botões de compra/adquirido
             self.screen.blit(self.botao_adquirido, (87, 570))

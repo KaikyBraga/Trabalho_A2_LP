@@ -3,7 +3,7 @@ import sys
 import pygame
 from utils import *
 import pandas as pd
-from game import Jogo
+from dino import *
 from loja import Loja 
 from pygame.locals import *
 from variaveis_sons import *
@@ -129,12 +129,9 @@ class Menu:
         Método chamado quando o botão "Jogar" é clicado.
         """
         pygame.mixer.music.stop()  
-        jogo = Jogo()
-        jogo_retorna_menu = jogo.loop_principal()
-
-        if jogo_retorna_menu:
-            # Reinicia a música ao retornar ao menu
-            pygame.mixer.music.play(-1)
+        main()
+        pygame.mixer.music.load(som_menu)
+        pygame.mixer.music.play(-1)
 
     def loja(self):
         """

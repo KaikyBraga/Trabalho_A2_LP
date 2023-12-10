@@ -1,11 +1,8 @@
-<<<<<<< HEAD
-LARGURA_TELA = 1280
-ALTURA_TELA = 720
-COR_FONTE = (255, 255, 255)
-NOME_FONTE = "Arial"
-=======
 WIDTH = 1200
 HEIGHT = 720   
+
+COR_FONTE = (255, 255, 255)
+NOME_FONTE = "Arial"
 
 BRIDGE_PATH = 'sprites/cenario/ponte.png'
 WOODS_PATH = 'sprites/cenario/background.png'
@@ -29,5 +26,4 @@ Y_FLOOR_GUERREIRO = 285
 Y_FLOOR_BOMB = 445
 Y_FLOOR_BAT  = 375
 Y_FLOOR_COIN  = 410
->>>>>>> 0e0043ca98ed9d18435ea1491dd38dc351010f0d
 

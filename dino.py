@@ -370,6 +370,10 @@ def main():
                     game.start_game()
                 if event.key == pygame.K_s:
                     game.char.deslizar()
+            if event.type == pygame.KEYDOWN and event.key == pygame.K_ESCAPE:
+                    # Retorna ao menu se a tecla ESC for pressionada
+                    pygame.mixer.music.stop()
+                    return True
 
         if game.running:
             for bg in game.bg:
@@ -419,5 +423,3 @@ def main():
 
         clock.tick(30)
         pygame.display.update()
-
-main()

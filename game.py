@@ -9,7 +9,7 @@ from variaveis_sprites import *
 
 pygame.init()
 
-tela = pygame.display.set_mode((LARGURA_TELA, ALTURA_TELA))
+tela = pygame.display.set_mode((WIDTH, HEIGHT))
 pygame.display.set_caption("JOGO")
 
 class Personagem:
@@ -170,8 +170,8 @@ class ElementoMovivel:
     Classe base que representa os elementos móveis do jogo.
     """
     def __init__(self, x, imagem, velocidade):
-        self.largura = LARGURA_TELA
-        self.altura = ALTURA_TELA
+        self.largura = WIDTH
+        self.altura = HEIGHT
         self.posicao_x = x
         self.posicao_y = 0
         self.velocidade = velocidade
@@ -180,8 +180,8 @@ class ElementoMovivel:
 
     def atualizar(self, deslocamento):
         self.posicao_x += deslocamento
-        if self.posicao_x <= -LARGURA_TELA:
-            self.posicao_x = LARGURA_TELA
+        if self.posicao_x <= -WIDTH:
+            self.posicao_x = WIDTH
 
     def exibir(self):
         tela.blit(self.textura, (self.posicao_x, self.posicao_y))
@@ -210,8 +210,8 @@ class Ponte(ElementoMovivel):
 class Jogo:
     def __init__(self):
 
-        self.fundos_paisagem = [Paisagem(x=0, velocidade=2.0), Paisagem(x=LARGURA_TELA, velocidade=2.0)]
-        self.fundos_ponte = [Ponte(x=0, velocidade=5.0), Ponte(x=LARGURA_TELA, velocidade=5.0)]
+        self.fundos_paisagem = [Paisagem(x=0, velocidade=2.0), Paisagem(x=WIDTH, velocidade=2.0)]
+        self.fundos_ponte = [Ponte(x=0, velocidade=5.0), Ponte(x=WIDTH, velocidade=5.0)]
         self.personagem = Personagem("Cavaleiro")
     
     #TODO: Criar uma função/método que muda o self.personagem   

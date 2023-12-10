@@ -223,7 +223,48 @@ class Bat():
 
     def get_mask(self):
         return self.mask[int(self.texture_num)]
+
+class Coin():
+    def __init__(self, x) -> None:
+        self.width = 190/2
+        self.height = 170/2
+
+        self.x = x
+        self.y = Y_FLOOR_COIN
+
+        self.texture_num = 0
+        self.texture = []
+        self.mask = []
+
+        self.recebida = False
+
+        self.set_texture()
     
+    def update(self, dx=0):
+        self.x += dx
+        self.texture_num  = (self.texture_num + 0.25)%len(self.texture)
+    
+    def show(self):
+        if self.recebida==False:
+            screen.blit(self.texture[int(self.texture_num)], (self.x, self.y))
+
+    def set_texture(self):
+        for i in range(1, 7):
+            bat_path = f'sprites/moeda/moeda_{i}.png'
+            path = os.path.join(bat_path)
+
+            img = (pygame.image.load(path))
+            
+            self.texture.append(pygame.transform.scale(img, (self.width, self.height)))
+            self.mask.append(pygame.mask.from_surface(self.texture[-1]))
+
+    def get_mask(self):
+        return self.mask[int(self.texture_num)] 
+
+    def receber(self):
+        self.recebida=True
+
+
 class BG:
     def __init__(self, img_path, x=0, mult_speed=1) -> None:
         self.width = WIDTH
@@ -303,11 +344,12 @@ class Game():
             x_new_obstacle = random.randint(x_min, x_max)
 
             rand_type = random.randint(1, 100)
-            if rand_type <= 50:
+            if rand_type <= 40:
                 self.obstacle.append( Bomb(x_new_obstacle) )
-            else:
+            elif rand_type <= 80:
                 self.obstacle.append( Bat(x_new_obstacle) )
-        
+            else:
+                self.obstacle.append( Coin(x_new_obstacle) )
 def main():
 
     game = Game()
@@ -346,11 +388,18 @@ def main():
             if game.check_colision():
                 print("Colisao")
 
-                game.running = False
-                game.char.alive=False
-
                 if isinstance(game.obstacle[0], Bomb):
+                    game.running = False
+                    game.char.alive=False
+                    
                     game.obstacle[0].explodir()
+                elif isinstance(game.obstacle[0], Bat):
+                    game.running = False
+                    game.char.alive=False
+                else:
+                    if game.obstacle[0].recebida==False:
+                        print("+1 MOEDA")
+                        game.obstacle[0].receber()
 
             loop = (loop+1)%100
             

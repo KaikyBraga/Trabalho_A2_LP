@@ -5,8 +5,8 @@ from variaveis_globais import BRIDGE_PATH, WOODS_PATH
 WIDTH = 1200
 HEIGHT = 720   
 
-Y_FLOOR = 450
-Y_FLOOR_AVENTUREIRO = 450
+Y_FLOOR_BOMB = 435
+Y_FLOOR_AVENTUREIRO = 355
 Y_FLOOR_CAVALEIRO   = 215
 
 pygame.init()
@@ -19,7 +19,7 @@ class Aventureiro():
         self.height = 37 * 5
 
         self.x = 150 - self.width//2
-        self.y = Y_FLOOR_AVENTUREIRO - self.height//2
+        self.y = Y_FLOOR_AVENTUREIRO
 
         self.jumping = False
         self.alpha = 1
@@ -49,9 +49,9 @@ class Aventureiro():
             self.y -= self.dy
             self.dy -= self.ddy
 
-            if self.y >= Y_FLOOR_AVENTUREIRO - self.height//2:
+            if self.y >= Y_FLOOR_AVENTUREIRO:
                 self.jumping = False
-                self.y = Y_FLOOR_AVENTUREIRO - self.height//2
+                self.y = Y_FLOOR_AVENTUREIRO
             
             self.texture_num  = (min(self.texture_num + 0.25, len(self.texture_jump)-1))%len(self.texture_jump)
         elif self.deslizamento:
@@ -233,7 +233,7 @@ class Bomb():
         self.height = 100
 
         self.x = x
-        self.y = Y_FLOOR
+        self.y = Y_FLOOR_BOMB
 
         self.exploded = False
 

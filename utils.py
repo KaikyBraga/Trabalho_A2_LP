@@ -12,8 +12,8 @@ class SpritesJogo:
         num_frames (int): Número de frames da animação.
 
     Methods:
-        carregar_frames(): Carrega os frames da animação.
-        transformar_escala(conjunto_sprites, escala_sprites): Transforma a escala de um conjunto de sprites.
+        __init__: Inicializa a classe.
+        carregar_frames(): Carrega os frames da animação com a escala desejada.
     """
     def __init__(self, caminho_principal, num_frames):
         """
@@ -41,22 +41,23 @@ class SpritesJogo:
         """
         self.escala = escala
 
+        # Criação de apenas um objeto carregado quando a quantidade de Sprites é igual a 1.
         if self.num_frames == 1:
             conjunto_imagens = pygame.image.load(self.caminho_principal)
             largura_sprite = conjunto_imagens.get_width()
             altura_sprite = conjunto_imagens.get_height()
             return pygame.transform.scale(conjunto_imagens, (largura_sprite * self.escala, altura_sprite * self.escala))
+        # Criação de lista de Sprites carregados caso a quantidade de frames for superior a 1.
         else:
             lista_frames = []
-            for i in range(1, self.num_frames + 1):
-                caminho_frame = f"{self.caminho_principal}{i}.png"
+            for indice_frame in range(1, self.num_frames + 1):
+                caminho_frame = f"{self.caminho_principal}{indice_frame}.png"
                 frame = pygame.image.load(caminho_frame)
                 largura_sprite = frame.get_width()
                 altura_sprite = frame.get_height()
                 frame = pygame.transform.scale(frame, (largura_sprite * self.escala, altura_sprite * self.escala))
                 lista_frames.append(frame)
             return lista_frames
-        
 
 # Função para criar o texto
 def criar_texto(mensagem_texto, tamanho_fonte, nome_fonte, cor_fonte, texto_cerrilhado=False, texto_negrito = False, texto_italico = False):

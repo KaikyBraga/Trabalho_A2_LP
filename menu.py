@@ -4,8 +4,10 @@ import pygame
 from utils import *
 import pandas as pd
 from game import Jogo
+from loja import Loja 
 from pygame.locals import *
 from variaveis_sons import *
+from variaveis_globais import *
 from variaveis_sprites import *
 
 class Menu:
@@ -71,13 +73,15 @@ class Menu:
             # Desenha a imagem de fundo do menu
             self.screen.blit(self.background_img, (0, 0))
 
+            # Botões do Menu
             botao_jogar = pygame.Rect(520, 250, 240, 95)
             botao_loja = pygame.Rect(520, 400, 240, 95)
             botao_sair = pygame.Rect(520, 550, 240, 95)
 
+            # Record
             dados_jogo = pd.read_csv("informacoes_jogo.csv")
             texto_record = str(dados_jogo["Score_Record"][0])
-            mensagem_record = criar_texto(texto_record, 40, "Arial", (255,0,0), texto_negrito=True)
+            mensagem_record = criar_texto(texto_record, 40, NOME_FONTE, COR_FONTE, texto_negrito=True)
             self.screen.blit(mensagem_record, (100, 80))
 
             # Event Loop
@@ -126,9 +130,9 @@ class Menu:
         """
         pygame.mixer.music.stop()  
         jogo = Jogo()
-        jogo_retornou_ao_menu = jogo.loop_principal()
+        jogo_retorna_menu = jogo.loop_principal()
 
-        if jogo_retornou_ao_menu:
+        if jogo_retorna_menu:
             # Reinicia a música ao retornar ao menu
             pygame.mixer.music.play(-1)
 
@@ -136,21 +140,15 @@ class Menu:
         """
         Método chamado quando o botão "Loja" é clicado.
         """
-        running = True
-        while running:
-            self.screen.fill((0, 0, 0))
-            self.draw_text('Options menu!', (255, 255, 255), 250, 250, pygame.Rect(100, 100, 100, 100))
+        pygame.mixer.music.stop()
+        loja= Loja()
+        loja_retorna_menu = loja.main_loja()
 
-            for event in pygame.event.get():
-                if event.type == QUIT:
-                    pygame.quit()
-                    sys.exit()
-                elif event.type == KEYDOWN:
-                    if event.key == K_ESCAPE:
-                        running = False
-
-            pygame.display.update()
-            self.mainClock.tick(60)
+        if loja_retorna_menu:
+            # Reinicia a música ao retornar ao menu
+            pygame.mixer.music.load(som_menu)
+            pygame.mixer.music.play(-1)
+            return None
 
     def sair(self):
         """

@@ -212,7 +212,7 @@ class Jogo:
 
         self.fundos_paisagem = [Paisagem(x=0, velocidade=2.0), Paisagem(x=LARGURA_TELA, velocidade=2.0)]
         self.fundos_ponte = [Ponte(x=0, velocidade=5.0), Ponte(x=LARGURA_TELA, velocidade=5.0)]
-        self.personagem = Personagem("Aventureiro")
+        self.personagem = Personagem("Cavaleiro")
     
     #TODO: Criar uma função/método que muda o self.personagem   
 

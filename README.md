@@ -43,9 +43,9 @@ Dentro da loja é possível adquirir os personagens por meio das moedas coletada
 - [https://www.deviantart.com/](https://www.deviantart.com/)
 - [https://www.vhv.rs/](https://www.vhv.rs/)
 - [https://opengameart.org/](https://opengameart.org/)
+- [https://pixabay.com/pt/](https://pixabay.com/pt/)
 
 **OBS:** As páginas do Menu são de autoria dos membros do grupo.
   
 ### Sons:
-- [https://pixabay.com/pt/](https://pixabay.com/pt/)
 - [https://opengameart.org/](https://opengameart.org/)

@@ -1,7 +1,10 @@
+"""
+Esse módulo representa as classes/funções auxiliares do jogo.
+Módulo responsável por armazenar funções que são úteis para o projeto.
+"""
+
 import pygame
 from pygame.locals import *
-
-
 
 class SpritesJogo:
     """

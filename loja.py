@@ -1,3 +1,8 @@
+"""
+Esse módulo representa a loja do jogo.
+Módulo responsável por criar a página da loja e suas funcionalidades.
+"""
+
 import pandas as pd
 import os
 import sys
@@ -27,18 +32,18 @@ class Loja:
     """
     
     def __init__(self):
-        '''
+        """
         Inicializa a classe Loja.
-        '''
+        """
         pygame.init()
         pygame.mixer.init()
         self.mainClock = pygame.time.Clock()
         self.screen = pygame.display.set_mode((1280, 720), 0, 32)
-        pygame.display.set_caption('game base')
+        pygame.display.set_caption("EMAP's RUNNING")
         self.font = pygame.font.SysFont(None, 20)
         self.click = False
 
- # Carrega a imagem de fundo da loja
+        # Carrega a imagem de fundo da loja
         dados_jogo = pd.read_csv("informacoes_jogo.csv")
         personagem_selecionado = str(dados_jogo["Personagem_Selecionado"][0])
         if personagem_selecionado == "Aventureiro":
@@ -56,22 +61,22 @@ class Loja:
         self.loja_guerreiro = pygame.image.load(os.path.join(os.path.dirname(__file__), "sprites/paginas/loja/loja_guerreiro.png"))
         self.loja_guerreira = pygame.image.load(os.path.join(os.path.dirname(__file__), "sprites/paginas/loja/loja_guerreira.png"))
 
-# Carrega as imagens dos personagens da loja
+        # Carrega as imagens dos personagens da loja
         self.aventureiro_img = AVENTUREIRO_CORRIDA
         self.cavaleiro_img = CAVALEIRO_CORRIDA
         self.guerreiro_img = GUERREIRO_CORRIDA
         self.guerreira_img = GUERREIRA_CORRIDA
 
-# Carrega a música
+        # Carrega a música
         pygame.mixer.music.load(os.path.join(os.path.dirname(__file__), "sons\som_loja.wav"))
         
-# Inicia a reprodução contínua da música
+        # Inicia a reprodução contínua da música
         pygame.mixer.music.play(-1)
 
     def main_loja(self):
-        '''
+        """
         Loop principal da loja, processa eventos e atualiza a tela.
-        '''
+        """
         loops = 0
         
         while True:

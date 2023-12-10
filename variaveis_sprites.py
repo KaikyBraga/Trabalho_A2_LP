@@ -1,5 +1,9 @@
-from utils import *
+"""
+Esse é o módulo que possui as variáveis dos sprites do jogo.
+Módulo responsável por carregar as sprites do jogo e armazená-las em variáveis.
+"""
 
+from utils import *
 
 # CENÁRIO
 PONTE = SpritesJogo("sprites/cenario/ponte.png", 1)
@@ -19,11 +23,6 @@ BOMBA = SpritesJogo("sprites/obstaculos/bomba/bomba.png", 1)
 BOMBA = BOMBA.carregar_frames(1)
 EXPLOSAO_BOMBA = SpritesJogo("sprites/obstaculos/bomba/explosao/explosao_", 13)
 EXPLOSAO_BOMBA = EXPLOSAO_BOMBA.carregar_frames(1)
-
-
-# Fogo
-FOGO = SpritesJogo("sprites/obstaculos/fogo/fogo_", 6)
-FOGO = FOGO.carregar_frames(1)
 
 
 # Morcego

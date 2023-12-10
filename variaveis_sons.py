@@ -1,3 +1,8 @@
+"""
+Esse módulo possui as variáveis de som do jogo.
+Módulo responsável por carregar os arquivos de som e armazená-los em variáveis.
+"""
+
 import os
 from pygame.locals import *
 

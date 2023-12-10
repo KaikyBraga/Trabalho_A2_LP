@@ -1,3 +1,8 @@
+"""
+Esse módulo possui as variáveis globais do jogo.
+Módulo responsável por armazenar as variáveis que são úteis para diversos arquivos do projeto.
+"""
+
 WIDTH = 1200
 HEIGHT = 720   
 

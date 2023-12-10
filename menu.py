@@ -1,4 +1,8 @@
-import os
+"""
+Esse é o módulo do menu do jogo.
+Módulo responsável por criar a página do menu e suas funcionalidades.
+"""
+
 import sys
 import pygame
 from utils import *

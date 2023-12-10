@@ -5,7 +5,7 @@ from variaveis_globais import BRIDGE_PATH, WOODS_PATH
 WIDTH = 1200
 HEIGHT = 720   
 
-Y_FLOOR_BOMB = 435
+Y_FLOOR_BOMB = 445
 Y_FLOOR_BAT  = 375
 Y_FLOOR_AVENTUREIRO = 355
 Y_FLOOR_CAVALEIRO   = 215
@@ -230,8 +230,8 @@ class Cavaleiro():
 
 class Bomb():
     def __init__(self, x) -> None:
-        self.width = 100
-        self.height = 100
+        self.width = 100*0.85
+        self.height = 100*0.85
 
         self.x = x
         self.y = Y_FLOOR_BOMB
@@ -344,13 +344,13 @@ class Game():
 
     def update(self):
         self.score += 1
-        self.speed  = 8 + 2*(self.score//100) #dando erro
+        self.speed  = 8 + 2*(self.score//100)
         self.char.alpha = self.speed/5
 
     def start_game(self):
         if self.running==False:
             self.score = 0
-            self.speed = 15
+            self.speed = 8
             self.running = True
 
             self.bg = [BG(WOODS_PATH, 0, 0.25), BG(WOODS_PATH, WIDTH, 0.25),
@@ -380,7 +380,7 @@ class Game():
             self.obstacle.pop(0)
 
             x_min = self.obstacle[-1].x+self.obstacle[-1].width + 200
-            x_max = self.obstacle[-1].x+self.obstacle[-1].width + 500
+            x_max = self.obstacle[-1].x+self.obstacle[-1].width + 800
 
             x_new_obstacle = random.randint(x_min, x_max)
 

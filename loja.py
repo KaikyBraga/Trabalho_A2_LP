@@ -9,7 +9,26 @@ from variaveis_sprites import *
 tela = pygame.display.set_mode((LARGURA_TELA, ALTURA_TELA))
 
 class Loja:
+    """
+    Classe que representa a loja do jogo.
+
+    Inicializa a interface gráfica, os botões da loja e processa eventos de clique.
+
+    Attributes:
+        mainClock: Relógio utilizado para controlar a taxa de quadros.
+        screen: Tela onde o menu é renderizado.
+        font: Fonte utilizada para desenhar texto.
+        click: Flag indicando se um clique do mouse ocorreu.
+
+    Methods:
+        __init__: Inicializa a classe e configura a interface gráfica.
+        main_loja: Loop principal da loja, processa eventos e atualiza a tela.
+    """
+    
     def __init__(self):
+        '''
+        Inicializa a classe Loja.
+        '''
         pygame.init()
         pygame.mixer.init()
         self.mainClock = pygame.time.Clock()
@@ -39,7 +58,9 @@ class Loja:
         pygame.mixer.music.play(-1)
 
     def main_loja(self):
-    
+        '''
+        Loop principal da loja, processa eventos e atualiza a tela.
+        '''
         loops = 0
         
         while True:

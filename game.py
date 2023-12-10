@@ -234,7 +234,7 @@ class Bomb():
         self.mask = None
 
         self.sound_bomb = pygame.mixer.Sound(os.path.join("sons/som_bomba.wav"))
-        self.sound_bomb.set_volume(0.05)
+        self.sound_bomb.set_volume(0.20)
 
         self.set_texture()
     
@@ -332,7 +332,7 @@ class Bat():
         self.mask = []
 
         self.sound_bat = pygame.mixer.Sound(os.path.join("sons/som_morcego.wav"))
-        self.sound_bat.set_volume(0.05)
+        self.sound_bat.set_volume(0.20)
 
         self.set_texture()
     
@@ -416,7 +416,7 @@ class Coin():
         self.mask = []
 
         self.sound_coin = pygame.mixer.Sound(os.path.join("sons/som_moeda.wav"))
-        self.sound_coin.set_volume(0.05)
+        self.sound_coin.set_volume(0.20)
         self.recebida = False
 
         self.set_texture()
@@ -567,7 +567,7 @@ class Game():
         self.op_char = op_char
 
         self.sound_score = pygame.mixer.Sound(os.path.join("sons/som_score.wav"))
-        self.sound_score.set_volume(0.25)
+        self.sound_score.set_volume(0.20)
 
         self.start_game()
 
@@ -696,7 +696,7 @@ def loop_jogo(op_char=1):
     game = Game(op_char)
 
     sound_background = pygame.mixer.Sound(os.path.join("sons/som_jogo.wav"))
-    sound_background.set_volume(0.01)
+    sound_background.set_volume(0.20)
     sound_background.play(-1)
 
     loop = 0

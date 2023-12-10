@@ -270,10 +270,15 @@ class Bomb():
             explosao_path = f'sprites/obstaculos/bomba/explosao/explosao_{i}.png'
             path = os.path.join(explosao_path)
             img = (pygame.image.load(path))
-            self.texture_explosion.append(pygame.transform.scale(img, (self.width, self.height))) 
+            self.texture_explosion.append(pygame.transform.scale(img, (3*self.width, 3*self.height))) 
     
     def get_mask(self):
         return self.mask
+    
+    def explodir(self):
+        self.exploded = True
+        self.y -= self.height
+        self.x -= 30
 
 class Bat():
     def __init__(self, x) -> None:
@@ -430,8 +435,9 @@ def main():
 
                 game.running = False
                 game.char.alive=False
+
                 if isinstance(game.obstacle[0], Bomb):
-                    game.obstacle[0].exploded=True
+                    game.obstacle[0].explodir()
 
             loop = (loop+1)%100
             

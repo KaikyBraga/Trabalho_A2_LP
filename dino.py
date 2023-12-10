@@ -153,6 +153,9 @@ class Bomb():
         self.texture_explosion = []
         self.mask = None
 
+        self.sound_bomb = pygame.mixer.Sound(os.path.join("sons/som_bomba.wav"))
+        self.sound_bomb.set_volume(0.05)
+
         self.set_texture()
     
     def update(self, dx=0):
@@ -190,6 +193,8 @@ class Bomb():
         self.y -= self.height
         self.x -= 30
 
+        self.sound_bomb.play()
+
 class Bat():
     def __init__(self, x) -> None:
         self.width = 93
@@ -203,7 +208,7 @@ class Bat():
         self.mask = []
 
         self.sound_bat = pygame.mixer.Sound(os.path.join("sons/som_morcego.wav"))
-        self.sound_bat.set_volume(0.25)
+        self.sound_bat.set_volume(0.05)
 
         self.set_texture()
     
@@ -243,7 +248,7 @@ class Coin():
         self.mask = []
 
         self.sound_coin = pygame.mixer.Sound(os.path.join("sons/som_moeda.wav"))
-        self.sound_coin.set_volume(0.25)
+        self.sound_coin.set_volume(0.05)
         self.recebida = False
 
         self.set_texture()

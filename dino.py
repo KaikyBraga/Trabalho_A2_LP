@@ -354,7 +354,7 @@ class Game():
             else:
                 self.obstacle.append( Coin(x_new_obstacle) )
 
-def main():
+def loop_jogo():
     game = Game()
 
     loop = 0
@@ -426,4 +426,4 @@ def main():
         clock.tick(30)
         pygame.display.update()
 
-main()
+loop_jogo()

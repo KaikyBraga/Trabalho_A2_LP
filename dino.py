@@ -48,7 +48,7 @@ class Character():
         elif self.alive:
             self.texture_num  = (self.texture_num + 0.25)%len(self.texture_run)
         else:
-            self.texture_num  = (min(self.texture_num + 0.125, len(self.texture_dead)-1))%len(self.texture_dead)
+            self.texture_num  = min(self.texture_num + 0.125, len(self.texture_dead)-1)
 
     def show(self):
         if self.jumping: 
@@ -89,7 +89,7 @@ class Character():
             self.texture_dead.append(pygame.transform.scale(img, (self.width, self.height)))
 
     def jump(self):
-        if self.jumping==False:
+        if self.jumping==False and self.alive:
             self.dy=17*self.alpha
             self.ddy = 0.75*(self.alpha**2)
             self.jumping = True
@@ -109,17 +109,26 @@ class Bomb():
         self.x = x
         self.y = Y_FLOOR
 
+        self.exploded = False
+
         self.texture_num = 0
         self.texture = None
+        self.texture_explosion = []
         self.mask = None
 
         self.set_texture()
     
-    def update(self, dx):
-        self.x += dx
-        
-    def show(self): 
-        screen.blit(self.texture, (self.x, self.y))
+    def update(self, dx=0):
+        if self.exploded==False:
+            self.x += dx
+        else:
+            self.texture_num  = min(self.texture_num + 0.5, len(self.texture_explosion)-1)
+    
+    def show(self):
+        if self.exploded==False:
+            screen.blit(self.texture, (self.x, self.y))
+        else:
+            screen.blit(self.texture_explosion[int(self.texture_num)], (self.x, self.y))
 
     def set_texture(self):
         bomba_path = f'sprites/obstaculos/bomba/bomba.png'
@@ -129,6 +138,12 @@ class Bomb():
         self.texture = pygame.transform.scale(self.texture, (self.width, self.height))
 
         self.mask = pygame.mask.from_surface(self.texture)
+
+        for i in range(1, 14):
+            explosao_path = f'sprites/obstaculos/bomba/explosao/explosao_{i}.png'
+            path = os.path.join(explosao_path)
+            img = (pygame.image.load(path))
+            self.texture_explosion.append(pygame.transform.scale(img, (self.width, self.height))) 
 
 class BG:
     def __init__(self, img_path, x=0, mult_speed=1) -> None:
@@ -242,8 +257,10 @@ def main():
 
             if game.check_colision():
                 print("Colisao")
+
                 game.running = False
                 game.dino.alive=False
+                game.obstacule[0].exploded=True
 
             loop = (loop+1)%100
             
@@ -255,6 +272,7 @@ def main():
             for bg in game.bg:
                 bg.show()
             for obstacule in game.obstacule:
+                obstacule.update()
                 obstacule.show()
 
             game.dino.update()

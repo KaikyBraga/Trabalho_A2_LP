@@ -9,7 +9,29 @@ from variaveis_sons import *
 from variaveis_sprites import *
 
 class Menu:
+    """
+    Classe que representa o menu principal do jogo.
+
+    Inicializa a interface gráfica, os botões do menu e processa eventos de clique.
+
+    Atributos:
+        mainClock: Relógio utilizado para controlar a taxa de quadros.
+        screen: Tela onde o menu é renderizado.
+        font: Fonte utilizada para desenhar texto.
+        click: Flag indicando se um clique do mouse ocorreu.
+
+    Métodos:
+        __init__: Inicializa a classe e configura a interface gráfica.
+        draw_text: Desenha a imagem de fundo do menu.
+        main_menu: Loop principal do menu, processa eventos e atualiza a tela.
+        jogar: Método chamado quando o botão "Jogar" é clicado.
+        loja: Método chamado quando o botão "Loja" é clicado.
+        sair: Método chamado quando o botão "Sair" é clicado.
+    """
     def __init__(self):
+        """
+        Inicializa a classe Menu.
+        """
         pygame.init()
         pygame.mixer.init()
         self.mainClock = pygame.time.Clock()
@@ -33,10 +55,16 @@ class Menu:
         self.menu_sair_img = MENU_SAIR
 
     def draw_text(self):
+        """
+        Desenha a imagem de fundo do menu.
+        """
         # Desenha a imagem de fundo do menu
         self.screen.blit(self.background_img, (0, 0))
         
     def main_menu(self):
+        """
+        Loop principal do menu, processa eventos e atualiza a tela.
+        """
         while True:
             mx, my = pygame.mouse.get_pos()
 
@@ -93,6 +121,9 @@ class Menu:
             self.mainClock.tick(60)
 
     def jogar(self):
+        """
+        Método chamado quando o botão "Jogar" é clicado.
+        """
         pygame.mixer.music.stop()  
         jogo = Jogo()
         jogo_retornou_ao_menu = jogo.loop_principal()
@@ -102,6 +133,9 @@ class Menu:
             pygame.mixer.music.play(-1)
 
     def loja(self):
+        """
+        Método chamado quando o botão "Loja" é clicado.
+        """
         running = True
         while running:
             self.screen.fill((0, 0, 0))
@@ -119,6 +153,9 @@ class Menu:
             self.mainClock.tick(60)
 
     def sair(self):
+        """
+        Método chamado quando o botão "Sair" é clicado.
+        """
         pygame.quit()
         sys.exit()
 

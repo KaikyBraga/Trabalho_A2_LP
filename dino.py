@@ -56,7 +56,7 @@ class Aventureiro():
             
             self.texture_num  = (min(self.texture_num + 0.25, len(self.texture_jump)-1))%len(self.texture_jump)
         elif self.deslizamento:
-            self.deslizamento_time -= self.deslizamento_tick
+            self.deslizamento_time -= self.deslizamento_tick*self.alpha/2
             
             if self.deslizamento_time <= 0:
                 self.deslizamento = False
@@ -349,7 +349,7 @@ class Game():
 
     def update(self):
         self.score += 1
-        self.speed  = 8 + 2*(self.score//100)
+        self.speed  = min(20, 8 + 2*(self.score//100))
         self.char.alpha = self.speed/5
 
     def start_game(self):

@@ -1,4 +1,3 @@
 sphinx
-sphinx-rtd-theme==2.0.0
 pygame
 pandas

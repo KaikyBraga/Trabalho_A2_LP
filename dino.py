@@ -264,7 +264,6 @@ class Coin():
     def receber(self):
         self.recebida=True
 
-
 class BG:
     def __init__(self, img_path, x=0, mult_speed=1) -> None:
         self.width = WIDTH
@@ -303,7 +302,7 @@ class Game():
         self.speed  = min(20, 8 + 2*(self.score//100))
         self.char.alpha = self.speed/5
 
-    def start_game(self):
+    def start_game(self, op=1):
         if self.running==False:
             self.score = 0
             self.speed = 8
@@ -312,10 +311,14 @@ class Game():
             self.bg = [BG(WOODS_PATH, 0, 0.25), BG(WOODS_PATH, WIDTH, 0.25),
                         BG(BRIDGE_PATH, 0), BG(BRIDGE_PATH, WIDTH)]
             
-            self.char = Personagem('aventureiro', 6, 4, 7, 2, WIDTH_AVENTUREIRO, HEIGHT_AVENTUREIRO, Y_FLOOR_AVENTUREIRO)
-            #self.char = Personagem('cavaleiro', 10, 3, 10, 2, WIDTH_CAVALEIRO, HEIGHT_CAVALEIRO, Y_FLOOR_CAVALEIRO)
-            #self.char = Personagem('guerreira', 8, 3, 11, 3, WIDTH_GUERREIRA, HEIGHT_GUERREIRA, Y_FLOOR_GUERREIRA)
-            #self.char = Personagem('guerreiro', 8, 2, 9, 2, WIDTH_GUERREIRO, HEIGHT_GUERREIRO, Y_FLOOR_GUERREIRO)
+            if op==1:
+                self.char = Personagem('aventureiro', 6, 4, 7, 2, WIDTH_AVENTUREIRO, HEIGHT_AVENTUREIRO, Y_FLOOR_AVENTUREIRO)
+            elif op==2:
+                self.char = Personagem('cavaleiro', 10, 3, 10, 2, WIDTH_CAVALEIRO, HEIGHT_CAVALEIRO, Y_FLOOR_CAVALEIRO)
+            elif op==3:
+                self.char = Personagem('guerreira', 8, 3, 11, 3, WIDTH_GUERREIRA, HEIGHT_GUERREIRA, Y_FLOOR_GUERREIRA)
+            else:
+                self.char = Personagem('guerreiro', 8, 2, 9, 2, WIDTH_GUERREIRO, HEIGHT_GUERREIRO, Y_FLOOR_GUERREIRO)
             
             self.obstacle = []
             self.start_obstacles()
@@ -350,11 +353,12 @@ class Game():
                 self.obstacle.append( Bat(x_new_obstacle) )
             else:
                 self.obstacle.append( Coin(x_new_obstacle) )
-def main():
 
+def main():
     game = Game()
 
     loop = 0
+    moedas_rodada = 0
 
     clock = pygame.time.Clock()
 
@@ -399,6 +403,8 @@ def main():
                 else:
                     if game.obstacle[0].recebida==False:
                         print("+1 MOEDA")
+
+                        moedas_rodada += 1
                         game.obstacle[0].receber()
 
             loop = (loop+1)%100

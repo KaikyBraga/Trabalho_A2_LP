@@ -1,5 +1,5 @@
 import os, sys, pygame, random
-
+import pandas as pd
 from variaveis_globais import *
 
 pygame.init()
@@ -375,8 +375,11 @@ class Game():
 
     def increase_coins(self):
         if self.moedas_rodada>0:
-            #adiciona no csv aqui
+            dados_jogo = pd.read_csv("informacoes_jogo.csv")
+            dados_jogo["Quantidade_de_Moedas"] = self.moedas_rodada
+            dados_jogo.to_csv("informacoes_jogo.csv", index=False)
             self.moedas_rodada = 0
+            
             
 def loop_jogo():
     game = Game()

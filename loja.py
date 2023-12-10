@@ -47,21 +47,25 @@ class Loja:
             loops += 1
         # Desenha a imagem de fundo da loja
             self.screen.blit(self.background_img, (0, 0))
+            
             dados_jogo = pd.read_csv("informacoes_jogo.csv")
             quantidade_moedas = dados_jogo["Quantidade_de_Moedas"][0]
             aventureiro_desbloqueado = (dados_jogo["Aventureiro_Desbloqueado"]).bool()
             cavaleiro_desbloqueado = (dados_jogo["Cavaleiro_Desbloqueado"]).bool()
             guerreiro_desbloqueado = (dados_jogo["Guerreiro_Desbloqueado"]).bool()
             guerreira_desbloqueado = (dados_jogo["Guerreira_Desbloqueada"]).bool()
-
-
+        
+        #Plota a quantidade de moedas
+            texto_moeda = str(dados_jogo["Quantidade_de_Moedas"][0])
+            mensagem_moeda = criar_texto(texto_moeda, 40, "Arial", (255, 255, 255), texto_negrito = True)
+            self.screen.blit(mensagem_moeda, (1118, 35))
+            
         #Cria os botões
             botao_aventureiro = pygame.Rect(100, 220, 240, 340)
             botao_cavaleiro = pygame.Rect(400, 220, 240, 340)
             botao_guerreiro = pygame.Rect(680, 220, 220, 340)
             botao_guerreira = pygame.Rect(950, 220, 240, 340)
 
-            aventureiro_adquirido = pygame.Rect(88, 570, 250, 60)
             comprar_cavaleiro = pygame.Rect(370, 570, 250, 60)
             comprar_guerreiro = pygame.Rect(672, 570, 250, 60)
             comprar_guerreira = pygame.Rect(962, 570, 250, 60)

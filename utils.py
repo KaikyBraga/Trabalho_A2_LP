@@ -80,4 +80,4 @@ def criar_texto(mensagem_texto, tamanho_fonte, nome_fonte, cor_fonte, texto_cerr
     fonte = pygame.font.SysFont(nome_fonte, tamanho_fonte, texto_negrito, texto_italico)
     texto = fonte.render(mensagem_texto, texto_cerrilhado, cor_fonte)
     
-    return print(texto)
+    return texto 

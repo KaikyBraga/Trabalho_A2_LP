@@ -236,6 +236,8 @@ class Coin():
         self.texture = []
         self.mask = []
 
+        self.sound_coin = pygame.mixer.Sound(os.path.join("sons/som_moeda.wav"))
+        self.sound_coin.set_volume(0.25)
         self.recebida = False
 
         self.set_texture()
@@ -263,6 +265,7 @@ class Coin():
 
     def receber(self):
         self.recebida=True
+        self.sound_coin.play()
 
 class BG:
     def __init__(self, img_path, x=0, mult_speed=1) -> None:

@@ -9,7 +9,7 @@ Y_FLOOR = 450
 Y_FLOOR_AVENTUREIRO = 450
 
 pygame.init()
-screen = pygame.display.set_mode((WIDTH, HEIGHT))
+screen = pygame.display.set_mode((WIDTH, HEIGHT), flags=pygame.SCALED, vsync=1)
 pygame.display.set_caption("Dino")
 
 class Character():
@@ -141,7 +141,7 @@ class BG:
     def update(self, dx):
         self.x += int(dx*self.mult_speed)
         if self.x <= -self.width:
-            self.x = self.width
+            self.x += 2*self.width
 
     def show(self):
         screen.blit(self.texture, (self.x, self.y))
@@ -165,7 +165,7 @@ class Game():
     def start_game(self):
         if self.running==False:
             self.score = 0
-            self.speed = 15#8
+            self.speed = 15
             self.running = True
 
             self.bg = [BG(WOODS_PATH, 0, 0.25), BG(WOODS_PATH, WIDTH, 0.25),
@@ -232,7 +232,7 @@ def main():
             for obstacule in game.obstacule:
                 obstacule.update(-game.speed)
                 obstacule.show()
-            
+
             game.dino.update()
             game.dino.show()
 
@@ -240,11 +240,10 @@ def main():
                 print("Colisao")
                 #game.running = False
 
-            
             loop = (loop+1)%100
             
-            #if(loop%2==0):
-            game.update()
+            if(loop%2==0):
+                game.update()
 
             print(game.score)
 

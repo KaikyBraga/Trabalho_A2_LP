@@ -419,6 +419,10 @@ def loop_jogo(op_char=1):
                     game.start_game()
                 if event.key == pygame.K_s:
                     game.char.deslizar()
+            if event.type == pygame.KEYDOWN and event.key == pygame.K_ESCAPE:
+                    # Retorna ao menu se a tecla ESC for pressionada
+                    pygame.mixer.music.stop()
+                    return True        
 
         if game.running:
             for bg in game.bg:
@@ -474,10 +478,10 @@ def loop_jogo(op_char=1):
             game.char.update()
             game.char.show()
         
-        texto_score = criar_texto( "Score: " + str(game.score), 40, "Verdana", (255,255,0), True, True)
+        texto_score = criar_texto( "Score: " + str(game.score), 40, NOME_FONTE, (255,255,0), True, True)
         screen.blit(texto_score, (900,35))
 
-        texto_score = criar_texto( "Moedas: " + str(game.moedas_rodada), 40, "Verdana", (255,255,0), True, True)
+        texto_score = criar_texto( "Moedas: " + str(game.moedas_rodada), 40, NOME_FONTE, (255,255,0), True, True)
         screen.blit(texto_score, (600,35))
 
         clock.tick(30)

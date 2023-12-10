@@ -1,6 +1,7 @@
 import os, sys, pygame, random
 import pandas as pd
 from variaveis_globais import *
+from utils import criar_texto
 
 pygame.init()
 screen = pygame.display.set_mode((WIDTH, HEIGHT), flags=pygame.SCALED, vsync=1)
@@ -309,11 +310,12 @@ class BG:
 class Game():
     def __init__(self, op_char) -> None:
         self.running = False
+        self.op_char = op_char
 
         self.sound_score = pygame.mixer.Sound(os.path.join("sons/som_score.wav"))
         self.sound_score.set_volume(0.25)
 
-        self.start_game(op_char)
+        self.start_game()
 
     def update(self):
         self.score += 1
@@ -323,7 +325,7 @@ class Game():
         if self.score%100==0:
             self.sound_score.play()
 
-    def start_game(self, op_char):
+    def start_game(self):
         if self.running==False:
             self.updated_record = False
             self.moedas_rodada = 0
@@ -334,11 +336,11 @@ class Game():
             self.bg = [BG(WOODS_PATH, 0, 0.25), BG(WOODS_PATH, WIDTH, 0.25),
                         BG(BRIDGE_PATH, 0), BG(BRIDGE_PATH, WIDTH)]
             
-            if op_char==1:
+            if self.op_char==1:
                 self.char = Personagem('aventureiro', 6, 4, 7, 2, WIDTH_AVENTUREIRO, HEIGHT_AVENTUREIRO, Y_FLOOR_AVENTUREIRO)
-            elif op_char==2:
+            elif self.op_char==2:
                 self.char = Personagem('cavaleiro', 10, 3, 10, 2, WIDTH_CAVALEIRO, HEIGHT_CAVALEIRO, Y_FLOOR_CAVALEIRO)
-            elif op_char==3:
+            elif self.op_char==3:
                 self.char = Personagem('guerreira', 8, 3, 11, 3, WIDTH_GUERREIRA, HEIGHT_GUERREIRA, Y_FLOOR_GUERREIRA)
             else:
                 self.char = Personagem('guerreiro', 8, 2, 9, 2, WIDTH_GUERREIRO, HEIGHT_GUERREIRO, Y_FLOOR_GUERREIRO)
@@ -471,6 +473,12 @@ def loop_jogo(op_char=1):
 
             game.char.update()
             game.char.show()
+        
+        texto_score = criar_texto( "Score: " + str(game.score), 40, "Verdana", (255,255,0), True, True)
+        screen.blit(texto_score, (900,35))
+
+        texto_score = criar_texto( "Moedas: " + str(game.moedas_rodada), 40, "Verdana", (255,255,0), True, True)
+        screen.blit(texto_score, (600,35))
 
         clock.tick(30)
         pygame.display.update()

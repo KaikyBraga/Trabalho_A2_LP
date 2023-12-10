@@ -1,0 +1,500 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="./">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>game module &mdash; Trabalho A2 LP 1.0 documentation</title>
+      <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=92fd9be5" />
+      <link rel="stylesheet" type="text/css" href="_static/css/theme.css?v=19f00094" />
+
+  
+  <!--[if lt IE 9]>
+    <script src="_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script src="_static/jquery.js?v=5d32c60e"></script>
+        <script src="_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+        <script src="_static/documentation_options.js?v=f2a433a1"></script>
+        <script src="_static/doctools.js?v=888ff710"></script>
+        <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="loja module" href="loja.html" />
+    <link rel="prev" title="Trabalho_A2_LP" href="modules.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="index.html" class="icon icon-home">
+            Trabalho A2 LP
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul class="current">
+<li class="toctree-l1 current"><a class="reference internal" href="modules.html">Trabalho_A2_LP</a><ul class="current">
+<li class="toctree-l2 current"><a class="current reference internal" href="#">game module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#game.BG"><code class="docutils literal notranslate"><span class="pre">BG</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#game.BG.set_texture"><code class="docutils literal notranslate"><span class="pre">BG.set_texture()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#game.BG.show"><code class="docutils literal notranslate"><span class="pre">BG.show()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#game.BG.update"><code class="docutils literal notranslate"><span class="pre">BG.update()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#game.Bat"><code class="docutils literal notranslate"><span class="pre">Bat</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#game.Bat.ataque"><code class="docutils literal notranslate"><span class="pre">Bat.ataque()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#game.Bat.get_mask"><code class="docutils literal notranslate"><span class="pre">Bat.get_mask()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#game.Bat.set_texture"><code class="docutils literal notranslate"><span class="pre">Bat.set_texture()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#game.Bat.show"><code class="docutils literal notranslate"><span class="pre">Bat.show()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#game.Bat.update"><code class="docutils literal notranslate"><span class="pre">Bat.update()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#game.Bomb"><code class="docutils literal notranslate"><span class="pre">Bomb</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#game.Bomb.explodir"><code class="docutils literal notranslate"><span class="pre">Bomb.explodir()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#game.Bomb.get_mask"><code class="docutils literal notranslate"><span class="pre">Bomb.get_mask()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#game.Bomb.set_texture"><code class="docutils literal notranslate"><span class="pre">Bomb.set_texture()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#game.Bomb.show"><code class="docutils literal notranslate"><span class="pre">Bomb.show()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#game.Bomb.update"><code class="docutils literal notranslate"><span class="pre">Bomb.update()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#game.Coin"><code class="docutils literal notranslate"><span class="pre">Coin</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#game.Coin.get_mask"><code class="docutils literal notranslate"><span class="pre">Coin.get_mask()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#game.Coin.receber"><code class="docutils literal notranslate"><span class="pre">Coin.receber()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#game.Coin.set_texture"><code class="docutils literal notranslate"><span class="pre">Coin.set_texture()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#game.Coin.show"><code class="docutils literal notranslate"><span class="pre">Coin.show()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#game.Coin.update"><code class="docutils literal notranslate"><span class="pre">Coin.update()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#game.Game"><code class="docutils literal notranslate"><span class="pre">Game</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#game.Game.check_colision"><code class="docutils literal notranslate"><span class="pre">Game.check_colision()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#game.Game.increase_coins"><code class="docutils literal notranslate"><span class="pre">Game.increase_coins()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#game.Game.spawn_obstacles"><code class="docutils literal notranslate"><span class="pre">Game.spawn_obstacles()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#game.Game.start_game"><code class="docutils literal notranslate"><span class="pre">Game.start_game()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#game.Game.start_obstacles"><code class="docutils literal notranslate"><span class="pre">Game.start_obstacles()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#game.Game.update"><code class="docutils literal notranslate"><span class="pre">Game.update()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#game.Game.update_record"><code class="docutils literal notranslate"><span class="pre">Game.update_record()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#game.Personagem"><code class="docutils literal notranslate"><span class="pre">Personagem</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#game.Personagem.current_mask"><code class="docutils literal notranslate"><span class="pre">Personagem.current_mask()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#game.Personagem.deslizar"><code class="docutils literal notranslate"><span class="pre">Personagem.deslizar()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#game.Personagem.jump"><code class="docutils literal notranslate"><span class="pre">Personagem.jump()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#game.Personagem.set_texture"><code class="docutils literal notranslate"><span class="pre">Personagem.set_texture()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#game.Personagem.show"><code class="docutils literal notranslate"><span class="pre">Personagem.show()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#game.Personagem.update"><code class="docutils literal notranslate"><span class="pre">Personagem.update()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#game.loop_jogo"><code class="docutils literal notranslate"><span class="pre">loop_jogo()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="loja.html">loja module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="menu.html">menu module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="utils.html">utils module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="variaveis_globais.html">variaveis_globais module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="variaveis_sons.html">variaveis_sons module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="variaveis_sprites.html">variaveis_sprites module</a></li>
+</ul>
+</li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">Trabalho A2 LP</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="modules.html">Trabalho_A2_LP</a></li>
+      <li class="breadcrumb-item active">game module</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="_sources/game.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="module-game">
+<span id="game-module"></span><h1>game module<a class="headerlink" href="#module-game" title="Link to this heading"></a></h1>
+<p>Esse é o módulo do jogo.
+Módulo responsável por criar toda a movimentação dos personagens e dos cenários.</p>
+<dl class="py class">
+<dt class="sig sig-object py" id="game.BG">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">game.</span></span><span class="sig-name descname"><span class="pre">BG</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">img_path</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">x</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">mult_speed</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/game.html#BG"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#game.BG" title="Link to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>Classe que representa um plano de fundo no jogo.</p>
+<dl class="simple">
+<dt>Attributes:</dt><dd><p>width: Largura do plano de fundo.
+height: Altura do plano de fundo.
+x: Posição horizontal do plano de fundo.
+y: Posição vertical do plano de fundo.
+mult_speed: Fator de multiplicação da velocidade de movimentação do plano de fundo.
+img_path: Caminho da imagem do plano de fundo.
+texture: Textura do plano de fundo.</p>
+</dd>
+</dl>
+<dl class="py method">
+<dt class="sig sig-object py" id="game.BG.set_texture">
+<span class="sig-name descname"><span class="pre">set_texture</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/game.html#BG.set_texture"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#game.BG.set_texture" title="Link to this definition"></a></dt>
+<dd><p>Carrega a textura do plano de fundo.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="game.BG.show">
+<span class="sig-name descname"><span class="pre">show</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/game.html#BG.show"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#game.BG.show" title="Link to this definition"></a></dt>
+<dd><p>Exibe o plano de fundo na tela.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="game.BG.update">
+<span class="sig-name descname"><span class="pre">update</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">dx</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/game.html#BG.update"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#game.BG.update" title="Link to this definition"></a></dt>
+<dd><p>Atualiza a posição do plano de fundo com base no deslocamento horizontal.</p>
+<p>Parameters:
+- dx: Deslocamento horizontal.</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="game.Bat">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">game.</span></span><span class="sig-name descname"><span class="pre">Bat</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/game.html#Bat"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#game.Bat" title="Link to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>Classe que representa um morcego no jogo.</p>
+<dl class="simple">
+<dt>Attributes:</dt><dd><p>width: Largura do morcego.
+height: Altura do morcego.
+x: Posição horizontal do morcego.
+y: Posição vertical do morcego.
+texture_num: Número do sprite atual.
+texture: Lista de texturas do morcego.
+mask: Lista de máscaras de colisão do morcego.
+sound_bat: Efeito sonoro do ataque do morcego.</p>
+</dd>
+</dl>
+<dl class="py method">
+<dt class="sig sig-object py" id="game.Bat.ataque">
+<span class="sig-name descname"><span class="pre">ataque</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/game.html#Bat.ataque"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#game.Bat.ataque" title="Link to this definition"></a></dt>
+<dd><p>Inicia o som de ataque do morcego.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="game.Bat.get_mask">
+<span class="sig-name descname"><span class="pre">get_mask</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/game.html#Bat.get_mask"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#game.Bat.get_mask" title="Link to this definition"></a></dt>
+<dd><p>Retorna a máscara de colisão do morcego.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="game.Bat.set_texture">
+<span class="sig-name descname"><span class="pre">set_texture</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/game.html#Bat.set_texture"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#game.Bat.set_texture" title="Link to this definition"></a></dt>
+<dd><p>Carrega as texturas do morcego.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="game.Bat.show">
+<span class="sig-name descname"><span class="pre">show</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/game.html#Bat.show"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#game.Bat.show" title="Link to this definition"></a></dt>
+<dd><p>Exibe o morcego na tela, escolhendo a textura apropriada.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="game.Bat.update">
+<span class="sig-name descname"><span class="pre">update</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">dx</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/game.html#Bat.update"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#game.Bat.update" title="Link to this definition"></a></dt>
+<dd><p>Atualiza a posição do morcego e a animação de voo.</p>
+<p>Parameters:
+- dx: Variação da posição horizontal do morcego.</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="game.Bomb">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">game.</span></span><span class="sig-name descname"><span class="pre">Bomb</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/game.html#Bomb"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#game.Bomb" title="Link to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>Classe que representa uma bomba no jogo.</p>
+<dl class="simple">
+<dt>Attributes:</dt><dd><p>width: Largura da bomba.
+height: Altura da bomba.
+x: Posição horizontal da bomba.
+y: Posição vertical da bomba.
+exploded: Indica se a bomba já explodiu.
+texture_num: Número do sprite atual.
+texture: Textura da bomba antes de explodir.
+texture_explosion: Lista de texturas da explosão.
+mask: Máscara de colisão da bomba.
+sound_bomb: Efeito sonoro da explosão da bomba.</p>
+</dd>
+</dl>
+<dl class="py method">
+<dt class="sig sig-object py" id="game.Bomb.explodir">
+<span class="sig-name descname"><span class="pre">explodir</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/game.html#Bomb.explodir"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#game.Bomb.explodir" title="Link to this definition"></a></dt>
+<dd><p>Inicia a animação de explosão da bomba e reproduz o som de explosão.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="game.Bomb.get_mask">
+<span class="sig-name descname"><span class="pre">get_mask</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/game.html#Bomb.get_mask"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#game.Bomb.get_mask" title="Link to this definition"></a></dt>
+<dd><p>Retorna a máscara de colisão da bomba.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="game.Bomb.set_texture">
+<span class="sig-name descname"><span class="pre">set_texture</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/game.html#Bomb.set_texture"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#game.Bomb.set_texture" title="Link to this definition"></a></dt>
+<dd><p>Carrega as texturas da bomba e da explosão.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="game.Bomb.show">
+<span class="sig-name descname"><span class="pre">show</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/game.html#Bomb.show"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#game.Bomb.show" title="Link to this definition"></a></dt>
+<dd><p>Exibe a bomba na tela, escolhendo a textura apropriada.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="game.Bomb.update">
+<span class="sig-name descname"><span class="pre">update</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">dx</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/game.html#Bomb.update"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#game.Bomb.update" title="Link to this definition"></a></dt>
+<dd><p>Atualiza a posição da bomba ou a animação de explosão.</p>
+<p>Parameters:
+- dx: Variação da posição horizontal da bomba.</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="game.Coin">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">game.</span></span><span class="sig-name descname"><span class="pre">Coin</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/game.html#Coin"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#game.Coin" title="Link to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>Classe que representa uma moeda no jogo.</p>
+<dl class="simple">
+<dt>Attributes:</dt><dd><p>width: Largura da moeda.
+height: Altura da moeda.
+x: Posição horizontal da moeda.
+y: Posição vertical da moeda.
+texture_num: Número do sprite atual.
+texture: Lista de texturas da moeda.
+mask: Lista de máscaras de colisão da moeda.
+sound_coin: Efeito sonoro ao receber a moeda.
+recebida: Indica se a moeda já foi recebida.</p>
+</dd>
+</dl>
+<dl class="py method">
+<dt class="sig sig-object py" id="game.Coin.get_mask">
+<span class="sig-name descname"><span class="pre">get_mask</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/game.html#Coin.get_mask"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#game.Coin.get_mask" title="Link to this definition"></a></dt>
+<dd><p>Retorna a máscara de colisão da moeda.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="game.Coin.receber">
+<span class="sig-name descname"><span class="pre">receber</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/game.html#Coin.receber"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#game.Coin.receber" title="Link to this definition"></a></dt>
+<dd><p>Marca a moeda como recebida e reproduz o som de recebimento.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="game.Coin.set_texture">
+<span class="sig-name descname"><span class="pre">set_texture</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/game.html#Coin.set_texture"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#game.Coin.set_texture" title="Link to this definition"></a></dt>
+<dd><p>Carrega as texturas da moeda.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="game.Coin.show">
+<span class="sig-name descname"><span class="pre">show</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/game.html#Coin.show"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#game.Coin.show" title="Link to this definition"></a></dt>
+<dd><p>Exibe a moeda na tela, escolhendo a textura apropriada.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="game.Coin.update">
+<span class="sig-name descname"><span class="pre">update</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">dx</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/game.html#Coin.update"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#game.Coin.update" title="Link to this definition"></a></dt>
+<dd><p>Atualiza a posição da moeda e a animação de flutuação.</p>
+<p>Parameters:
+- dx: Variação da posição horizontal da moeda.</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="game.Game">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">game.</span></span><span class="sig-name descname"><span class="pre">Game</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">op_char</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/game.html#Game"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#game.Game" title="Link to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>Classe que representa o jogo principal.</p>
+<dl class="simple">
+<dt>Attributes:</dt><dd><p>running: Indica se o jogo está em execução.
+op_char: Opção do personagem escolhido.
+sound_score: Efeito sonoro ao marcar um ponto.
+start_game: Inicia o jogo.
+updated_record: Indica se o recorde foi atualizado.
+moedas_rodada: Quantidade de moedas obtidas na rodada.
+score: Pontuação do jogador.
+speed: Velocidade de deslocamento do cenário.
+bg: Lista de objetos BG representando o plano de fundo.
+char: Personagem controlado pelo jogador.
+obstacle: Lista de obstáculos no jogo.
+check_colision: Verifica colisão entre o personagem e os obstáculos.
+start_obstacles: Inicializa a lista de obstáculos no início do jogo.
+spawn_obstacles: Gera novos obstáculos conforme o jogo progride.
+increase_coins: Atualiza a quantidade de moedas no arquivo de informações do jogo.
+update_record: Atualiza o recorde no arquivo de informações do jogo.</p>
+</dd>
+</dl>
+<dl class="py method">
+<dt class="sig sig-object py" id="game.Game.check_colision">
+<span class="sig-name descname"><span class="pre">check_colision</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/game.html#Game.check_colision"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#game.Game.check_colision" title="Link to this definition"></a></dt>
+<dd><p>Verifica colisão entre o personagem e os obstáculos.</p>
+<p>Returns:
+- True se houver colisão, False caso contrário.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="game.Game.increase_coins">
+<span class="sig-name descname"><span class="pre">increase_coins</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/game.html#Game.increase_coins"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#game.Game.increase_coins" title="Link to this definition"></a></dt>
+<dd><p>Atualiza a quantidade de moedas no arquivo de informações do jogo.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="game.Game.spawn_obstacles">
+<span class="sig-name descname"><span class="pre">spawn_obstacles</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/game.html#Game.spawn_obstacles"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#game.Game.spawn_obstacles" title="Link to this definition"></a></dt>
+<dd><p>Gera novos obstáculos conforme o jogo progride.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="game.Game.start_game">
+<span class="sig-name descname"><span class="pre">start_game</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/game.html#Game.start_game"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#game.Game.start_game" title="Link to this definition"></a></dt>
+<dd><p>Inicia o jogo, inicializando os atributos e objetos necessários.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="game.Game.start_obstacles">
+<span class="sig-name descname"><span class="pre">start_obstacles</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/game.html#Game.start_obstacles"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#game.Game.start_obstacles" title="Link to this definition"></a></dt>
+<dd><p>Inicializa a lista de obstáculos no início do jogo.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="game.Game.update">
+<span class="sig-name descname"><span class="pre">update</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/game.html#Game.update"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#game.Game.update" title="Link to this definition"></a></dt>
+<dd><p>Atualiza a pontuação, velocidade e alpha do personagem.
+Reproduz o som de pontuação a cada 100 pontos.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="game.Game.update_record">
+<span class="sig-name descname"><span class="pre">update_record</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/game.html#Game.update_record"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#game.Game.update_record" title="Link to this definition"></a></dt>
+<dd><p>Atualiza o recorde no arquivo de informações do jogo.</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="game.Personagem">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">game.</span></span><span class="sig-name descname"><span class="pre">Personagem</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">qnt_run</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">qnt_jump</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">qnt_die</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">qnt_deslizamento</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">width</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">height</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">y_floor</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/game.html#Personagem"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#game.Personagem" title="Link to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>Classe que representa um personagem no jogo.</p>
+<dl class="simple">
+<dt>Attributes:</dt><dd><p>name: Nome do personagem.
+qnt_run: Quantidade de sprites para corrida.
+qnt_jump: Quantidade de sprites para pulo.
+qnt_die: Quantidade de sprites para morte.
+qnt_deslizamento: Quantidade de sprites para deslizamento.
+width: Largura do sprite.
+height: Altura do sprite.
+y_floor: Altura do chão onde o personagem fica.</p>
+</dd>
+</dl>
+<dl class="py method">
+<dt class="sig sig-object py" id="game.Personagem.current_mask">
+<span class="sig-name descname"><span class="pre">current_mask</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/game.html#Personagem.current_mask"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#game.Personagem.current_mask" title="Link to this definition"></a></dt>
+<dd><p>Retorna a máscara do sprite atual, dependendo da animação em execução.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="game.Personagem.deslizar">
+<span class="sig-name descname"><span class="pre">deslizar</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/game.html#Personagem.deslizar"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#game.Personagem.deslizar" title="Link to this definition"></a></dt>
+<dd><p>Inicia a animação de deslizamento se o personagem não estiver pulando, deslizando ou morto.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="game.Personagem.jump">
+<span class="sig-name descname"><span class="pre">jump</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/game.html#Personagem.jump"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#game.Personagem.jump" title="Link to this definition"></a></dt>
+<dd><p>Inicia a animação de pulo se o personagem não estiver pulando, deslizando ou morto.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="game.Personagem.set_texture">
+<span class="sig-name descname"><span class="pre">set_texture</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/game.html#Personagem.set_texture"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#game.Personagem.set_texture" title="Link to this definition"></a></dt>
+<dd><p>Carrega os sprites do personagem para as animações de corrida, pulo, morte e deslizamento.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="game.Personagem.show">
+<span class="sig-name descname"><span class="pre">show</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/game.html#Personagem.show"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#game.Personagem.show" title="Link to this definition"></a></dt>
+<dd><p>Mostra o personagem na tela, escolhendo a animação apropriada.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="game.Personagem.update">
+<span class="sig-name descname"><span class="pre">update</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/game.html#Personagem.update"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#game.Personagem.update" title="Link to this definition"></a></dt>
+<dd><p>Atualiza o estado do personagem com base nas animações.</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="game.loop_jogo">
+<span class="sig-prename descclassname"><span class="pre">game.</span></span><span class="sig-name descname"><span class="pre">loop_jogo</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">op_char</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/game.html#loop_jogo"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#game.loop_jogo" title="Link to this definition"></a></dt>
+<dd><p>Função principal que representa o loop do jogo.</p>
+<p>Parameters:
+- op_char: Opção do personagem escolhido.</p>
+<p>Returns:
+- True se o jogador pressionar a tecla ESC para voltar ao menu, False caso contrário.</p>
+</dd></dl>
+
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="modules.html" class="btn btn-neutral float-left" title="Trabalho_A2_LP" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="loja.html" class="btn btn-neutral float-right" title="loja module" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2023, Anderson, Ramyro, Samuel e Kaiky.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

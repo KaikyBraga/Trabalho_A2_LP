@@ -1,0 +1,1001 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>game &mdash; Trabalho A2 LP 1.0 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=92fd9be5" />
+      <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=19f00094" />
+
+  
+  <!--[if lt IE 9]>
+    <script src="../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script src="../_static/jquery.js?v=5d32c60e"></script>
+        <script src="../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+        <script src="../_static/documentation_options.js?v=f2a433a1"></script>
+        <script src="../_static/doctools.js?v=888ff710"></script>
+        <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../index.html" class="icon icon-home">
+            Trabalho A2 LP
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../modules.html">Trabalho_A2_LP</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">Trabalho A2 LP</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="index.html">Module code</a></li>
+      <li class="breadcrumb-item active">game</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Source code for game</h1><div class="highlight"><pre>
+<span></span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">Esse é o módulo do jogo.</span>
+<span class="sd">Módulo responsável por criar toda a movimentação dos personagens e dos cenários.</span>
+<span class="sd">&quot;&quot;&quot;</span>
+
+<span class="kn">import</span> <span class="nn">os</span><span class="o">,</span> <span class="nn">sys</span><span class="o">,</span> <span class="nn">pygame</span><span class="o">,</span> <span class="nn">random</span>
+<span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
+<span class="kn">from</span> <span class="nn">variaveis_globais</span> <span class="kn">import</span> <span class="o">*</span>
+<span class="kn">from</span> <span class="nn">utils</span> <span class="kn">import</span> <span class="n">criar_texto</span>
+
+<span class="n">pygame</span><span class="o">.</span><span class="n">init</span><span class="p">()</span>
+<span class="n">screen</span> <span class="o">=</span> <span class="n">pygame</span><span class="o">.</span><span class="n">display</span><span class="o">.</span><span class="n">set_mode</span><span class="p">((</span><span class="n">WIDTH</span><span class="p">,</span> <span class="n">HEIGHT</span><span class="p">),</span> <span class="n">flags</span><span class="o">=</span><span class="n">pygame</span><span class="o">.</span><span class="n">SCALED</span><span class="p">,</span> <span class="n">vsync</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+<span class="n">pygame</span><span class="o">.</span><span class="n">display</span><span class="o">.</span><span class="n">set_caption</span><span class="p">(</span><span class="s2">&quot;EMAP&#39;s RUNNING&quot;</span><span class="p">)</span>
+
+<div class="viewcode-block" id="Personagem">
+<a class="viewcode-back" href="../game.html#game.Personagem">[docs]</a>
+<span class="k">class</span> <span class="nc">Personagem</span><span class="p">():</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Classe que representa um personagem no jogo.</span>
+
+<span class="sd">    Attributes:</span>
+<span class="sd">        name: Nome do personagem.</span>
+<span class="sd">        qnt_run: Quantidade de sprites para corrida.</span>
+<span class="sd">        qnt_jump: Quantidade de sprites para pulo.</span>
+<span class="sd">        qnt_die: Quantidade de sprites para morte.</span>
+<span class="sd">        qnt_deslizamento: Quantidade de sprites para deslizamento.</span>
+<span class="sd">        width: Largura do sprite.</span>
+<span class="sd">        height: Altura do sprite.</span>
+<span class="sd">        y_floor: Altura do chão onde o personagem fica.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">qnt_run</span><span class="p">,</span> <span class="n">qnt_jump</span><span class="p">,</span> <span class="n">qnt_die</span><span class="p">,</span> <span class="n">qnt_deslizamento</span><span class="p">,</span> <span class="n">width</span><span class="p">,</span> <span class="n">height</span><span class="p">,</span> <span class="n">y_floor</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Inicializa um objeto da classe Personagem.</span>
+
+<span class="sd">        Parameters:</span>
+<span class="sd">            name: Nome do personagem.</span>
+<span class="sd">            qnt_run: Quantidade de sprites para corrida.</span>
+<span class="sd">            qnt_jump: Quantidade de sprites para pulo.</span>
+<span class="sd">            qnt_die: Quantidade de sprites para morte.</span>
+<span class="sd">            qnt_deslizamento: Quantidade de sprites para deslizamento.</span>
+<span class="sd">            width: Largura do sprite.</span>
+<span class="sd">            height: Altura do sprite.</span>
+<span class="sd">            y_floor: Altura do chão onde o personagem fica.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">name</span> <span class="o">=</span> <span class="n">name</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">qnt_run</span> <span class="o">=</span> <span class="n">qnt_run</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">qnt_jump</span> <span class="o">=</span> <span class="n">qnt_jump</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">qnt_die</span> <span class="o">=</span> <span class="n">qnt_die</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">qnt_deslizamento</span> <span class="o">=</span> <span class="n">qnt_deslizamento</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">width</span> <span class="o">=</span> <span class="n">width</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">height</span> <span class="o">=</span> <span class="n">height</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">x</span> <span class="o">=</span> <span class="mi">200</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">width</span><span class="o">//</span><span class="mi">2</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">y_floor</span> <span class="o">=</span> <span class="n">y_floor</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">y</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">y_floor</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">jumping</span> <span class="o">=</span> <span class="kc">False</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">alpha</span> <span class="o">=</span> <span class="mi">1</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">dy</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">ddy</span> <span class="o">=</span> <span class="mf">0.75</span><span class="o">*</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">alpha</span><span class="o">**</span><span class="mi">2</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">deslizamento</span> <span class="o">=</span> <span class="kc">False</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">deslizamento_time</span> <span class="o">=</span> <span class="mi">20</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">deslizamento_tick</span> <span class="o">=</span> <span class="mi">1</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">alive</span> <span class="o">=</span> <span class="kc">True</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">texture_num</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">texture_run</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">texture_jump</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">texture_dead</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">texture_deslizamento</span> <span class="o">=</span> <span class="p">[]</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">mask_run</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">mask_jump</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">mask_deslizamento</span> <span class="o">=</span> <span class="p">[]</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">set_texture</span><span class="p">()</span>
+    
+<div class="viewcode-block" id="Personagem.update">
+<a class="viewcode-back" href="../game.html#game.Personagem.update">[docs]</a>
+    <span class="k">def</span> <span class="nf">update</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Atualiza o estado do personagem com base nas animações.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">jumping</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">y</span> <span class="o">-=</span> <span class="bp">self</span><span class="o">.</span><span class="n">dy</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">dy</span> <span class="o">-=</span> <span class="bp">self</span><span class="o">.</span><span class="n">ddy</span>
+
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">y</span> <span class="o">&gt;=</span> <span class="bp">self</span><span class="o">.</span><span class="n">y_floor</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">jumping</span> <span class="o">=</span> <span class="kc">False</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">y</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">y_floor</span>
+            
+            <span class="bp">self</span><span class="o">.</span><span class="n">texture_num</span>  <span class="o">=</span> <span class="p">(</span><span class="nb">min</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">texture_num</span> <span class="o">+</span> <span class="mf">0.25</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">texture_jump</span><span class="p">)</span><span class="o">-</span><span class="mi">1</span><span class="p">))</span><span class="o">%</span><span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">texture_jump</span><span class="p">)</span>
+        <span class="k">elif</span> <span class="bp">self</span><span class="o">.</span><span class="n">deslizamento</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">deslizamento_time</span> <span class="o">-=</span> <span class="bp">self</span><span class="o">.</span><span class="n">deslizamento_tick</span><span class="o">*</span><span class="bp">self</span><span class="o">.</span><span class="n">alpha</span><span class="o">/</span><span class="mi">2</span>
+            
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">deslizamento_time</span> <span class="o">&lt;=</span> <span class="mi">0</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">deslizamento</span> <span class="o">=</span> <span class="kc">False</span>
+
+            <span class="bp">self</span><span class="o">.</span><span class="n">texture_num</span>  <span class="o">=</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">texture_num</span> <span class="o">+</span> <span class="mf">0.25</span><span class="p">)</span><span class="o">%</span><span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">texture_deslizamento</span><span class="p">)</span>
+        <span class="k">elif</span> <span class="bp">self</span><span class="o">.</span><span class="n">alive</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">texture_num</span>  <span class="o">=</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">texture_num</span> <span class="o">+</span> <span class="mf">0.25</span><span class="p">)</span><span class="o">%</span><span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">texture_run</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">texture_num</span>  <span class="o">=</span> <span class="nb">min</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">texture_num</span> <span class="o">+</span> <span class="mf">0.125</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">texture_dead</span><span class="p">)</span><span class="o">-</span><span class="mi">1</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="Personagem.show">
+<a class="viewcode-back" href="../game.html#game.Personagem.show">[docs]</a>
+    <span class="k">def</span> <span class="nf">show</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Mostra o personagem na tela, escolhendo a animação apropriada.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">jumping</span><span class="p">:</span> 
+            <span class="n">screen</span><span class="o">.</span><span class="n">blit</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">texture_jump</span><span class="p">[</span><span class="nb">int</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">texture_num</span><span class="p">)],</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">x</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">y</span><span class="p">))</span>
+        <span class="k">elif</span> <span class="bp">self</span><span class="o">.</span><span class="n">deslizamento</span><span class="p">:</span>
+            <span class="n">screen</span><span class="o">.</span><span class="n">blit</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">texture_deslizamento</span><span class="p">[</span><span class="nb">int</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">texture_num</span><span class="p">)],</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">x</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">y</span><span class="p">))</span>
+        <span class="k">elif</span> <span class="bp">self</span><span class="o">.</span><span class="n">alive</span><span class="p">:</span>
+            <span class="n">screen</span><span class="o">.</span><span class="n">blit</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">texture_run</span><span class="p">[</span><span class="nb">int</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">texture_num</span><span class="p">)],</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">x</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">y</span><span class="p">))</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">screen</span><span class="o">.</span><span class="n">blit</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">texture_dead</span><span class="p">[</span><span class="nb">int</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">texture_num</span><span class="p">)],</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">x</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">y</span><span class="p">))</span></div>
+
+
+<div class="viewcode-block" id="Personagem.set_texture">
+<a class="viewcode-back" href="../game.html#game.Personagem.set_texture">[docs]</a>
+    <span class="k">def</span> <span class="nf">set_texture</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Carrega os sprites do personagem para as animações de corrida, pulo, morte e deslizamento.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="c1">#carrega sprites de corrida</span>
+        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">qnt_run</span><span class="o">+</span><span class="mi">1</span><span class="p">):</span>
+            <span class="n">run_path</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;sprites/personagens/</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="si">}</span><span class="s2">/corrida/</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="si">}</span><span class="s2">_corrida_</span><span class="si">{</span><span class="n">i</span><span class="si">}</span><span class="s2">.png&quot;</span>  
+            <span class="n">path</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">run_path</span><span class="p">)</span>
+
+            <span class="n">img</span> <span class="o">=</span> <span class="n">pygame</span><span class="o">.</span><span class="n">image</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">path</span><span class="p">)</span>
+
+            <span class="bp">self</span><span class="o">.</span><span class="n">texture_run</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">pygame</span><span class="o">.</span><span class="n">transform</span><span class="o">.</span><span class="n">scale</span><span class="p">(</span><span class="n">img</span><span class="p">,</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">width</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">height</span><span class="p">)))</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">mask_run</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">pygame</span><span class="o">.</span><span class="n">mask</span><span class="o">.</span><span class="n">from_surface</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">texture_run</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]))</span>
+
+        <span class="c1">#carrega sprites de pulo</span>
+        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">qnt_jump</span><span class="o">+</span><span class="mi">1</span><span class="p">):</span>
+            <span class="n">jump_path</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;sprites/personagens/</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="si">}</span><span class="s2">/pulo/</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="si">}</span><span class="s2">_pulo_</span><span class="si">{</span><span class="n">i</span><span class="si">}</span><span class="s2">.png&quot;</span>  
+            <span class="n">path</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">jump_path</span><span class="p">)</span>
+
+            <span class="n">img</span> <span class="o">=</span> <span class="n">pygame</span><span class="o">.</span><span class="n">image</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">path</span><span class="p">)</span>
+
+            <span class="bp">self</span><span class="o">.</span><span class="n">texture_jump</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">pygame</span><span class="o">.</span><span class="n">transform</span><span class="o">.</span><span class="n">scale</span><span class="p">(</span><span class="n">img</span><span class="p">,</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">width</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">height</span><span class="p">)))</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">mask_jump</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">pygame</span><span class="o">.</span><span class="n">mask</span><span class="o">.</span><span class="n">from_surface</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">texture_jump</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]))</span>
+        
+        <span class="c1">#carrega sprites de morte</span>
+        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">qnt_die</span><span class="o">+</span><span class="mi">1</span><span class="p">):</span>
+            <span class="n">dead_path</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;sprites/personagens/</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="si">}</span><span class="s2">/morte/</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="si">}</span><span class="s2">_morte_</span><span class="si">{</span><span class="n">i</span><span class="si">}</span><span class="s2">.png&quot;</span>  
+            <span class="n">path</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">dead_path</span><span class="p">)</span>
+
+            <span class="n">img</span> <span class="o">=</span> <span class="n">pygame</span><span class="o">.</span><span class="n">image</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">path</span><span class="p">)</span>
+
+            <span class="bp">self</span><span class="o">.</span><span class="n">texture_dead</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">pygame</span><span class="o">.</span><span class="n">transform</span><span class="o">.</span><span class="n">scale</span><span class="p">(</span><span class="n">img</span><span class="p">,</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">width</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">height</span><span class="p">)))</span>
+        
+        <span class="c1">#carrega sprites de deslizamento</span>
+        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">qnt_deslizamento</span><span class="o">+</span><span class="mi">1</span><span class="p">):</span>
+            <span class="n">deslizamento_path</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;sprites/personagens/</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="si">}</span><span class="s2">/deslizamento/</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="si">}</span><span class="s2">_deslizamento_</span><span class="si">{</span><span class="n">i</span><span class="si">}</span><span class="s2">.png&quot;</span>  
+            <span class="n">path</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">deslizamento_path</span><span class="p">)</span>
+
+            <span class="n">img</span> <span class="o">=</span> <span class="n">pygame</span><span class="o">.</span><span class="n">image</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">path</span><span class="p">)</span>
+
+            <span class="bp">self</span><span class="o">.</span><span class="n">texture_deslizamento</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">pygame</span><span class="o">.</span><span class="n">transform</span><span class="o">.</span><span class="n">scale</span><span class="p">(</span><span class="n">img</span><span class="p">,</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">width</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">height</span><span class="p">)))</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">mask_deslizamento</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">pygame</span><span class="o">.</span><span class="n">mask</span><span class="o">.</span><span class="n">from_surface</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">texture_deslizamento</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]))</span></div>
+
+
+<div class="viewcode-block" id="Personagem.jump">
+<a class="viewcode-back" href="../game.html#game.Personagem.jump">[docs]</a>
+    <span class="k">def</span> <span class="nf">jump</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Inicia a animação de pulo se o personagem não estiver pulando, deslizando ou morto.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">deslizamento</span><span class="o">==</span><span class="kc">False</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">jumping</span><span class="o">==</span><span class="kc">False</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">alive</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">dy</span><span class="o">=</span><span class="mi">17</span><span class="o">*</span><span class="bp">self</span><span class="o">.</span><span class="n">alpha</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">ddy</span> <span class="o">=</span> <span class="mf">0.75</span><span class="o">*</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">alpha</span><span class="o">**</span><span class="mi">2</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">jumping</span> <span class="o">=</span> <span class="kc">True</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">texture_num</span><span class="o">=</span><span class="mi">0</span></div>
+
+    
+<div class="viewcode-block" id="Personagem.deslizar">
+<a class="viewcode-back" href="../game.html#game.Personagem.deslizar">[docs]</a>
+    <span class="k">def</span> <span class="nf">deslizar</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Inicia a animação de deslizamento se o personagem não estiver pulando, deslizando ou morto.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">deslizamento</span><span class="o">==</span><span class="kc">False</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">jumping</span><span class="o">==</span><span class="kc">False</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">alive</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">deslizamento</span> <span class="o">=</span> <span class="kc">True</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">deslizamento_time</span> <span class="o">=</span> <span class="mi">30</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">deslizamento_tick</span> <span class="o">=</span> <span class="mi">1</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">texture_num</span><span class="o">=</span><span class="mi">0</span></div>
+
+
+<div class="viewcode-block" id="Personagem.current_mask">
+<a class="viewcode-back" href="../game.html#game.Personagem.current_mask">[docs]</a>
+    <span class="k">def</span> <span class="nf">current_mask</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Retorna a máscara do sprite atual, dependendo da animação em execução.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">jumping</span><span class="p">:</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">mask_jump</span><span class="p">[</span><span class="nb">int</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">texture_num</span><span class="p">)]</span>
+        <span class="k">elif</span> <span class="bp">self</span><span class="o">.</span><span class="n">deslizamento</span><span class="p">:</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">mask_deslizamento</span><span class="p">[</span><span class="nb">int</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">texture_num</span><span class="p">)]</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">mask_run</span><span class="p">[</span><span class="nb">int</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">texture_num</span><span class="p">)]</span></div>
+</div>
+
+
+<div class="viewcode-block" id="Bomb">
+<a class="viewcode-back" href="../game.html#game.Bomb">[docs]</a>
+<span class="k">class</span> <span class="nc">Bomb</span><span class="p">():</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Classe que representa uma bomba no jogo.</span>
+
+<span class="sd">    Attributes:</span>
+<span class="sd">        width: Largura da bomba.</span>
+<span class="sd">        height: Altura da bomba.</span>
+<span class="sd">        x: Posição horizontal da bomba.</span>
+<span class="sd">        y: Posição vertical da bomba.</span>
+<span class="sd">        exploded: Indica se a bomba já explodiu.</span>
+<span class="sd">        texture_num: Número do sprite atual.</span>
+<span class="sd">        texture: Textura da bomba antes de explodir.</span>
+<span class="sd">        texture_explosion: Lista de texturas da explosão.</span>
+<span class="sd">        mask: Máscara de colisão da bomba.</span>
+<span class="sd">        sound_bomb: Efeito sonoro da explosão da bomba.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">x</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Inicializa um objeto da classe Bomb.</span>
+
+<span class="sd">        Parameters:</span>
+<span class="sd">        - x: Posição horizontal inicial da bomba.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">width</span> <span class="o">=</span> <span class="mi">100</span><span class="o">*</span><span class="mf">0.85</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">height</span> <span class="o">=</span> <span class="mi">100</span><span class="o">*</span><span class="mf">0.85</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">x</span> <span class="o">=</span> <span class="n">x</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">y</span> <span class="o">=</span> <span class="n">Y_FLOOR_BOMB</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">exploded</span> <span class="o">=</span> <span class="kc">False</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">texture_num</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">texture</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">texture_explosion</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">mask</span> <span class="o">=</span> <span class="kc">None</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">sound_bomb</span> <span class="o">=</span> <span class="n">pygame</span><span class="o">.</span><span class="n">mixer</span><span class="o">.</span><span class="n">Sound</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="s2">&quot;sons/som_bomba.wav&quot;</span><span class="p">))</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">sound_bomb</span><span class="o">.</span><span class="n">set_volume</span><span class="p">(</span><span class="mf">0.05</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">set_texture</span><span class="p">()</span>
+    
+<div class="viewcode-block" id="Bomb.update">
+<a class="viewcode-back" href="../game.html#game.Bomb.update">[docs]</a>
+    <span class="k">def</span> <span class="nf">update</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">dx</span><span class="o">=</span><span class="mi">0</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Atualiza a posição da bomba ou a animação de explosão.</span>
+
+<span class="sd">        Parameters:</span>
+<span class="sd">        - dx: Variação da posição horizontal da bomba.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">exploded</span><span class="o">==</span><span class="kc">False</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">x</span> <span class="o">+=</span> <span class="n">dx</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">texture_num</span>  <span class="o">=</span> <span class="nb">min</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">texture_num</span> <span class="o">+</span> <span class="mf">0.5</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">texture_explosion</span><span class="p">)</span><span class="o">-</span><span class="mi">1</span><span class="p">)</span></div>
+
+    
+<div class="viewcode-block" id="Bomb.show">
+<a class="viewcode-back" href="../game.html#game.Bomb.show">[docs]</a>
+    <span class="k">def</span> <span class="nf">show</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Exibe a bomba na tela, escolhendo a textura apropriada.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">exploded</span><span class="o">==</span><span class="kc">False</span><span class="p">:</span>
+            <span class="n">screen</span><span class="o">.</span><span class="n">blit</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">texture</span><span class="p">,</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">x</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">y</span><span class="p">))</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">screen</span><span class="o">.</span><span class="n">blit</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">texture_explosion</span><span class="p">[</span><span class="nb">int</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">texture_num</span><span class="p">)],</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">x</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">y</span><span class="p">))</span></div>
+
+
+<div class="viewcode-block" id="Bomb.set_texture">
+<a class="viewcode-back" href="../game.html#game.Bomb.set_texture">[docs]</a>
+    <span class="k">def</span> <span class="nf">set_texture</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Carrega as texturas da bomba e da explosão.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="n">bomba_path</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;sprites/obstaculos/bomba/bomba.png&quot;</span>
+        <span class="n">path</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">bomba_path</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">texture</span> <span class="o">=</span> <span class="n">pygame</span><span class="o">.</span><span class="n">image</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">path</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">texture</span> <span class="o">=</span> <span class="n">pygame</span><span class="o">.</span><span class="n">transform</span><span class="o">.</span><span class="n">scale</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">texture</span><span class="p">,</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">width</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">height</span><span class="p">))</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">mask</span> <span class="o">=</span> <span class="n">pygame</span><span class="o">.</span><span class="n">mask</span><span class="o">.</span><span class="n">from_surface</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">texture</span><span class="p">)</span>
+
+        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">14</span><span class="p">):</span>
+            <span class="n">explosao_path</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;sprites/obstaculos/bomba/explosao/explosao_</span><span class="si">{</span><span class="n">i</span><span class="si">}</span><span class="s2">.png&quot;</span>
+            <span class="n">path</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">explosao_path</span><span class="p">)</span>
+            <span class="n">img</span> <span class="o">=</span> <span class="p">(</span><span class="n">pygame</span><span class="o">.</span><span class="n">image</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">path</span><span class="p">))</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">texture_explosion</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">pygame</span><span class="o">.</span><span class="n">transform</span><span class="o">.</span><span class="n">scale</span><span class="p">(</span><span class="n">img</span><span class="p">,</span> <span class="p">(</span><span class="mi">3</span><span class="o">*</span><span class="bp">self</span><span class="o">.</span><span class="n">width</span><span class="p">,</span> <span class="mi">3</span><span class="o">*</span><span class="bp">self</span><span class="o">.</span><span class="n">height</span><span class="p">)))</span> </div>
+
+    
+<div class="viewcode-block" id="Bomb.get_mask">
+<a class="viewcode-back" href="../game.html#game.Bomb.get_mask">[docs]</a>
+    <span class="k">def</span> <span class="nf">get_mask</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Retorna a máscara de colisão da bomba.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">mask</span></div>
+
+    
+<div class="viewcode-block" id="Bomb.explodir">
+<a class="viewcode-back" href="../game.html#game.Bomb.explodir">[docs]</a>
+    <span class="k">def</span> <span class="nf">explodir</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Inicia a animação de explosão da bomba e reproduz o som de explosão.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">exploded</span> <span class="o">=</span> <span class="kc">True</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">y</span> <span class="o">-=</span> <span class="bp">self</span><span class="o">.</span><span class="n">height</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">x</span> <span class="o">-=</span> <span class="mi">30</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">sound_bomb</span><span class="o">.</span><span class="n">play</span><span class="p">()</span></div>
+</div>
+
+
+<div class="viewcode-block" id="Bat">
+<a class="viewcode-back" href="../game.html#game.Bat">[docs]</a>
+<span class="k">class</span> <span class="nc">Bat</span><span class="p">():</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Classe que representa um morcego no jogo.</span>
+
+<span class="sd">    Attributes:</span>
+<span class="sd">        width: Largura do morcego.</span>
+<span class="sd">        height: Altura do morcego.</span>
+<span class="sd">        x: Posição horizontal do morcego.</span>
+<span class="sd">        y: Posição vertical do morcego.</span>
+<span class="sd">        texture_num: Número do sprite atual.</span>
+<span class="sd">        texture: Lista de texturas do morcego.</span>
+<span class="sd">        mask: Lista de máscaras de colisão do morcego.</span>
+<span class="sd">        sound_bat: Efeito sonoro do ataque do morcego.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">x</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Inicializa um objeto da classe Bat.</span>
+
+<span class="sd">        Parameters:</span>
+<span class="sd">        - x: Posição horizontal inicial do morcego.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">width</span> <span class="o">=</span> <span class="mi">93</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">height</span> <span class="o">=</span> <span class="mi">63</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">x</span> <span class="o">=</span> <span class="n">x</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">y</span> <span class="o">=</span> <span class="n">Y_FLOOR_BAT</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">texture_num</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">texture</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">mask</span> <span class="o">=</span> <span class="p">[]</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">sound_bat</span> <span class="o">=</span> <span class="n">pygame</span><span class="o">.</span><span class="n">mixer</span><span class="o">.</span><span class="n">Sound</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="s2">&quot;sons/som_morcego.wav&quot;</span><span class="p">))</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">sound_bat</span><span class="o">.</span><span class="n">set_volume</span><span class="p">(</span><span class="mf">0.05</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">set_texture</span><span class="p">()</span>
+    
+<div class="viewcode-block" id="Bat.update">
+<a class="viewcode-back" href="../game.html#game.Bat.update">[docs]</a>
+    <span class="k">def</span> <span class="nf">update</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">dx</span><span class="o">=</span><span class="mi">0</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Atualiza a posição do morcego e a animação de voo.</span>
+
+<span class="sd">        Parameters:</span>
+<span class="sd">        - dx: Variação da posição horizontal do morcego.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">x</span> <span class="o">+=</span> <span class="n">dx</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">texture_num</span>  <span class="o">=</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">texture_num</span> <span class="o">+</span> <span class="mf">0.25</span><span class="p">)</span><span class="o">%</span><span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">texture</span><span class="p">)</span></div>
+
+    
+<div class="viewcode-block" id="Bat.show">
+<a class="viewcode-back" href="../game.html#game.Bat.show">[docs]</a>
+    <span class="k">def</span> <span class="nf">show</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Exibe o morcego na tela, escolhendo a textura apropriada.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="n">screen</span><span class="o">.</span><span class="n">blit</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">texture</span><span class="p">[</span><span class="nb">int</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">texture_num</span><span class="p">)],</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">x</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">y</span><span class="p">))</span></div>
+
+
+<div class="viewcode-block" id="Bat.set_texture">
+<a class="viewcode-back" href="../game.html#game.Bat.set_texture">[docs]</a>
+    <span class="k">def</span> <span class="nf">set_texture</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Carrega as texturas do morcego.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">5</span><span class="p">):</span>
+            <span class="n">bat_path</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;sprites/obstaculos/morcego/morcego_</span><span class="si">{</span><span class="n">i</span><span class="si">}</span><span class="s2">.png&quot;</span>
+            <span class="n">path</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">bat_path</span><span class="p">)</span>
+
+            <span class="n">img</span> <span class="o">=</span> <span class="p">(</span><span class="n">pygame</span><span class="o">.</span><span class="n">image</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">path</span><span class="p">))</span>
+            
+            <span class="bp">self</span><span class="o">.</span><span class="n">texture</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">pygame</span><span class="o">.</span><span class="n">transform</span><span class="o">.</span><span class="n">scale</span><span class="p">(</span><span class="n">img</span><span class="p">,</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">width</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">height</span><span class="p">)))</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">mask</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">pygame</span><span class="o">.</span><span class="n">mask</span><span class="o">.</span><span class="n">from_surface</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">texture</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]))</span></div>
+
+
+<div class="viewcode-block" id="Bat.get_mask">
+<a class="viewcode-back" href="../game.html#game.Bat.get_mask">[docs]</a>
+    <span class="k">def</span> <span class="nf">get_mask</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Retorna a máscara de colisão do morcego.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">mask</span><span class="p">[</span><span class="nb">int</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">texture_num</span><span class="p">)]</span></div>
+
+    
+<div class="viewcode-block" id="Bat.ataque">
+<a class="viewcode-back" href="../game.html#game.Bat.ataque">[docs]</a>
+    <span class="k">def</span> <span class="nf">ataque</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Inicia o som de ataque do morcego.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">sound_bat</span><span class="o">.</span><span class="n">play</span><span class="p">()</span></div>
+</div>
+
+
+<div class="viewcode-block" id="Coin">
+<a class="viewcode-back" href="../game.html#game.Coin">[docs]</a>
+<span class="k">class</span> <span class="nc">Coin</span><span class="p">():</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Classe que representa uma moeda no jogo.</span>
+
+<span class="sd">    Attributes:</span>
+<span class="sd">        width: Largura da moeda.</span>
+<span class="sd">        height: Altura da moeda.</span>
+<span class="sd">        x: Posição horizontal da moeda.</span>
+<span class="sd">        y: Posição vertical da moeda.</span>
+<span class="sd">        texture_num: Número do sprite atual.</span>
+<span class="sd">        texture: Lista de texturas da moeda.</span>
+<span class="sd">        mask: Lista de máscaras de colisão da moeda.</span>
+<span class="sd">        sound_coin: Efeito sonoro ao receber a moeda.</span>
+<span class="sd">        recebida: Indica se a moeda já foi recebida.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">x</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Inicializa um objeto da classe Coin.</span>
+
+<span class="sd">        Parameters:</span>
+<span class="sd">        - x: Posição horizontal inicial da moeda.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">width</span> <span class="o">=</span> <span class="mi">190</span><span class="o">/</span><span class="mi">2</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">height</span> <span class="o">=</span> <span class="mi">170</span><span class="o">/</span><span class="mi">2</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">x</span> <span class="o">=</span> <span class="n">x</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">y</span> <span class="o">=</span> <span class="n">Y_FLOOR_COIN</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">texture_num</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">texture</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">mask</span> <span class="o">=</span> <span class="p">[]</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">sound_coin</span> <span class="o">=</span> <span class="n">pygame</span><span class="o">.</span><span class="n">mixer</span><span class="o">.</span><span class="n">Sound</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="s2">&quot;sons/som_moeda.wav&quot;</span><span class="p">))</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">sound_coin</span><span class="o">.</span><span class="n">set_volume</span><span class="p">(</span><span class="mf">0.05</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">recebida</span> <span class="o">=</span> <span class="kc">False</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">set_texture</span><span class="p">()</span>
+    
+<div class="viewcode-block" id="Coin.update">
+<a class="viewcode-back" href="../game.html#game.Coin.update">[docs]</a>
+    <span class="k">def</span> <span class="nf">update</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">dx</span><span class="o">=</span><span class="mi">0</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Atualiza a posição da moeda e a animação de flutuação.</span>
+
+<span class="sd">        Parameters:</span>
+<span class="sd">        - dx: Variação da posição horizontal da moeda.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">x</span> <span class="o">+=</span> <span class="n">dx</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">texture_num</span>  <span class="o">=</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">texture_num</span> <span class="o">+</span> <span class="mf">0.25</span><span class="p">)</span><span class="o">%</span><span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">texture</span><span class="p">)</span></div>
+
+    
+<div class="viewcode-block" id="Coin.show">
+<a class="viewcode-back" href="../game.html#game.Coin.show">[docs]</a>
+    <span class="k">def</span> <span class="nf">show</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Exibe a moeda na tela, escolhendo a textura apropriada.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">recebida</span><span class="o">==</span><span class="kc">False</span><span class="p">:</span>
+            <span class="n">screen</span><span class="o">.</span><span class="n">blit</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">texture</span><span class="p">[</span><span class="nb">int</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">texture_num</span><span class="p">)],</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">x</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">y</span><span class="p">))</span></div>
+
+
+<div class="viewcode-block" id="Coin.set_texture">
+<a class="viewcode-back" href="../game.html#game.Coin.set_texture">[docs]</a>
+    <span class="k">def</span> <span class="nf">set_texture</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Carrega as texturas da moeda.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">7</span><span class="p">):</span>
+            <span class="n">bat_path</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;sprites/moeda/moeda_</span><span class="si">{</span><span class="n">i</span><span class="si">}</span><span class="s2">.png&quot;</span>
+            <span class="n">path</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">bat_path</span><span class="p">)</span>
+
+            <span class="n">img</span> <span class="o">=</span> <span class="p">(</span><span class="n">pygame</span><span class="o">.</span><span class="n">image</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">path</span><span class="p">))</span>
+            
+            <span class="bp">self</span><span class="o">.</span><span class="n">texture</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">pygame</span><span class="o">.</span><span class="n">transform</span><span class="o">.</span><span class="n">scale</span><span class="p">(</span><span class="n">img</span><span class="p">,</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">width</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">height</span><span class="p">)))</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">mask</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">pygame</span><span class="o">.</span><span class="n">mask</span><span class="o">.</span><span class="n">from_surface</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">texture</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]))</span></div>
+
+
+<div class="viewcode-block" id="Coin.get_mask">
+<a class="viewcode-back" href="../game.html#game.Coin.get_mask">[docs]</a>
+    <span class="k">def</span> <span class="nf">get_mask</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Retorna a máscara de colisão da moeda.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">mask</span><span class="p">[</span><span class="nb">int</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">texture_num</span><span class="p">)]</span> </div>
+
+
+<div class="viewcode-block" id="Coin.receber">
+<a class="viewcode-back" href="../game.html#game.Coin.receber">[docs]</a>
+    <span class="k">def</span> <span class="nf">receber</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Marca a moeda como recebida e reproduz o som de recebimento.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">recebida</span><span class="o">=</span><span class="kc">True</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">sound_coin</span><span class="o">.</span><span class="n">play</span><span class="p">()</span></div>
+</div>
+
+
+<div class="viewcode-block" id="BG">
+<a class="viewcode-back" href="../game.html#game.BG">[docs]</a>
+<span class="k">class</span> <span class="nc">BG</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Classe que representa um plano de fundo no jogo.</span>
+
+<span class="sd">    Attributes:</span>
+<span class="sd">        width: Largura do plano de fundo.</span>
+<span class="sd">        height: Altura do plano de fundo.</span>
+<span class="sd">        x: Posição horizontal do plano de fundo.</span>
+<span class="sd">        y: Posição vertical do plano de fundo.</span>
+<span class="sd">        mult_speed: Fator de multiplicação da velocidade de movimentação do plano de fundo.</span>
+<span class="sd">        img_path: Caminho da imagem do plano de fundo.</span>
+<span class="sd">        texture: Textura do plano de fundo.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">img_path</span><span class="p">,</span> <span class="n">x</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">mult_speed</span><span class="o">=</span><span class="mi">1</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Inicializa um objeto da classe BG.</span>
+
+<span class="sd">        Parameters:</span>
+<span class="sd">        - img_path: Caminho da imagem do plano de fundo.</span>
+<span class="sd">        - x: Posição horizontal inicial do plano de fundo.</span>
+<span class="sd">        - mult_speed: Fator de multiplicação da velocidade de movimentação do plano de fundo.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">width</span> <span class="o">=</span> <span class="n">WIDTH</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">height</span> <span class="o">=</span> <span class="n">HEIGHT</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">x</span> <span class="o">=</span> <span class="n">x</span>  
+        <span class="bp">self</span><span class="o">.</span><span class="n">y</span> <span class="o">=</span> <span class="mi">0</span>
+        
+        <span class="bp">self</span><span class="o">.</span><span class="n">mult_speed</span> <span class="o">=</span> <span class="n">mult_speed</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">img_path</span> <span class="o">=</span> <span class="n">img_path</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">texture</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">set_texture</span><span class="p">()</span>
+    
+<div class="viewcode-block" id="BG.update">
+<a class="viewcode-back" href="../game.html#game.BG.update">[docs]</a>
+    <span class="k">def</span> <span class="nf">update</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">dx</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Atualiza a posição do plano de fundo com base no deslocamento horizontal.</span>
+
+<span class="sd">        Parameters:</span>
+<span class="sd">        - dx: Deslocamento horizontal.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">x</span> <span class="o">+=</span> <span class="nb">int</span><span class="p">(</span><span class="n">dx</span><span class="o">*</span><span class="bp">self</span><span class="o">.</span><span class="n">mult_speed</span><span class="p">)</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">x</span> <span class="o">&lt;=</span> <span class="o">-</span><span class="bp">self</span><span class="o">.</span><span class="n">width</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">x</span> <span class="o">+=</span> <span class="mi">2</span><span class="o">*</span><span class="bp">self</span><span class="o">.</span><span class="n">width</span></div>
+
+
+<div class="viewcode-block" id="BG.show">
+<a class="viewcode-back" href="../game.html#game.BG.show">[docs]</a>
+    <span class="k">def</span> <span class="nf">show</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Exibe o plano de fundo na tela.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="n">screen</span><span class="o">.</span><span class="n">blit</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">texture</span><span class="p">,</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">x</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">y</span><span class="p">))</span></div>
+
+ 
+<div class="viewcode-block" id="BG.set_texture">
+<a class="viewcode-back" href="../game.html#game.BG.set_texture">[docs]</a>
+    <span class="k">def</span> <span class="nf">set_texture</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Carrega a textura do plano de fundo.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="n">path</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">img_path</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">texture</span> <span class="o">=</span> <span class="n">pygame</span><span class="o">.</span><span class="n">image</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">path</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">texture</span> <span class="o">=</span> <span class="n">pygame</span><span class="o">.</span><span class="n">transform</span><span class="o">.</span><span class="n">scale</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">texture</span><span class="p">,</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">width</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">height</span><span class="p">))</span></div>
+</div>
+
+
+<div class="viewcode-block" id="Game">
+<a class="viewcode-back" href="../game.html#game.Game">[docs]</a>
+<span class="k">class</span> <span class="nc">Game</span><span class="p">():</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Classe que representa o jogo principal.</span>
+
+<span class="sd">    Attributes:</span>
+<span class="sd">        running: Indica se o jogo está em execução.</span>
+<span class="sd">        op_char: Opção do personagem escolhido.</span>
+<span class="sd">        sound_score: Efeito sonoro ao marcar um ponto.</span>
+<span class="sd">        start_game: Inicia o jogo.</span>
+<span class="sd">        updated_record: Indica se o recorde foi atualizado.</span>
+<span class="sd">        moedas_rodada: Quantidade de moedas obtidas na rodada.</span>
+<span class="sd">        score: Pontuação do jogador.</span>
+<span class="sd">        speed: Velocidade de deslocamento do cenário.</span>
+<span class="sd">        bg: Lista de objetos BG representando o plano de fundo.</span>
+<span class="sd">        char: Personagem controlado pelo jogador.</span>
+<span class="sd">        obstacle: Lista de obstáculos no jogo.</span>
+<span class="sd">        check_colision: Verifica colisão entre o personagem e os obstáculos.</span>
+<span class="sd">        start_obstacles: Inicializa a lista de obstáculos no início do jogo.</span>
+<span class="sd">        spawn_obstacles: Gera novos obstáculos conforme o jogo progride.</span>
+<span class="sd">        increase_coins: Atualiza a quantidade de moedas no arquivo de informações do jogo.</span>
+<span class="sd">        update_record: Atualiza o recorde no arquivo de informações do jogo.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">op_char</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Inicializa um objeto da classe Game.</span>
+
+<span class="sd">        Parameters:</span>
+<span class="sd">        - op_char: Opção do personagem escolhido.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">running</span> <span class="o">=</span> <span class="kc">False</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">op_char</span> <span class="o">=</span> <span class="n">op_char</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">sound_score</span> <span class="o">=</span> <span class="n">pygame</span><span class="o">.</span><span class="n">mixer</span><span class="o">.</span><span class="n">Sound</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="s2">&quot;sons/som_score.wav&quot;</span><span class="p">))</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">sound_score</span><span class="o">.</span><span class="n">set_volume</span><span class="p">(</span><span class="mf">0.25</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">start_game</span><span class="p">()</span>
+
+<div class="viewcode-block" id="Game.update">
+<a class="viewcode-back" href="../game.html#game.Game.update">[docs]</a>
+    <span class="k">def</span> <span class="nf">update</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Atualiza a pontuação, velocidade e alpha do personagem.</span>
+<span class="sd">        Reproduz o som de pontuação a cada 100 pontos.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">score</span> <span class="o">+=</span> <span class="mi">1</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">speed</span>  <span class="o">=</span> <span class="nb">min</span><span class="p">(</span><span class="mi">20</span><span class="p">,</span> <span class="mi">8</span> <span class="o">+</span> <span class="mi">2</span><span class="o">*</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">score</span><span class="o">//</span><span class="mi">100</span><span class="p">))</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">char</span><span class="o">.</span><span class="n">alpha</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">speed</span><span class="o">/</span><span class="mi">5</span>
+        
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">score</span><span class="o">%</span><span class="mi">100</span><span class="o">==</span><span class="mi">0</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">sound_score</span><span class="o">.</span><span class="n">play</span><span class="p">()</span></div>
+
+
+<div class="viewcode-block" id="Game.start_game">
+<a class="viewcode-back" href="../game.html#game.Game.start_game">[docs]</a>
+    <span class="k">def</span> <span class="nf">start_game</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Inicia o jogo, inicializando os atributos e objetos necessários.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">running</span><span class="o">==</span><span class="kc">False</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">updated_record</span> <span class="o">=</span> <span class="kc">False</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">moedas_rodada</span> <span class="o">=</span> <span class="mi">0</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">score</span> <span class="o">=</span> <span class="mi">0</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">speed</span> <span class="o">=</span> <span class="mi">8</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">running</span> <span class="o">=</span> <span class="kc">True</span>
+
+            <span class="bp">self</span><span class="o">.</span><span class="n">bg</span> <span class="o">=</span> <span class="p">[</span><span class="n">BG</span><span class="p">(</span><span class="n">WOODS_PATH</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mf">0.25</span><span class="p">),</span> <span class="n">BG</span><span class="p">(</span><span class="n">WOODS_PATH</span><span class="p">,</span> <span class="n">WIDTH</span><span class="p">,</span> <span class="mf">0.25</span><span class="p">),</span>
+                        <span class="n">BG</span><span class="p">(</span><span class="n">BRIDGE_PATH</span><span class="p">,</span> <span class="mi">0</span><span class="p">),</span> <span class="n">BG</span><span class="p">(</span><span class="n">BRIDGE_PATH</span><span class="p">,</span> <span class="n">WIDTH</span><span class="p">)]</span>
+            
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">op_char</span><span class="o">==</span><span class="mi">1</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">char</span> <span class="o">=</span> <span class="n">Personagem</span><span class="p">(</span><span class="s2">&quot;aventureiro&quot;</span><span class="p">,</span> <span class="mi">6</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="mi">7</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="n">WIDTH_AVENTUREIRO</span><span class="p">,</span> <span class="n">HEIGHT_AVENTUREIRO</span><span class="p">,</span> <span class="n">Y_FLOOR_AVENTUREIRO</span><span class="p">)</span>
+            <span class="k">elif</span> <span class="bp">self</span><span class="o">.</span><span class="n">op_char</span><span class="o">==</span><span class="mi">2</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">char</span> <span class="o">=</span> <span class="n">Personagem</span><span class="p">(</span><span class="s2">&quot;cavaleiro&quot;</span><span class="p">,</span> <span class="mi">10</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">10</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="n">WIDTH_CAVALEIRO</span><span class="p">,</span> <span class="n">HEIGHT_CAVALEIRO</span><span class="p">,</span> <span class="n">Y_FLOOR_CAVALEIRO</span><span class="p">)</span>
+            <span class="k">elif</span> <span class="bp">self</span><span class="o">.</span><span class="n">op_char</span><span class="o">==</span><span class="mi">3</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">char</span> <span class="o">=</span> <span class="n">Personagem</span><span class="p">(</span><span class="s2">&quot;guerreira&quot;</span><span class="p">,</span> <span class="mi">8</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">11</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="n">WIDTH_GUERREIRA</span><span class="p">,</span> <span class="n">HEIGHT_GUERREIRA</span><span class="p">,</span> <span class="n">Y_FLOOR_GUERREIRA</span><span class="p">)</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">char</span> <span class="o">=</span> <span class="n">Personagem</span><span class="p">(</span><span class="s2">&quot;guerreiro&quot;</span><span class="p">,</span> <span class="mi">8</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">9</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="n">WIDTH_GUERREIRO</span><span class="p">,</span> <span class="n">HEIGHT_GUERREIRO</span><span class="p">,</span> <span class="n">Y_FLOOR_GUERREIRO</span><span class="p">)</span>
+            
+            <span class="bp">self</span><span class="o">.</span><span class="n">obstacle</span> <span class="o">=</span> <span class="p">[]</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">start_obstacles</span><span class="p">()</span></div>
+
+
+<div class="viewcode-block" id="Game.check_colision">
+<a class="viewcode-back" href="../game.html#game.Game.check_colision">[docs]</a>
+    <span class="k">def</span> <span class="nf">check_colision</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Verifica colisão entre o personagem e os obstáculos.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">        - True se houver colisão, False caso contrário.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="k">for</span> <span class="n">obstacle</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">obstacle</span><span class="p">:</span>
+            <span class="n">pos</span> <span class="o">=</span> <span class="p">(</span><span class="n">obstacle</span><span class="o">.</span><span class="n">x</span><span class="o">-</span><span class="bp">self</span><span class="o">.</span><span class="n">char</span><span class="o">.</span><span class="n">x</span><span class="p">,</span> <span class="n">obstacle</span><span class="o">.</span><span class="n">y</span><span class="o">-</span><span class="bp">self</span><span class="o">.</span><span class="n">char</span><span class="o">.</span><span class="n">y</span><span class="p">)</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">char</span><span class="o">.</span><span class="n">current_mask</span><span class="p">()</span><span class="o">.</span><span class="n">overlap</span><span class="p">(</span><span class="n">obstacle</span><span class="o">.</span><span class="n">get_mask</span><span class="p">(),</span> <span class="n">pos</span><span class="p">)</span><span class="o">!=</span><span class="kc">None</span><span class="p">:</span>
+                <span class="k">return</span> <span class="kc">True</span>
+        <span class="k">return</span> <span class="kc">False</span></div>
+
+    
+<div class="viewcode-block" id="Game.start_obstacles">
+<a class="viewcode-back" href="../game.html#game.Game.start_obstacles">[docs]</a>
+    <span class="k">def</span> <span class="nf">start_obstacles</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Inicializa a lista de obstáculos no início do jogo.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">obstacle</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">Bomb</span><span class="p">(</span><span class="n">WIDTH</span><span class="p">))</span>
+        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">2</span><span class="p">):</span>
+            <span class="n">x_min</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">obstacle</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">x</span><span class="o">+</span><span class="bp">self</span><span class="o">.</span><span class="n">obstacle</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">width</span> <span class="o">+</span> <span class="mi">300</span>
+            <span class="n">x_max</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">obstacle</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">x</span><span class="o">+</span><span class="bp">self</span><span class="o">.</span><span class="n">obstacle</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">width</span> <span class="o">+</span> <span class="mi">600</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">obstacle</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">Bomb</span><span class="p">(</span><span class="n">random</span><span class="o">.</span><span class="n">randint</span><span class="p">(</span><span class="n">x_min</span><span class="p">,</span> <span class="n">x_max</span><span class="p">)))</span></div>
+
+
+<div class="viewcode-block" id="Game.spawn_obstacles">
+<a class="viewcode-back" href="../game.html#game.Game.spawn_obstacles">[docs]</a>
+    <span class="k">def</span> <span class="nf">spawn_obstacles</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Gera novos obstáculos conforme o jogo progride.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">obstacle</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">x</span> <span class="o">&lt;=</span> <span class="o">-</span><span class="bp">self</span><span class="o">.</span><span class="n">obstacle</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">width</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">obstacle</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+
+            <span class="n">x_min</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">obstacle</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">x</span><span class="o">+</span><span class="bp">self</span><span class="o">.</span><span class="n">obstacle</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">width</span> <span class="o">+</span> <span class="mi">200</span>
+            <span class="n">x_max</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">obstacle</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">x</span><span class="o">+</span><span class="bp">self</span><span class="o">.</span><span class="n">obstacle</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">width</span> <span class="o">+</span> <span class="mi">800</span>
+
+            <span class="n">x_new_obstacle</span> <span class="o">=</span> <span class="n">random</span><span class="o">.</span><span class="n">randint</span><span class="p">(</span><span class="n">x_min</span><span class="p">,</span> <span class="n">x_max</span><span class="p">)</span>
+
+            <span class="n">rand_type</span> <span class="o">=</span> <span class="n">random</span><span class="o">.</span><span class="n">randint</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">100</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">rand_type</span> <span class="o">&lt;=</span> <span class="mi">40</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">obstacle</span><span class="o">.</span><span class="n">append</span><span class="p">(</span> <span class="n">Bomb</span><span class="p">(</span><span class="n">x_new_obstacle</span><span class="p">)</span> <span class="p">)</span>
+            <span class="k">elif</span> <span class="n">rand_type</span> <span class="o">&lt;=</span> <span class="mi">80</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">obstacle</span><span class="o">.</span><span class="n">append</span><span class="p">(</span> <span class="n">Bat</span><span class="p">(</span><span class="n">x_new_obstacle</span><span class="p">)</span> <span class="p">)</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">obstacle</span><span class="o">.</span><span class="n">append</span><span class="p">(</span> <span class="n">Coin</span><span class="p">(</span><span class="n">x_new_obstacle</span><span class="p">)</span> <span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="Game.increase_coins">
+<a class="viewcode-back" href="../game.html#game.Game.increase_coins">[docs]</a>
+    <span class="k">def</span> <span class="nf">increase_coins</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Atualiza a quantidade de moedas no arquivo de informações do jogo.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">moedas_rodada</span><span class="o">&gt;</span><span class="mi">0</span><span class="p">:</span>
+            <span class="n">dados_jogo</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="s2">&quot;informacoes_jogo.csv&quot;</span><span class="p">)</span>
+            <span class="n">dados_jogo</span><span class="p">[</span><span class="s2">&quot;Quantidade_de_Moedas&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">moedas_rodada</span>
+            <span class="n">dados_jogo</span><span class="o">.</span><span class="n">to_csv</span><span class="p">(</span><span class="s2">&quot;informacoes_jogo.csv&quot;</span><span class="p">,</span> <span class="n">index</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">moedas_rodada</span> <span class="o">=</span> <span class="mi">0</span></div>
+
+            
+<div class="viewcode-block" id="Game.update_record">
+<a class="viewcode-back" href="../game.html#game.Game.update_record">[docs]</a>
+    <span class="k">def</span> <span class="nf">update_record</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Atualiza o recorde no arquivo de informações do jogo.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">updated_record</span><span class="o">==</span><span class="kc">False</span><span class="p">:</span>
+            
+            <span class="n">dados_jogo</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="s2">&quot;informacoes_jogo.csv&quot;</span><span class="p">)</span>
+            <span class="n">dados_jogo</span><span class="p">[</span><span class="s2">&quot;Score_Record&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="nb">max</span><span class="p">(</span> <span class="n">dados_jogo</span><span class="p">[</span><span class="s2">&quot;Score_Record&quot;</span><span class="p">][</span><span class="mi">0</span><span class="p">],</span> <span class="bp">self</span><span class="o">.</span><span class="n">score</span><span class="p">)</span>
+            <span class="n">dados_jogo</span><span class="o">.</span><span class="n">to_csv</span><span class="p">(</span><span class="s2">&quot;informacoes_jogo.csv&quot;</span><span class="p">,</span> <span class="n">index</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">moedas_rodada</span> <span class="o">=</span> <span class="mi">0</span>
+
+            <span class="bp">self</span><span class="o">.</span><span class="n">updated_record</span><span class="o">=</span><span class="kc">True</span>     </div>
+</div>
+
+
+<div class="viewcode-block" id="loop_jogo">
+<a class="viewcode-back" href="../game.html#game.loop_jogo">[docs]</a>
+<span class="k">def</span> <span class="nf">loop_jogo</span><span class="p">(</span><span class="n">op_char</span><span class="o">=</span><span class="mi">1</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Função principal que representa o loop do jogo.</span>
+
+<span class="sd">    Parameters:</span>
+<span class="sd">    - op_char: Opção do personagem escolhido.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">    - True se o jogador pressionar a tecla ESC para voltar ao menu, False caso contrário.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    
+    <span class="n">game</span> <span class="o">=</span> <span class="n">Game</span><span class="p">(</span><span class="n">op_char</span><span class="p">)</span>
+
+    <span class="n">sound_background</span> <span class="o">=</span> <span class="n">pygame</span><span class="o">.</span><span class="n">mixer</span><span class="o">.</span><span class="n">Sound</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="s2">&quot;sons/som_jogo.wav&quot;</span><span class="p">))</span>
+    <span class="n">sound_background</span><span class="o">.</span><span class="n">set_volume</span><span class="p">(</span><span class="mf">0.01</span><span class="p">)</span>
+    <span class="n">sound_background</span><span class="o">.</span><span class="n">play</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">)</span>
+
+    <span class="n">loop</span> <span class="o">=</span> <span class="mi">0</span>
+
+    <span class="n">clock</span> <span class="o">=</span> <span class="n">pygame</span><span class="o">.</span><span class="n">time</span><span class="o">.</span><span class="n">Clock</span><span class="p">()</span>
+
+    <span class="k">while</span><span class="p">(</span><span class="kc">True</span><span class="p">):</span>
+        <span class="k">for</span> <span class="n">event</span> <span class="ow">in</span> <span class="n">pygame</span><span class="o">.</span><span class="n">event</span><span class="o">.</span><span class="n">get</span><span class="p">():</span>
+            <span class="k">if</span> <span class="n">event</span><span class="o">.</span><span class="n">type</span> <span class="o">==</span> <span class="n">pygame</span><span class="o">.</span><span class="n">QUIT</span><span class="p">:</span>
+                <span class="n">pygame</span><span class="o">.</span><span class="n">quit</span><span class="p">()</span>
+                <span class="n">sys</span><span class="o">.</span><span class="n">exit</span><span class="p">()</span>
+            <span class="k">if</span> <span class="n">event</span><span class="o">.</span><span class="n">type</span> <span class="o">==</span> <span class="n">pygame</span><span class="o">.</span><span class="n">KEYDOWN</span><span class="p">:</span>
+                <span class="k">if</span> <span class="n">event</span><span class="o">.</span><span class="n">key</span> <span class="o">==</span> <span class="n">pygame</span><span class="o">.</span><span class="n">K_SPACE</span> <span class="ow">or</span> <span class="n">event</span><span class="o">.</span><span class="n">key</span> <span class="o">==</span> <span class="n">pygame</span><span class="o">.</span><span class="n">K_w</span><span class="p">:</span>
+                    <span class="n">game</span><span class="o">.</span><span class="n">char</span><span class="o">.</span><span class="n">jump</span><span class="p">()</span>
+                <span class="k">if</span> <span class="n">event</span><span class="o">.</span><span class="n">key</span> <span class="o">==</span> <span class="n">pygame</span><span class="o">.</span><span class="n">K_r</span><span class="p">:</span>
+                    <span class="n">game</span><span class="o">.</span><span class="n">start_game</span><span class="p">()</span>
+                <span class="k">if</span> <span class="n">event</span><span class="o">.</span><span class="n">key</span> <span class="o">==</span> <span class="n">pygame</span><span class="o">.</span><span class="n">K_s</span><span class="p">:</span>
+                    <span class="n">game</span><span class="o">.</span><span class="n">char</span><span class="o">.</span><span class="n">deslizar</span><span class="p">()</span>
+            <span class="k">if</span> <span class="n">event</span><span class="o">.</span><span class="n">type</span> <span class="o">==</span> <span class="n">pygame</span><span class="o">.</span><span class="n">KEYDOWN</span> <span class="ow">and</span> <span class="n">event</span><span class="o">.</span><span class="n">key</span> <span class="o">==</span> <span class="n">pygame</span><span class="o">.</span><span class="n">K_ESCAPE</span><span class="p">:</span>
+                    <span class="c1"># Retorna ao menu se a tecla ESC for pressionada</span>
+                    <span class="n">pygame</span><span class="o">.</span><span class="n">mixer</span><span class="o">.</span><span class="n">music</span><span class="o">.</span><span class="n">stop</span><span class="p">()</span>
+                    <span class="k">return</span> <span class="kc">True</span>        
+
+        <span class="k">if</span> <span class="n">game</span><span class="o">.</span><span class="n">running</span><span class="p">:</span>
+            <span class="k">for</span> <span class="n">bg</span> <span class="ow">in</span> <span class="n">game</span><span class="o">.</span><span class="n">bg</span><span class="p">:</span>
+                <span class="n">bg</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="o">-</span><span class="n">game</span><span class="o">.</span><span class="n">speed</span><span class="p">)</span>
+                <span class="n">bg</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+
+            <span class="n">game</span><span class="o">.</span><span class="n">spawn_obstacles</span><span class="p">()</span>
+
+            <span class="k">for</span> <span class="n">obstacle</span> <span class="ow">in</span> <span class="n">game</span><span class="o">.</span><span class="n">obstacle</span><span class="p">:</span>
+                <span class="n">obstacle</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="o">-</span><span class="n">game</span><span class="o">.</span><span class="n">speed</span><span class="p">)</span>
+                <span class="n">obstacle</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+
+            <span class="n">game</span><span class="o">.</span><span class="n">char</span><span class="o">.</span><span class="n">update</span><span class="p">()</span>
+            <span class="n">game</span><span class="o">.</span><span class="n">char</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+
+            <span class="k">if</span> <span class="n">game</span><span class="o">.</span><span class="n">check_colision</span><span class="p">():</span>
+                <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Colisao&quot;</span><span class="p">)</span>
+
+                <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">game</span><span class="o">.</span><span class="n">obstacle</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">Bomb</span><span class="p">):</span>
+                    <span class="n">game</span><span class="o">.</span><span class="n">running</span> <span class="o">=</span> <span class="kc">False</span>
+                    <span class="n">game</span><span class="o">.</span><span class="n">char</span><span class="o">.</span><span class="n">alive</span><span class="o">=</span><span class="kc">False</span>
+                    
+                    <span class="n">game</span><span class="o">.</span><span class="n">obstacle</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">explodir</span><span class="p">()</span>
+                <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">game</span><span class="o">.</span><span class="n">obstacle</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">Bat</span><span class="p">):</span>
+                    <span class="n">game</span><span class="o">.</span><span class="n">running</span> <span class="o">=</span> <span class="kc">False</span>
+                    <span class="n">game</span><span class="o">.</span><span class="n">char</span><span class="o">.</span><span class="n">alive</span><span class="o">=</span><span class="kc">False</span>
+                    
+                    <span class="n">game</span><span class="o">.</span><span class="n">obstacle</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">ataque</span><span class="p">()</span>
+
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="k">if</span> <span class="n">game</span><span class="o">.</span><span class="n">obstacle</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">recebida</span><span class="o">==</span><span class="kc">False</span><span class="p">:</span>
+                        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;+1 MOEDA&quot;</span><span class="p">)</span>
+
+                        <span class="n">game</span><span class="o">.</span><span class="n">moedas_rodada</span> <span class="o">+=</span> <span class="mi">1</span>
+                        <span class="n">game</span><span class="o">.</span><span class="n">obstacle</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">receber</span><span class="p">()</span>
+
+            <span class="n">loop</span> <span class="o">=</span> <span class="p">(</span><span class="n">loop</span><span class="o">+</span><span class="mi">1</span><span class="p">)</span><span class="o">%</span><span class="mi">100</span>
+            
+            <span class="k">if</span><span class="p">(</span><span class="n">loop</span><span class="o">%</span><span class="mi">5</span><span class="o">==</span><span class="mi">0</span><span class="p">):</span>
+                <span class="n">game</span><span class="o">.</span><span class="n">update</span><span class="p">()</span>
+
+            <span class="nb">print</span><span class="p">(</span><span class="n">game</span><span class="o">.</span><span class="n">score</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">game</span><span class="o">.</span><span class="n">increase_coins</span><span class="p">()</span>
+            <span class="n">game</span><span class="o">.</span><span class="n">update_record</span><span class="p">()</span>
+
+            <span class="k">for</span> <span class="n">bg</span> <span class="ow">in</span> <span class="n">game</span><span class="o">.</span><span class="n">bg</span><span class="p">:</span>
+                <span class="n">bg</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+            <span class="k">for</span> <span class="n">obstacle</span> <span class="ow">in</span> <span class="n">game</span><span class="o">.</span><span class="n">obstacle</span><span class="p">:</span>
+                <span class="n">obstacle</span><span class="o">.</span><span class="n">update</span><span class="p">()</span>
+                <span class="n">obstacle</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+
+            <span class="n">game</span><span class="o">.</span><span class="n">char</span><span class="o">.</span><span class="n">update</span><span class="p">()</span>
+            <span class="n">game</span><span class="o">.</span><span class="n">char</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+        
+        <span class="n">texto_score</span> <span class="o">=</span> <span class="n">criar_texto</span><span class="p">(</span> <span class="s2">&quot;Score: &quot;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">game</span><span class="o">.</span><span class="n">score</span><span class="p">),</span> <span class="mi">40</span><span class="p">,</span> <span class="n">NOME_FONTE</span><span class="p">,</span> <span class="p">(</span><span class="mi">255</span><span class="p">,</span><span class="mi">255</span><span class="p">,</span><span class="mi">0</span><span class="p">),</span> <span class="kc">True</span><span class="p">,</span> <span class="kc">True</span><span class="p">)</span>
+        <span class="n">screen</span><span class="o">.</span><span class="n">blit</span><span class="p">(</span><span class="n">texto_score</span><span class="p">,</span> <span class="p">(</span><span class="mi">900</span><span class="p">,</span><span class="mi">35</span><span class="p">))</span>
+
+        <span class="n">texto_score</span> <span class="o">=</span> <span class="n">criar_texto</span><span class="p">(</span> <span class="s2">&quot;Moedas: &quot;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">game</span><span class="o">.</span><span class="n">moedas_rodada</span><span class="p">),</span> <span class="mi">40</span><span class="p">,</span> <span class="n">NOME_FONTE</span><span class="p">,</span> <span class="p">(</span><span class="mi">255</span><span class="p">,</span><span class="mi">255</span><span class="p">,</span><span class="mi">0</span><span class="p">),</span> <span class="kc">True</span><span class="p">,</span> <span class="kc">True</span><span class="p">)</span>
+        <span class="n">screen</span><span class="o">.</span><span class="n">blit</span><span class="p">(</span><span class="n">texto_score</span><span class="p">,</span> <span class="p">(</span><span class="mi">600</span><span class="p">,</span><span class="mi">35</span><span class="p">))</span>
+
+        <span class="n">clock</span><span class="o">.</span><span class="n">tick</span><span class="p">(</span><span class="mi">30</span><span class="p">)</span>
+        <span class="n">pygame</span><span class="o">.</span><span class="n">display</span><span class="o">.</span><span class="n">update</span><span class="p">()</span></div>
+
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2023, Anderson, Ramyro, Samuel e Kaiky.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

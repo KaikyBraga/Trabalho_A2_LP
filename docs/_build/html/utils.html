@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="./">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>utils module &mdash; Trabalho A2 LP 1.0 documentation</title>
+      <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=92fd9be5" />
+      <link rel="stylesheet" type="text/css" href="_static/css/theme.css?v=19f00094" />
+
+  
+  <!--[if lt IE 9]>
+    <script src="_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script src="_static/jquery.js?v=5d32c60e"></script>
+        <script src="_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+        <script src="_static/documentation_options.js?v=f2a433a1"></script>
+        <script src="_static/doctools.js?v=888ff710"></script>
+        <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="variaveis_globais module" href="variaveis_globais.html" />
+    <link rel="prev" title="menu module" href="menu.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="index.html" class="icon icon-home">
+            Trabalho A2 LP
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul class="current">
+<li class="toctree-l1 current"><a class="reference internal" href="modules.html">Trabalho_A2_LP</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="game.html">game module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="loja.html">loja module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="menu.html">menu module</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">utils module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#utils.SpritesJogo"><code class="docutils literal notranslate"><span class="pre">SpritesJogo</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#utils.SpritesJogo.carregar_frames"><code class="docutils literal notranslate"><span class="pre">SpritesJogo.carregar_frames()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#utils.criar_texto"><code class="docutils literal notranslate"><span class="pre">criar_texto()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="variaveis_globais.html">variaveis_globais module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="variaveis_sons.html">variaveis_sons module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="variaveis_sprites.html">variaveis_sprites module</a></li>
+</ul>
+</li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">Trabalho A2 LP</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="modules.html">Trabalho_A2_LP</a></li>
+      <li class="breadcrumb-item active">utils module</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="_sources/utils.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="module-utils">
+<span id="utils-module"></span><h1>utils module<a class="headerlink" href="#module-utils" title="Link to this heading"></a></h1>
+<p>Esse módulo representa as classes/funções auxiliares do jogo.
+Módulo responsável por armazenar funções que são úteis para o projeto.</p>
+<dl class="py class">
+<dt class="sig sig-object py" id="utils.SpritesJogo">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">utils.</span></span><span class="sig-name descname"><span class="pre">SpritesJogo</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">caminho_principal</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">num_frames</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/utils.html#SpritesJogo"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#utils.SpritesJogo" title="Link to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>Classe para agrupar frames de uma ação de um objeto e criar animações.</p>
+<dl class="simple">
+<dt>Attributes:</dt><dd><p>caminho_principal (str): Caminho principal dos elementos dos sprites.
+num_frames (int): Número de frames da animação.</p>
+</dd>
+<dt>Methods:</dt><dd><p>__init__: Inicializa a classe.
+carregar_frames(): Carrega os frames da animação com a escala desejada.</p>
+</dd>
+</dl>
+<dl class="py method">
+<dt class="sig sig-object py" id="utils.SpritesJogo.carregar_frames">
+<span class="sig-name descname"><span class="pre">carregar_frames</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">escala</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/utils.html#SpritesJogo.carregar_frames"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#utils.SpritesJogo.carregar_frames" title="Link to this definition"></a></dt>
+<dd><p>Carrega os frames da animação, caso seja um conjunto de imagens unitário, retorna apenas a imagem carregada. Caso contrário,
+retorna o conjunto de imagens carregadas em uma lista.</p>
+<dl class="simple">
+<dt>Parameters:</dt><dd><p>escala (int): Escala em que o conjunto de imagens fica sem perder</p>
+</dd>
+<dt>Returns:</dt><dd><p>pygame.Surface or list[pygame.Surface]: Retorna a imagem unitária carregada ou a lista de imagens carregadas.</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="utils.criar_texto">
+<span class="sig-prename descclassname"><span class="pre">utils.</span></span><span class="sig-name descname"><span class="pre">criar_texto</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">mensagem_texto</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">tamanho_fonte</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">nome_fonte</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">cor_fonte</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">texto_cerrilhado</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">texto_negrito</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">texto_italico</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/utils.html#criar_texto"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#utils.criar_texto" title="Link to this definition"></a></dt>
+<dd><p>Essa função tem o objetivo de criar textos estilizados para serem utilizadas no jogo.</p>
+<dl class="simple">
+<dt>Parameters:</dt><dd><p>mensagem_texto (str): Mensagem do texto.
+tamanho_fonte (float): Tamanho da fonte do texto.
+nome_fonte (str): Nome da fonte.
+cor_fonte (tuple): Cor da fonte em canal RGB (quantidade_vermelho, quantidade_verde, quantidade_azul).
+texto_cerrilhado (bool): Define se o texto é cerrilhado ou não.
+texto_negrito (bool): Define se o texto está em negrito ou não.
+texto_italico (bool): Define se o texto está em itálico ou não.</p>
+</dd>
+<dt>Returns:</dt><dd><p>texto (pygame.surface.Surface): Texto a ser utilizado na construção do jogo.</p>
+</dd>
+</dl>
+</dd></dl>
+
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="menu.html" class="btn btn-neutral float-left" title="menu module" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="variaveis_globais.html" class="btn btn-neutral float-right" title="variaveis_globais module" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2023, Anderson, Ramyro, Samuel e Kaiky.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

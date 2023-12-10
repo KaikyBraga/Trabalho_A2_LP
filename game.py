@@ -760,7 +760,7 @@ def loop_jogo(op_char=1):
             if(loop%5==0):
                 game.update()
 
-            print(game.score)
+            #print(game.score)
         else:
             game.increase_coins()
             game.update_record()

@@ -10,7 +10,7 @@ O jogo EMAp's Running consiste em um jogo de corrida sem fim. Nele, o jogador te
 
 ## Intruções:
 1. Instalar os pacotes necessários: pip install -r requeriments.txt
-2. Executar o jogo com `menu.py`
+2. Executar o jogo com `main.py`
 3. Abrir a documentação sphinx: `docs/build/html/index.html`
 
 ## Controles:

@@ -7,6 +7,7 @@ import os, sys, pygame, random
 import pandas as pd
 from variaveis_globais import *
 from utils import criar_texto
+from helpers.image_loader import load_image
 
 pygame.init()
 screen = pygame.display.set_mode((WIDTH, HEIGHT), flags=pygame.SCALED, vsync=1)
@@ -127,9 +128,9 @@ class Personagem():
             run_path = f"sprites/personagens/{self.name}/corrida/{self.name}_corrida_{i}.png"  
             path = os.path.join(run_path)
 
-            img = pygame.image.load(path)
+            img = load_image(path, scale=(self.width, self.height), convert_alpha=True)
 
-            self.texture_run.append(pygame.transform.scale(img, (self.width, self.height)))
+            self.texture_run.append(img)
             self.mask_run.append(pygame.mask.from_surface(self.texture_run[-1]))
 
         #carrega sprites de pulo
@@ -137,9 +138,9 @@ class Personagem():
             jump_path = f"sprites/personagens/{self.name}/pulo/{self.name}_pulo_{i}.png"  
             path = os.path.join(jump_path)
 
-            img = pygame.image.load(path)
+            img = load_image(path, scale=(self.width, self.height), convert_alpha=True)
 
-            self.texture_jump.append(pygame.transform.scale(img, (self.width, self.height)))
+            self.texture_jump.append(img)
             self.mask_jump.append(pygame.mask.from_surface(self.texture_jump[-1]))
         
         #carrega sprites de morte
@@ -147,18 +148,18 @@ class Personagem():
             dead_path = f"sprites/personagens/{self.name}/morte/{self.name}_morte_{i}.png"  
             path = os.path.join(dead_path)
 
-            img = pygame.image.load(path)
+            img = load_image(path, scale=(self.width, self.height), convert_alpha=True)
 
-            self.texture_dead.append(pygame.transform.scale(img, (self.width, self.height)))
+            self.texture_dead.append(img)
         
         #carrega sprites de deslizamento
         for i in range(1, self.qnt_deslizamento+1):
             deslizamento_path = f"sprites/personagens/{self.name}/deslizamento/{self.name}_deslizamento_{i}.png"  
             path = os.path.join(deslizamento_path)
 
-            img = pygame.image.load(path)
+            img = load_image(path, scale=(self.width, self.height), convert_alpha=True)
 
-            self.texture_deslizamento.append(pygame.transform.scale(img, (self.width, self.height)))
+            self.texture_deslizamento.append(img)
             self.mask_deslizamento.append(pygame.mask.from_surface(self.texture_deslizamento[-1]))
 
     def jump(self):
@@ -269,16 +270,15 @@ class Bomb():
         bomba_path = f"sprites/obstaculos/bomba/bomba.png"
         path = os.path.join(bomba_path)
 
-        self.texture = pygame.image.load(path)
-        self.texture = pygame.transform.scale(self.texture, (self.width, self.height))
+        self.texture = load_image(path, (self.width, self.height), convert_alpha=True)
 
         self.mask = pygame.mask.from_surface(self.texture)
 
         for i in range(1, 14):
             explosao_path = f"sprites/obstaculos/bomba/explosao/explosao_{i}.png"
             path = os.path.join(explosao_path)
-            img = (pygame.image.load(path))
-            self.texture_explosion.append(pygame.transform.scale(img, (3*self.width, 3*self.height))) 
+            img = load_image(path, (3*self.width, 3*self.height), convert_alpha=True)
+            self.texture_explosion.append(img) 
     
     def get_mask(self):
         """
@@ -363,9 +363,9 @@ class Bat():
             bat_path = f"sprites/obstaculos/morcego/morcego_{i}.png"
             path = os.path.join(bat_path)
 
-            img = (pygame.image.load(path))
+            img = load_image(path, (self.width, self.height), convert_alpha=True)
             
-            self.texture.append(pygame.transform.scale(img, (self.width, self.height)))
+            self.texture.append(img)
             self.mask.append(pygame.mask.from_surface(self.texture[-1]))
 
     def get_mask(self):
@@ -449,9 +449,9 @@ class Coin():
             bat_path = f"sprites/moeda/moeda_{i}.png"
             path = os.path.join(bat_path)
 
-            img = (pygame.image.load(path))
+            img = load_image(path, (self.width, self.height), convert_alpha=True)
             
-            self.texture.append(pygame.transform.scale(img, (self.width, self.height)))
+            self.texture.append(img)
             self.mask.append(pygame.mask.from_surface(self.texture[-1]))
 
     def get_mask(self):
@@ -528,9 +528,10 @@ class BG:
         """
 
         path = os.path.join(self.img_path)
+        
+        use_alpha = "ponte" in self.img_path
 
-        self.texture = pygame.image.load(path)
-        self.texture = pygame.transform.scale(self.texture, (self.width, self.height))
+        self.texture = load_image(path, (self.width, self.height), convert_alpha=use_alpha)
 
 class Game():
     """

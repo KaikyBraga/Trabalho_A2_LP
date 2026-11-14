@@ -3,6 +3,7 @@ Esse é o módulo do menu do jogo.
 Módulo responsável por criar a página do menu e suas funcionalidades.
 """
 
+import os
 import sys
 import pygame
 from utils import *
@@ -12,7 +13,7 @@ from loja import Loja
 from pygame.locals import *
 from variaveis_sons import *
 from variaveis_globais import *
-from variaveis_sprites import *
+from helpers.image_loader import load_image
 
 class Menu:
     """
@@ -47,7 +48,7 @@ class Menu:
         self.click = False
 
         # Carrega a imagem de fundo do menu
-        self.background_img = MENU
+        self.background_img = load_image(os.path.join(os.path.dirname(__file__), "sprites/paginas/menu/menu.png"))
 
         # Carrega a música
         pygame.mixer.music.load(som_menu)
@@ -56,9 +57,9 @@ class Menu:
         pygame.mixer.music.play(-1)  
 
         # Carrega as imagens dos botões 
-        self.menu_jogar_img = MENU_JOGAR
-        self.menu_loja_img = MENU_LOJA
-        self.menu_sair_img = MENU_SAIR
+        self.menu_jogar_img = load_image(os.path.join(os.path.dirname(__file__), "sprites/paginas/menu/menu_jogar.png"))
+        self.menu_loja_img = load_image(os.path.join(os.path.dirname(__file__), "sprites/paginas/menu/menu_loja.png"))
+        self.menu_sair_img = load_image(os.path.join(os.path.dirname(__file__), "sprites/paginas/menu/menu_sair.png"))
 
     def draw_text(self):
         """

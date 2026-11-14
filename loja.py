@@ -89,10 +89,10 @@ class Loja:
             # Dados do arquivo csv   
             dados_jogo = pd.read_csv("informacoes_jogo.csv")
             quantidade_moedas = dados_jogo["Quantidade_de_Moedas"][0]
-            aventureiro_desbloqueado = (dados_jogo["Aventureiro_Desbloqueado"]).bool()
-            cavaleiro_desbloqueado = (dados_jogo["Cavaleiro_Desbloqueado"]).bool()
-            guerreiro_desbloqueado = (dados_jogo["Guerreiro_Desbloqueado"]).bool()
-            guerreira_desbloqueado = (dados_jogo["Guerreira_Desbloqueada"]).bool()   
+            aventureiro_desbloqueado = bool(dados_jogo["Aventureiro_Desbloqueado"].iloc[0])
+            cavaleiro_desbloqueado = bool(dados_jogo["Cavaleiro_Desbloqueado"].iloc[0])
+            guerreiro_desbloqueado = bool(dados_jogo["Guerreiro_Desbloqueado"].iloc[0])
+            guerreira_desbloqueado = bool(dados_jogo["Guerreira_Desbloqueada"].iloc[0])   
         
             # Plota a quantidade de moedas
             texto_moeda = str(dados_jogo["Quantidade_de_Moedas"][0])

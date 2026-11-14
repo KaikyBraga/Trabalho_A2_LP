@@ -47,8 +47,8 @@ class Personagem():
         self.qnt_die = qnt_die
         self.qnt_deslizamento = qnt_deslizamento
 
-        self.width = width
-        self.height = height
+        self.width = int(width)
+        self.height = int(height)
 
         self.x = 200 - self.width//2
         self.y_floor = y_floor
@@ -220,8 +220,8 @@ class Bomb():
         - x: Posição horizontal inicial da bomba.
         """
 
-        self.width = 100*0.85
-        self.height = 100*0.85
+        self.width = int(100*0.85)
+        self.height = int(100*0.85)
 
         self.x = x
         self.y = Y_FLOOR_BOMB
@@ -405,8 +405,8 @@ class Coin():
         - x: Posição horizontal inicial da moeda.
         """
 
-        self.width = 190/2
-        self.height = 170/2
+        self.width = int(190/2)
+        self.height = int(170/2)
 
         self.x = x
         self.y = Y_FLOOR_COIN
@@ -620,7 +620,7 @@ class Game():
         """
 
         for obstacle in self.obstacle:
-            pos = (obstacle.x-self.char.x, obstacle.y-self.char.y)
+            pos = (int(obstacle.x-self.char.x), int(obstacle.y-self.char.y))
             if self.char.current_mask().overlap(obstacle.get_mask(), pos)!=None:
                 return True
         return False
@@ -634,7 +634,7 @@ class Game():
         for i in range(2):
             x_min = self.obstacle[-1].x+self.obstacle[-1].width + 300
             x_max = self.obstacle[-1].x+self.obstacle[-1].width + 600
-            self.obstacle.append(Bomb(random.randint(x_min, x_max)))
+            self.obstacle.append(Bomb(random.randint(int(x_min), int(x_max))))
 
     def spawn_obstacles(self):
         """
@@ -647,7 +647,7 @@ class Game():
             x_min = self.obstacle[-1].x+self.obstacle[-1].width + 200
             x_max = self.obstacle[-1].x+self.obstacle[-1].width + 800
 
-            x_new_obstacle = random.randint(x_min, x_max)
+            x_new_obstacle = random.randint(int(x_min), int(x_max))
 
             rand_type = random.randint(1, 100)
             if rand_type <= 40:

@@ -5,6 +5,7 @@ Módulo responsável por armazenar funções que são úteis para o projeto.
 
 import pygame
 from pygame.locals import *
+from helpers.image_loader import load_image
 
 class SpritesJogo:
     """
@@ -46,19 +47,14 @@ class SpritesJogo:
 
         # Criação de apenas um objeto carregado quando a quantidade de Sprites é igual a 1.
         if self.num_frames == 1:
-            conjunto_imagens = pygame.image.load(self.caminho_principal)
-            largura_sprite = conjunto_imagens.get_width()
-            altura_sprite = conjunto_imagens.get_height()
-            return pygame.transform.scale(conjunto_imagens, (largura_sprite * self.escala, altura_sprite * self.escala))
+            conjunto_imagens = load_image(self.caminho_principal, scale_factor=self.escala, convert_alpha=True)
+            return conjunto_imagens 
         # Criação de lista de Sprites carregados caso a quantidade de frames for superior a 1.
         else:
             lista_frames = []
             for indice_frame in range(1, self.num_frames + 1):
                 caminho_frame = f"{self.caminho_principal}{indice_frame}.png"
-                frame = pygame.image.load(caminho_frame)
-                largura_sprite = frame.get_width()
-                altura_sprite = frame.get_height()
-                frame = pygame.transform.scale(frame, (largura_sprite * self.escala, altura_sprite * self.escala))
+                frame = load_image(caminho_frame, scale_factor=self.escala, convert_alpha=True)
                 lista_frames.append(frame)
             return lista_frames
 

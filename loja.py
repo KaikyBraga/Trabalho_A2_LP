@@ -9,8 +9,9 @@ import sys
 import pygame
 from pygame.locals import *
 from variaveis_globais import *
-from variaveis_sprites import *
 from game import *
+from helpers.image_loader import load_image
+from utils import SpritesJogo
 
 tela = pygame.display.set_mode((WIDTH, HEIGHT))
 
@@ -43,29 +44,36 @@ class Loja:
         self.font = pygame.font.SysFont(None, 20)
         self.click = False
 
+        self.loja_aventureiro = load_image(os.path.join(os.path.dirname(__file__), "sprites/paginas/loja/loja_aventureiro.png"))
+        self.loja_cavaleiro = load_image(os.path.join(os.path.dirname(__file__), "sprites/paginas/loja/loja_cavaleiro.png"))
+        self.loja_guerreiro = load_image(os.path.join(os.path.dirname(__file__), "sprites/paginas/loja/loja_guerreiro.png"))
+        self.loja_guerreira = load_image(os.path.join(os.path.dirname(__file__), "sprites/paginas/loja/loja_guerreira.png"))
+        
         # Carrega a imagem de fundo da loja
         dados_jogo = pd.read_csv("informacoes_jogo.csv")
         personagem_selecionado = str(dados_jogo["Personagem_Selecionado"][0])
         if personagem_selecionado == "Aventureiro":
-            self.background_img = LOJA_AVENTUREIRO
+            self.background_img = self.loja_aventureiro
         elif personagem_selecionado == "Cavaleiro":
-            self.background_img = LOJA_CAVALEIRO
+            self.background_img = self.loja_cavaleiro
         elif personagem_selecionado == "Guerreira":
-            self.background_img = LOJA_GUERREIRA
+            self.background_img = self.loja_guerreira
         elif personagem_selecionado == "Guerreiro":
-            self.background_img = LOJA_GUERREIRO
+            self.background_img = self.loja_guerreiro
 
         
-        self.loja_aventureiro = pygame.image.load(os.path.join(os.path.dirname(__file__), "sprites/paginas/loja/loja_aventureiro.png"))
-        self.loja_cavaleiro = pygame.image.load(os.path.join(os.path.dirname(__file__), "sprites/paginas/loja/loja_cavaleiro.png"))
-        self.loja_guerreiro = pygame.image.load(os.path.join(os.path.dirname(__file__), "sprites/paginas/loja/loja_guerreiro.png"))
-        self.loja_guerreira = pygame.image.load(os.path.join(os.path.dirname(__file__), "sprites/paginas/loja/loja_guerreira.png"))
 
+        # Carrega as imagens dos botões de compra/adquirido
+        self.botao_adquirido = load_image(os.path.join(os.path.dirname(__file__), "sprites/paginas/loja/botao_adquirido.png"))
+        self.botao_preco_50 = load_image(os.path.join(os.path.dirname(__file__), "sprites/paginas/loja/botao_preco_50.png"))
+        self.botao_preco_100 = load_image(os.path.join(os.path.dirname(__file__), "sprites/paginas/loja/botao_preco_100.png"))
+        self.botao_preco_200 = load_image(os.path.join(os.path.dirname(__file__), "sprites/paginas/loja/botao_preco_200.png"))
+        
         # Carrega as imagens dos personagens da loja
-        self.aventureiro_img = AVENTUREIRO_CORRIDA
-        self.cavaleiro_img = CAVALEIRO_CORRIDA
-        self.guerreiro_img = GUERREIRO_CORRIDA
-        self.guerreira_img = GUERREIRA_CORRIDA
+        self.aventureiro_img = SpritesJogo("sprites/personagens/aventureiro/corrida/aventureiro_corrida_", 6).carregar_frames(5)
+        self.cavaleiro_img = SpritesJogo("sprites/personagens/cavaleiro/corrida/cavaleiro_corrida_", 10).carregar_frames(4)
+        self.guerreiro_img = SpritesJogo("sprites/personagens/guerreiro/corrida/guerreiro_corrida_", 8).carregar_frames(2)
+        self.guerreira_img = SpritesJogo("sprites/personagens/guerreira/corrida/guerreira_corrida_", 8).carregar_frames(5)
 
         # Carrega a música
         pygame.mixer.music.load(os.path.join(os.path.dirname(__file__), "sons\som_loja.wav"))
@@ -115,16 +123,6 @@ class Loja:
             self.screen.blit(self.guerreiro_img[loops % len(self.guerreiro_img)], (600, 220))
             self.screen.blit(self.guerreira_img[loops % len(self.guerreira_img)], (950, 250))
 
-            # Carrega a imagens do botão de voltar
-            self.botao_voltar_img = pygame.image.load(os.path.join(os.path.dirname(__file__), "sprites/paginas/loja/botao_voltar.png"))
-            self.botao_voltar_escuro_img = pygame.image.load(os.path.join(os.path.dirname(__file__), "sprites/paginas/loja/botao_voltar_selecionado.png"))
-        
-            # Carrega as imagens dos botões de compra/adquirido
-            self.botao_adquirido = pygame.image.load(os.path.join(os.path.dirname(__file__), "sprites/paginas/loja/botao_adquirido.png"))
-            self.botao_preco_50 = pygame.image.load(os.path.join(os.path.dirname(__file__), "sprites/paginas/loja/botao_preco_50.png"))
-            self.botao_preco_100 = pygame.image.load(os.path.join(os.path.dirname(__file__), "sprites/paginas/loja/botao_preco_100.png"))
-            self.botao_preco_200 = pygame.image.load(os.path.join(os.path.dirname(__file__), "sprites/paginas/loja/botao_preco_200.png"))
-
             # Plota as imagens dos botões de compra/adquirido
             self.screen.blit(self.botao_adquirido, (87, 570))
             if cavaleiro_desbloqueado == False:
@@ -157,12 +155,12 @@ class Loja:
 
             # Verifica as colisões com o mouse
             if botao_aventureiro.collidepoint((mx, my)) and aventureiro_desbloqueado == True and self.click:
-                self.background_img = LOJA_AVENTUREIRO
+                self.background_img = self.loja_aventureiro
                 dados_jogo["Personagem_Selecionado"] = "Aventureiro"
                 dados_jogo.to_csv("informacoes_jogo.csv", index=False)
              
             elif botao_cavaleiro.collidepoint((mx, my)) and cavaleiro_desbloqueado == True and self.click:
-                self.background_img = LOJA_CAVALEIRO
+                self.background_img = self.loja_cavaleiro
                 dados_jogo["Personagem_Selecionado"] = "Cavaleiro"
                 dados_jogo.to_csv("informacoes_jogo.csv", index=False)
                     
@@ -172,7 +170,7 @@ class Loja:
                 dados_jogo.to_csv("informacoes_jogo.csv", index = False)
             
             elif botao_guerreiro.collidepoint((mx, my)) and guerreiro_desbloqueado == True and self.click:
-                self.background_img = LOJA_GUERREIRO 
+                self.background_img = self.loja_guerreiro
                 dados_jogo["Personagem_Selecionado"] = "Guerreiro"
                 dados_jogo.to_csv("informacoes_jogo.csv", index=False)
             
@@ -182,7 +180,7 @@ class Loja:
                 dados_jogo.to_csv("informacoes_jogo.csv", index = False)
                                      
             elif botao_guerreira.collidepoint((mx, my)) and guerreira_desbloqueado == True and self.click:
-                self.background_img = LOJA_GUERREIRA
+                self.background_img = self.loja_guerreira
                 dados_jogo["Personagem_Selecionado"] = "Guerreira"
                 dados_jogo.to_csv("informacoes_jogo.csv", index=False)
     
